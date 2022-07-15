@@ -3,6 +3,7 @@ package com.efub.lakkulakku.domain.user.entity;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -16,14 +17,16 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
 
-	@Id
+	/*@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID id;*/
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique = true, length = 9)
-	@NotNull
+	//@NotNull
 	private Integer uid;
 
 	@NotNull
@@ -39,4 +42,13 @@ public class User extends BaseTimeEntity {
 	@OneToOne(mappedBy = "user")
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
+
+	@Builder
+	public User(String email, String password, String nickname, Profile profile)
+	{
+		this.email = email;
+		this.password = password;
+		this.nickname = nickname;
+		this.profile = profile;
+	}
 }
