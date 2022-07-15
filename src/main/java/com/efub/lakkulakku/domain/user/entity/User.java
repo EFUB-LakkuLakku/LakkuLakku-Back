@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,4 +40,21 @@ public class User extends BaseTimeEntity {
 	@OneToOne(mappedBy = "user")
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
+
+	public void updatePassword(/*PasswordEncoder passwordEncoder,*/ String password){
+		//this.password = passwordEncoder.encode(password);
+	}
+
+	public void updateEmail(String email){
+
+		this.email = email;
+	}
+
+	public void encodePassword(/*PasswordEncoder passwordEncoder*/){
+		//this.password = passwordEncoder.encode(password);
+	}
+
+	/*public boolean matchPassword(PasswordEncoder passwordEncoder, String checkPassword){
+		return passwordEncoder.matches(checkPassword, getPassword());
+	}*/
 }
