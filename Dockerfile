@@ -1,16 +1,13 @@
 FROM openjdk:11 as builder
 
-# Create working directory
-RUN mkdir -p /app
-WORKDIR /app
-COPY . /app
+COPY . ./
 
+RUN chmod +x ./gradlew
 RUN ./gradlew clean build
 
 FROM openjdk:11.0-jre-slim
 
-WORKDIR /app
-COPY --from=builder /app/build/libs/core.jar /app
+COPY --from=builder build/libs/*.jar app.jar
 EXPOSE 8080
 
-RUN chmod +x /app/core.jar
+RUN chmod +x app.jar
