@@ -3,16 +3,14 @@ services:
 
   web:
     container_name: web
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: .
     command: java -jar -Dspring.profiles.active=prod app.jar
     env_file:
       - .env
-    volumes:
-      - ./:/app/
     expose:
       - 8080
+    ports:
+      - "8080:8080"
 
   nginx:
     container_name: nginx
