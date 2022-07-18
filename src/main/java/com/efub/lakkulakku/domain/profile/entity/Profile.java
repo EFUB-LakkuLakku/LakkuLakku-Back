@@ -27,4 +27,12 @@ public class Profile extends BaseTimeEntity {
 
 	@OneToOne
 	private User user;
+
+	private String bio;
+
+	public void updateProfile(String image, String bio){
+		if (!image.isBlank())
+			this.file.updateImage(image);
+		this.bio = bio;
+	}
 }

@@ -33,4 +33,8 @@ public class File extends BaseTimeEntity {
 	@NotNull
 	private String url;
 
+	public void updateImage(String image){
+		this.url = image;
+	}
+
 }
