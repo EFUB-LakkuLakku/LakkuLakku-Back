@@ -17,17 +17,17 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
 
-	/*@Id
+	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;*/
+	private UUID id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(unique = true, length = 9)
+
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, length = 12)
 	//@NotNull
-	private Integer uid;
+	private Long uid;
 
 	@NotNull
 	private String email;
@@ -44,8 +44,9 @@ public class User extends BaseTimeEntity {
 	private Profile profile;
 
 	@Builder
-	public User(String email, String password, String nickname, Profile profile)
+	public User(Long uid, String email, String password, String nickname, Profile profile)
 	{
+		this.uid = uid;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;

@@ -8,5 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    boolean existsByNickname(String nickname); //아이디 중복 확인을 위해
+    boolean existsByNickname(String nickname);
+
+    boolean existsByEmail(String email);
 }

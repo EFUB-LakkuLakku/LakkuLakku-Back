@@ -24,6 +24,7 @@ public class SignupReqDto {
     public User toEntity()
     {
         return User.builder()
+                .uid(System.currentTimeMillis())
                 .email(email)
                 .password(password)
                 .nickname(nickname)
