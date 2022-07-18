@@ -4,9 +4,9 @@ spring:
       use-legacy-processing: true
       profiles: local
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/EFUB?serverTimezone=UTC&characterEncoding=UTF-8
+    url: 
     username: root
-    password: Kjy990216!
+    password: 
 
   jpa:
     hibernate:
