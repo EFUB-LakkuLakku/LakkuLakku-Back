@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.comment.entity;
 
+//import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.user.entity.User;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
@@ -35,9 +36,13 @@ public class Comment extends BaseTimeEntity {
 	private String content;
 
 	@Column
-	private String parentId;
+	private UUID parentId;
 
-	@Column(columnDefinition = "default 0")
+	@Column
 	private Boolean isSecret;
 
+	@PrePersist
+	public void prePersist() {
+		this.isSecret = this.isSecret != null && this.isSecret;
+	}
 }
