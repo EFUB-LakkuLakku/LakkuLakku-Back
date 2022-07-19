@@ -1,5 +1,7 @@
 package com.efub.lakkulakku.domain.users.service;
 
+import com.efub.lakkulakku.domain.user.dto.WithdrawReqDto;
+import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
@@ -27,5 +29,19 @@ public class UsersService {
     public boolean checkNicknameDuplicate(String nickname) {
         return usersRepository.existsByNickname(nickname);
     }
+
+    @Transactional
+    public Users findUsersByEmail(LoginReqDto loginReqDto) {
+        return usersRepository.findByEmail(loginReqDto.getEmail())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+    }
+
+    @Transactional
+    public void deleteUser(WithdrawReqDto withdrawReqDto) {
+        Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        usersRepository.delete(users);
+    }
+
 
 }

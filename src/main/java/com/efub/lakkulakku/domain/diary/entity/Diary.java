@@ -1,6 +1,7 @@
 package com.efub.lakkulakku.domain.diary.entity;
 
 import com.efub.lakkulakku.domain.comment.entity.Comment;
+//import com.efub.lakkulakku.domain.diary.dto.DiaryResDto;
 import com.efub.lakkulakku.domain.image.entity.Image;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
@@ -8,6 +9,7 @@ import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.text.entity.Text;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -69,4 +71,15 @@ public class Diary extends BaseTimeEntity {
 	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
 	private Integer cntLike;
 
+	@PrePersist
+	public void prePersist() {
+		this.cntComment = this.cntComment == null ? 0 : this.cntComment;
+		this.cntLike = this.cntLike == null ? 0 : this.cntLike;
+	}
+
+	@Builder
+	public Diary(Users user, String date) {
+		this.users = users;
+		this.date = date;
+	}
 }
