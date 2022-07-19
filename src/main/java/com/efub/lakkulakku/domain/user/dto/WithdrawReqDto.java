@@ -8,17 +8,13 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-public class LoginReqDto {
+public class WithdrawReqDto {
 
     @NotBlank
-    private String email;
-
-    @NotBlank
-    private String password;
+    private String nickname;
 
     @Builder
-    public LoginReqDto(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public WithdrawReqDto(String nickname) {
+        this.nickname = nickname;
     }
 }
