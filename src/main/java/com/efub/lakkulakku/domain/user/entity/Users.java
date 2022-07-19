@@ -15,7 +15,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends BaseTimeEntity {
+
+public class Users extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -39,17 +40,16 @@ public class User extends BaseTimeEntity {
 	@NotNull
 	private String nickname;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "users")
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 
 	@Builder
-	public User(Long uid, String email, String password, String nickname, Profile profile)
+	public Users(Long uid, String email, String password, String nickname)
 	{
 		this.uid = uid;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
-		this.profile = profile;
 	}
 }

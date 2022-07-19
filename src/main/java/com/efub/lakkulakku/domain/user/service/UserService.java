@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.user.service;
 
 import com.efub.lakkulakku.domain.user.dto.SignupReqDto;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.user.entity.Users;
 import com.efub.lakkulakku.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User signup(SignupReqDto reqDto) {
+    public Users signup(SignupReqDto reqDto) {
         return userRepository.save(reqDto.toEntity());
     }
 

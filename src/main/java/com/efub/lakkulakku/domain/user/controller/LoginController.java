@@ -1,11 +1,9 @@
 package com.efub.lakkulakku.domain.user.controller;
 
 import com.efub.lakkulakku.domain.user.dto.SignupReqDto;
-import com.efub.lakkulakku.domain.user.entity.User;
 import com.efub.lakkulakku.domain.user.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.user.exception.DuplicateNicknameException;
 import com.efub.lakkulakku.domain.user.service.UserService;
-import com.efub.lakkulakku.global.exception.GlobalExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

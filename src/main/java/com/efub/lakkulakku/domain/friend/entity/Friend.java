@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.friend.entity;
 
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.user.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +22,10 @@ public class Friend extends BaseTimeEntity {
 
 	@OneToOne
 	@JoinColumn(name = "user_id")
-	private User userId;
+	private Users usersId;
 
 	@OneToOne
 	@JoinColumn(name = "target_id")
-	private User targetId;
+	private Users targetId;
 	
 }

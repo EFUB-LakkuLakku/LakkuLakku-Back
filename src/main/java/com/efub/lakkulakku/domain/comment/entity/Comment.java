@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.comment.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.user.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class Comment extends BaseTimeEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private Users users;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "diary_id")
@@ -37,7 +37,7 @@ public class Comment extends BaseTimeEntity {
 	@Column
 	private String parentId;
 
-	@Column(columnDefinition = "default 0")
+	@Column(columnDefinition = "boolean default 0")//
 	private Boolean isSecret;
 
 }

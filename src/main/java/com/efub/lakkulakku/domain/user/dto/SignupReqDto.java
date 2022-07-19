@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.user.dto;
 
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.user.entity.Users;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,9 +21,9 @@ public class SignupReqDto {
         this.nickname = nickname;
     }
 
-    public User toEntity()
+    public Users toEntity()
     {
-        return User.builder()
+        return Users.builder()
                 .uid(System.currentTimeMillis())
                 .email(email)
                 .password(password)
