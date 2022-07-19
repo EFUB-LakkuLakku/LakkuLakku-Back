@@ -21,7 +21,7 @@ public class Notification extends BaseTimeEntity {
 	private UUID id;
 
 	@OneToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "users_id")
 	private Users usersId;
 
 	@OneToOne

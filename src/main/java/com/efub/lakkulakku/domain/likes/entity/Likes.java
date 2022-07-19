@@ -27,6 +27,6 @@ public class Likes extends BaseTimeEntity {
 	private Diary diary;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "users_id")
 	private Users users;
 }
