@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.profile.entity;
 
 import com.efub.lakkulakku.domain.file.entity.File;
-import com.efub.lakkulakku.domain.user.entity.Users;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

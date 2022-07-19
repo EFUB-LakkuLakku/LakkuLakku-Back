@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.comment.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.user.entity.Users;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

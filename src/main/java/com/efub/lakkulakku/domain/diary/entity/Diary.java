@@ -2,11 +2,11 @@ package com.efub.lakkulakku.domain.diary.entity;
 
 import com.efub.lakkulakku.domain.comment.entity.Comment;
 import com.efub.lakkulakku.domain.image.entity.Image;
-import com.efub.lakkulakku.domain.like.entity.Likes;
+import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.text.entity.Text;
-import com.efub.lakkulakku.domain.user.entity.Users;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

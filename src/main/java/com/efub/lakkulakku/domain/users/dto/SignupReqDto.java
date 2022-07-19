@@ -1,6 +1,6 @@
-package com.efub.lakkulakku.domain.user.dto;
+package com.efub.lakkulakku.domain.users.dto;
 
-import com.efub.lakkulakku.domain.user.entity.Users;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

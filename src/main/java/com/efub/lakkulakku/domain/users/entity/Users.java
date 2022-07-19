@@ -1,4 +1,4 @@
-package com.efub.lakkulakku.domain.user.entity;
+package com.efub.lakkulakku.domain.users.entity;
 
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;

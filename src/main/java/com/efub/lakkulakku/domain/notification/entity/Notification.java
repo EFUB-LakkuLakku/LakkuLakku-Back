@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.notification.entity;
 
-import com.efub.lakkulakku.domain.user.entity.Users;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

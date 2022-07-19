@@ -1,8 +1,8 @@
 package com.efub.lakkulakku.global.exception;
 
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
-import com.efub.lakkulakku.domain.user.exception.DuplicateEmailException;
-import com.efub.lakkulakku.domain.user.exception.DuplicateNicknameException;
+import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
+import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

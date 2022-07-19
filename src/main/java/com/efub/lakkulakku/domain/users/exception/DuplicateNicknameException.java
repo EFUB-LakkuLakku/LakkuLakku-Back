@@ -1,4 +1,4 @@
-package com.efub.lakkulakku.domain.user.exception;
+package com.efub.lakkulakku.domain.users.exception;
 
 public class DuplicateNicknameException extends IllegalArgumentException {
     public DuplicateNicknameException() {
