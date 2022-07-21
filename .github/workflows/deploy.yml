@@ -5,7 +5,6 @@ on:
       - main
 
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-18.04
@@ -17,7 +16,6 @@ jobs:
         run: |
           touch .env
           echo "${{ secrets.ENV_VARS }}" >> .env
-
       - name: create remote directory
         uses: appleboy/ssh-action@master
         with:
@@ -35,6 +33,15 @@ jobs:
           remote_user: ubuntu
           remote_key: ${{ secrets.KEY }}
 
+      - name: swap memory configuration
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            sh /home/ubuntu/srv/ubuntu/config/scripts/memory.sh
+
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
@@ -42,4 +49,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sh /home/ubuntu/srv/ubuntu/deploy.sh
+            sh /home/ubuntu/srv/ubuntu/config/scripts/deploy.sh
+
+      - name: delete unused images and containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            sh /home/ubuntu/srv/ubuntu/config/scripts/delete.sh
