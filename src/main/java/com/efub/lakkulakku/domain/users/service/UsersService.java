@@ -21,16 +21,6 @@ public class UsersService {
     }
 
     @Transactional
-    public boolean checkEmailDuplicate(String email) {
-        return usersRepository.existsByEmail(email);
-    }
-
-    @Transactional
-    public boolean checkNicknameDuplicate(String nickname) {
-        return usersRepository.existsByNickname(nickname);
-    }
-
-    @Transactional
     public Users findUsersByEmail(LoginReqDto loginReqDto) {
         return usersRepository.findByEmail(loginReqDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));

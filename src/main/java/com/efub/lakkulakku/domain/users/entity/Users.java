@@ -25,9 +25,7 @@ public class Users extends BaseTimeEntity {
 	private UUID id;
 
 
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique = true, length = 12)
-	//@NotNull
 	private Long uid;
 
 	@NotNull

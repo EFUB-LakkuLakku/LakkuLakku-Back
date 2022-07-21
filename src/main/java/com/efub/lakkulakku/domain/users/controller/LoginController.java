@@ -7,9 +7,9 @@ import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
+import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +22,7 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGIN_SUCCESS
 @RequiredArgsConstructor
 public class LoginController {
     private final UsersService usersService;
+    private final UsersRepository usersRepository;
 
 
     @PostMapping("/signup")
@@ -33,7 +34,7 @@ public class LoginController {
 
     @GetMapping("/signup/email")
     public ResponseEntity<?> checkEmailDuplicate(@RequestParam String email) {
-        if (usersService.checkEmailDuplicate(email) == true) {
+        if (usersRepository.existsByEmail(email)) {
             throw new DuplicateEmailException();
         } else {
             return ResponseEntity.ok("사용할 수 있는 이메일입니다.");
@@ -43,7 +44,7 @@ public class LoginController {
 
     @GetMapping("/signup/nickname")
     public ResponseEntity<?> checkNicknameDuplicate(@RequestParam String nickname) {
-        if (usersService.checkNicknameDuplicate(nickname) == true) {
+        if (usersRepository.existsByNickname(nickname)) {
             throw new DuplicateNicknameException();
         } else {
             return ResponseEntity.ok("사용할 수 있는 닉네임입니다.");
