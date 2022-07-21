@@ -30,9 +30,7 @@ public class Profile extends BaseTimeEntity {
 
 	private String bio;
 
-	public void updateProfile(String image, String bio){
-		if (!image.isBlank())
-			this.file.updateImage(image);
+	public void updateBio(String bio){
 		this.bio = bio;
 	}
 }
