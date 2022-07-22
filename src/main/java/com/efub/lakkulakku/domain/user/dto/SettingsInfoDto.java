@@ -8,12 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SettingsInfoDto {
-    private String email;
 
     @Builder
     public SettingsInfoDto(User user) {
-
-        this.email = user.getEmail();
 
     }
 }

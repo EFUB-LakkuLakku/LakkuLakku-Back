@@ -17,42 +17,38 @@ import java.util.UUID;
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
 
-	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	@Column(length = 16)
-	private UUID id;
+    @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(length = 16)
+    private UUID id;
 
-	@Column(unique = true, length = 9)
-	@NotNull
-	private Integer uid;
+    @Column(unique = true, length = 9)
+    @NotNull
+    private Integer uid;
 
-	@NotNull
-	private String email;
+    @NotNull
+    private String email;
 
-	@JsonIgnore
-	@NotNull
-	private String password;
+    @JsonIgnore
+    @NotNull
+    private String password;
 
-	@NotNull
-	private String nickname;
+    @NotNull
+    private String nickname;
 
-	@OneToOne(mappedBy = "user")
-	@JoinColumn(name = "profile_id")
-	private Profile profile;
+    @OneToOne(mappedBy = "user")
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
-	public void updatePassword(/*PasswordEncoder passwordEncoder,*/ String password){
-		//this.password = passwordEncoder.encode(password);
-	}
+    public void updatePassword(/*PasswordEncoder passwordEncoder,*/ String password) {
+        //this.password = passwordEncoder.encode(password);
+    }
 
-	public void updateEmail(String email){
 
-		this.email = email;
-	}
-
-	public void encodePassword(/*PasswordEncoder passwordEncoder*/){
-		//this.password = passwordEncoder.encode(password);
-	}
+    public void encodePassword(/*PasswordEncoder passwordEncoder*/) {
+        //this.password = passwordEncoder.encode(password);
+    }
 
 	/*public boolean matchPassword(PasswordEncoder passwordEncoder, String checkPassword){
 		return passwordEncoder.matches(checkPassword, getPassword());
