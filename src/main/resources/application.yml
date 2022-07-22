@@ -1,8 +1,5 @@
 spring:
   datasource:
-    config:
-      use-legacy-processing: true
-      profiles: local
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: 
     username: 
