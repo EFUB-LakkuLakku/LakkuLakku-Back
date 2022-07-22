@@ -1,8 +1,9 @@
-package com.efub.lakkulakku.domain.user.entity;
+package com.efub.lakkulakku.domain.users.entity;
 
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends BaseTimeEntity {
+
+public class Users extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -22,9 +24,9 @@ public class User extends BaseTimeEntity {
 	@Column(length = 16)
 	private UUID id;
 
-	@Column(unique = true, length = 9)
-	@NotNull
-	private Integer uid;
+
+	@Column(unique = true, length = 12)
+	private Long uid;
 
 	@NotNull
 	private String email;
@@ -36,7 +38,16 @@ public class User extends BaseTimeEntity {
 	@NotNull
 	private String nickname;
 
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "users")
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
+
+	@Builder
+	public Users(Long uid, String email, String password, String nickname)
+	{
+		this.uid = uid;
+		this.email = email;
+		this.password = password;
+		this.nickname = nickname;
+	}
 }

@@ -1,4 +1,4 @@
-package com.efub.lakkulakku.domain.user.dto;
+package com.efub.lakkulakku.domain.users.dto;
 
 import lombok.Builder;
 import lombok.Getter;

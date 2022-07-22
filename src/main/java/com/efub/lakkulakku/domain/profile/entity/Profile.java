@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.profile.entity;
 
 import com.efub.lakkulakku.domain.file.entity.File;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +26,5 @@ public class Profile extends BaseTimeEntity {
 	private File file;
 
 	@OneToOne
-	private User user;
+	private Users users;
 }

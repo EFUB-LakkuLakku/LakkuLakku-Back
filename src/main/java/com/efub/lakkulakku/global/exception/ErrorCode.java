@@ -11,14 +11,17 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-	// Common
-	DUPLICATE_DIARY_DATE(CONFLICT, "C0001", "DUPLICATE_DIARY_EXISTS");
+    // Common
+    DUPLICATE_DIARY_DATE(CONFLICT, "C0001", "DUPLICATE_DIARY_EXISTS"),
+    DUPLICATE_NICKNAME(CONFLICT, "C0002", "DUPLICATE_NICKNAME_EXISTS"),
+    DUPLICATE_EMAIL(CONFLICT, "C0003", "DUPLICATE_EMAIL_EXISTS");
 
-	// Standard
 
-	// Exception
+    // Standard
 
-	private final HttpStatus status;
-	private final String code;
-	private final String message;
+    // Exception
+
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
 }
