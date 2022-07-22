@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class ErrorResponse {
-
     private HttpStatus status;
     private ErrorCode code;
     private String message;

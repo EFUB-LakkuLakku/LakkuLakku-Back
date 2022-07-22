@@ -54,5 +54,4 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
 }
