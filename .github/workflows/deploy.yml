@@ -18,6 +18,11 @@ jobs:
           touch .env
           echo "${{ secrets.ENV_VARS }}" >> .env
 
+      - name: create application yml file
+        run: |
+          touch /home/ubuntu/srv/ubuntu/src/main/resources/application.yml
+          echo "${{ secrets.APP_YML }}" >> /home/ubuntu/srv/ubuntu/src/main/resources/application.yml
+
       - name: create remote directory
         uses: appleboy/ssh-action@master
         with:
