@@ -26,8 +26,7 @@ public enum ErrorCode {
 	S3_UPLOAD_FAILURE(INTERNAL_SERVER_ERROR, "E0001", "NETWORK_FAILURE"),
 	FILE_UPLOAD_FAILURE(BAD_REQUEST, "E0002", "WRONG_FILE_TYPE");
 
-	private final HttpStatus status;
-	private final String code;
-	private final String message;
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
 }
-

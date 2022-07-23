@@ -5,6 +5,7 @@ on:
       - main
 
 jobs:
+
   build:
     name: Build
     runs-on: ubuntu-18.04
@@ -16,6 +17,7 @@ jobs:
         run: |
           touch .env
           echo "${{ secrets.ENV_VARS }}" >> .env
+
       - name: create remote directory
         uses: appleboy/ssh-action@master
         with:
