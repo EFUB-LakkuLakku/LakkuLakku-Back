@@ -7,10 +7,13 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.efub.lakkulakku.domain.file.entity.File;
+import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
+import com.efub.lakkulakku.domain.file.exception.S3IOException;
 import com.efub.lakkulakku.domain.file.repository.FileRepository;
 import com.efub.lakkulakku.domain.profile.ProfileRepository;
 import com.efub.lakkulakku.domain.users.dto.ProfileUpdateResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,12 +41,6 @@ public class ProfileService {
 
     private static final String FILE_EXTENSION_SEPARATOR = ".";
 
-    private void validateFileExists(MultipartFile multipartFile) throws Exception{
-        if (multipartFile.isEmpty()) {
-            throw new Exception();
-        }
-    }
-
     public static ArrayList<String> buildFileName(String category, String nickname, String originalFileName) {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
@@ -55,11 +52,13 @@ public class ProfileService {
         return array;
     }
 
-    public File uploadImage(String category, String nickname, MultipartFile multipartFile) throws Exception {
-        validateFileExists(multipartFile);
-
+    public File uploadImage(String category, String nickname, MultipartFile multipartFile) throws S3IOException, FileExtenstionException {
         ArrayList<String> fileInfo = buildFileName(category, nickname, multipartFile.getOriginalFilename());
         String fullFileName = fileInfo.get(2);
+        String fileExtension = fileInfo.get(1);
+
+        if (!(fileExtension.equals(".png") || fileExtension.equals(".jpg") || fileExtension.equals("jpeg")))
+            throw new FileExtenstionException();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
@@ -68,7 +67,7 @@ public class ProfileService {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fullFileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new Exception();
+            throw new S3IOException();
         }
 
         String url = amazonS3Client.getUrl(bucket, fullFileName).toString();
@@ -93,7 +92,7 @@ public class ProfileService {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fullFileName));
     }
 
-    public void updateImage(String category, Users user, MultipartFile multipartFile) throws Exception {
+    public void updateImage(String category, Users user, MultipartFile multipartFile) throws FileExtenstionException {
         if (user.getProfile().getFile() != null) {
             user.getProfile().getFile();
             deleteProfileImage(user);
@@ -106,9 +105,9 @@ public class ProfileService {
         profileRepository.save(user.getProfile());
     }
 
-    public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio) throws Exception {
+    public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio) throws FileExtenstionException {
         Users entity = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!image.isEmpty())
             updateImage("profile", entity, image);
