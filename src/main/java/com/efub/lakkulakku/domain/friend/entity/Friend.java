@@ -22,10 +22,9 @@ public class Friend extends BaseTimeEntity {
 
 	@OneToOne
 	@JoinColumn(name = "users_id")
-	private Users usersId;
+	private Users userId;
 
 	@OneToOne
 	@JoinColumn(name = "target_id")
 	private Users targetId;
-	
 }

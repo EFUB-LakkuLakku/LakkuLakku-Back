@@ -14,12 +14,12 @@ public class CommentMapper {
 			return null;
 
 		return CommentResDto.builder()
-			.id(entity.getId())
-			.nickname(entity.getUsers().getNickname())
-			.parentId(entity.getParentId())
-			.content(entity.getContent())
-			.isSecret(entity.getIsSecret())
-			.createdOn(entity.getCreatedOn())
-			.build();
+				.id(entity.getId())
+				.nickname(entity.getUsers().getNickname())
+				.parentId(entity.getParentId())
+				.content(entity.getContent())
+				.isSecret(entity.getIsSecret())
+				.createdOn(entity.getCreatedOn())
+				.build();
 	}
 }
