@@ -7,7 +7,7 @@ import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
-import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+//import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
