@@ -13,16 +13,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface FriendRepository extends JpaRepository <Friend, UUID>{
-    Optional<Friend> findById(UUID id);
-    Optional<Users> findByUserId(Users userId);
-    Optional<Users> findByTargetId(Users targetId);
+public interface FriendRepository extends JpaRepository<Friend, UUID> {
+	Optional<Friend> findById(UUID id);
 
-    List<Friend> findAllByUserId(Users user);
-    List<Friend> findAllByTargetId(Users user);
+	Optional<Users> findByUserId(Users userId);
+
+	Optional<Users> findByTargetId(Users targetId);
+
+	List<Friend> findAllByUserId(Users user);
+
+	List<Friend> findAllByTargetId(Users user);
 
 
-    void deleteById(UUID id);
+	void deleteById(UUID id);
 
-    Optional<Friend> findByUserIdAndTargetId(Users id1, Users id2);
+	Optional<Friend> findByUserIdAndTargetId(Users id1, Users id2);
 }

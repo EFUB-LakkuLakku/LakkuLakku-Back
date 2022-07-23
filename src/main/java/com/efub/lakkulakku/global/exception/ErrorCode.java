@@ -12,20 +12,19 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    // Common
-    DUPLICATE_DIARY_DATE(CONFLICT, "C0001", "DUPLICATE_DIARY_EXISTS"),
-    DUPLICATE_NICKNAME(CONFLICT, "C0002", "DUPLICATE_NICKNAME_EXISTS"),
-    DUPLICATE_EMAIL(CONFLICT, "C0003", "DUPLICATE_EMAIL_EXISTS"),
-    DUPLICATE_FRIEND(CONFLICT, "C0004", "DUPLICATE_FRIEND_EXISTS"),
-    USER_NOT_FOUND(NOT_FOUND, "C0005", "USER_NOT_FOUND");
+	// Common
+	DUPLICATE_DIARY_DATE(CONFLICT, "C0001", "DUPLICATE_DIARY_EXISTS"),
+	DUPLICATE_NICKNAME(CONFLICT, "C0002", "DUPLICATE_NICKNAME_EXISTS"),
+	DUPLICATE_EMAIL(CONFLICT, "C0003", "DUPLICATE_EMAIL_EXISTS"),
+	DUPLICATE_FRIEND(CONFLICT, "C0004", "DUPLICATE_FRIEND_EXISTS"),
+	USER_NOT_FOUND(NOT_FOUND, "C0005", "USER_NOT_FOUND");
 
 
+	// Standard
 
-    // Standard
+	// Exception
 
-    // Exception
-
-    private final HttpStatus status;
-    private final String code;
-    private final String message;
+	private final HttpStatus status;
+	private final String code;
+	private final String message;
 }
