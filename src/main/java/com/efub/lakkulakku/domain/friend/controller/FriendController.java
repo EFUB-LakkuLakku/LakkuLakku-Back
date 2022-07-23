@@ -9,6 +9,7 @@ import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class FriendController {
 		Users user = usersRepository.findByNickname("모래").get(); //TODO : Test 유저, 나중에 로그인 된 유저 넣기
 		Optional<Users> target = usersRepository.findByUid(reqDto.getUid());
 		friendService.addFriend(reqDto, user);
-		return ResponseEntity.ok("성공적으로 친구가 되었습니다.");
+		return ResponseEntity.ok(FRIEND_SUCCESS);
 	}
 
 	@GetMapping()
@@ -50,7 +51,7 @@ public class FriendController {
 	public ResponseEntity<?> deleteFriend(@RequestBody FriendReqDto reqDto) {
 		Users user = usersRepository.findByNickname("모래").get(); //TODO : Test 유저, 나중에 로그인 된 유저 넣기
 		friendService.deleteFriend(reqDto, user);
-		return ResponseEntity.ok("성공적으로 친구 끊기가 완료되었습니다.");
+		return ResponseEntity.ok(DELETE_FRIEND_SUCCESS);
 	}
 
 

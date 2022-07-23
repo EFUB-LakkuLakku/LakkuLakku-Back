@@ -10,13 +10,15 @@ import java.util.UUID;
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users, UUID> {
-    boolean existsByNickname(String nickname);
-    boolean existsByEmail(String email);
-    @Query("SELECT u FROM Users u WHERE u.email=:email")
-    Optional<Users> findByEmail(String email);
+	boolean existsByNickname(String nickname);
 
-    @Query("SELECT u FROM Users u WHERE u.nickname=:nickname")
-    Optional<Users> findByNickname(String nickname);
+	boolean existsByEmail(String email);
 
-    Optional<Users> findByUid(Long uid);
+	@Query("SELECT u FROM Users u WHERE u.email=:email")
+	Optional<Users> findByEmail(String email);
+
+	@Query("SELECT u FROM Users u WHERE u.nickname=:nickname")
+	Optional<Users> findByNickname(String nickname);
+
+	Optional<Users> findByUid(Long uid);
 }

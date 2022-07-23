@@ -1,9 +1,12 @@
 spring:
   datasource:
+    config:
+      use-legacy-processing: true
+      profiles: local
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_DB}?serverTimezone=Asia/Seoul
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
+    url: jdbc:mysql://localhost:3306/EFUB?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: Kjy990216!
 
   jpa:
     hibernate:

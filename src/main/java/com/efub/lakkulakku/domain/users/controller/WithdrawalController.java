@@ -19,11 +19,11 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.WITHDRAW_SUCC
 @RequiredArgsConstructor
 public class WithdrawalController {
 
-    private final UsersService usersService;
+	private final UsersService usersService;
 
-    @PostMapping("/withdrawal")
-    public ResponseEntity<LoginResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
-        usersService.deleteUser(withdrawReqDto);
-        return ResponseEntity.ok(LoginResDto.builder().message(WITHDRAW_SUCCESS).build());
-    }
+	@PostMapping("/withdrawal")
+	public ResponseEntity<LoginResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
+		usersService.deleteUser(withdrawReqDto);
+		return ResponseEntity.ok(LoginResDto.builder().message(WITHDRAW_SUCCESS).build());
+	}
 }
