@@ -14,13 +14,13 @@ import javax.validation.constraints.Pattern;
 public class UpdatePasswordDto {
 
     @NotBlank
-    @Length(min=2, max = 16)
+    @Length(min = 2, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!.?,])[A-Za-z\\d!.?,]{2,16}$",
             message = "16자 이내의 영문자 및 숫자와 ?,!,., , 특수문자로 입력해주세요.")
     private String beforePassword;
 
     @NotBlank
-    @Length(min=2, max = 16)
+    @Length(min = 2, max = 16)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!.?,])[A-Za-z\\d!.?,]{2,16}$",
             message = "16자 이내의 영문자 및 숫자와 ?,!,., , 특수문자로 입력해주세요.")
     private String afterPassword;
