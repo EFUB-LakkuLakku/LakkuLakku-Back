@@ -6,23 +6,30 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.efub.lakkulakku.domain.user.dto.ProfileUpdateResDto;
-import com.efub.lakkulakku.domain.user.entity.User;
-import com.efub.lakkulakku.domain.user.repository.UserRepository;
+import com.efub.lakkulakku.domain.file.entity.File;
+import com.efub.lakkulakku.domain.file.repository.FileRepository;
+import com.efub.lakkulakku.domain.profile.ProfileRepository;
+import com.efub.lakkulakku.domain.users.dto.ProfileUpdateResDto;
+import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
 
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final FileRepository fileRepository;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -37,54 +44,77 @@ public class ProfileService {
         }
     }
 
-    public static String buildFileName(String category, String originalFileName) {
+    public static ArrayList<String> buildFileName(String category, String nickname, String originalFileName) {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
         String fileName = originalFileName.substring(0, fileExtensionIndex);
-        String now = String.valueOf(System.currentTimeMillis());
 
-        return category + "/" + fileName + "_" + now + fileExtension;
+        String fullFileName = category + "/" + fileName + "_" + nickname + fileExtension;
+        ArrayList<String> array = new ArrayList<String>(Arrays.asList(fileName, fileExtension, fullFileName));
+
+        return array;
     }
 
-    public String uploadImage(String category, MultipartFile multipartFile) throws Exception {
+    public File uploadImage(String category, String nickname, MultipartFile multipartFile) throws Exception {
         validateFileExists(multipartFile);
 
-        String fileName = buildFileName(category, multipartFile.getOriginalFilename());
+        ArrayList<String> fileInfo = buildFileName(category, nickname, multipartFile.getOriginalFilename());
+        String fullFileName = fileInfo.get(2);
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+            amazonS3Client.putObject(new PutObjectRequest(bucket, fullFileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
             throw new Exception();
         }
 
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        String url = amazonS3Client.getUrl(bucket, fullFileName).toString();
+
+        File file = File.builder()
+                .filename(fileInfo.get(0))
+                .filetype(fileInfo.get(1))
+                .url(url)
+                .build();
+        fileRepository.save(file);
+
+        return file;
     }
 
-    public void deleteImage(String fileName) {
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    public void deleteProfileImage(Users user) {
+        // TODO: s3 특정 파일 삭제 로직 구현
+//        fileRepository.delete(user.getProfile().getFile());
+
+        String fileExtension = user.getProfile().getFile().getFiletype();
+        String fullFileName = "profile/*_" + user.getNickname() + fileExtension;
+
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fullFileName));
     }
 
-    public void updateImage(String category, MultipartFile multipartFile) throws Exception {
-        deleteImage(buildFileName(category, multipartFile.getOriginalFilename()));
-        uploadImage(category, multipartFile);
+    public void updateImage(String category, Users user, MultipartFile multipartFile) throws Exception {
+        if (user.getProfile().getFile() != null) {
+            user.getProfile().getFile();
+            deleteProfileImage(user);
+        } else {
+            System.out.println("유저 프로필이 비어있는 상태입니다.");
+        }
+        File newFile = uploadImage(category, user.getNickname(), multipartFile);
+
+        user.getProfile().updateFile(newFile);
+        profileRepository.save(user.getProfile());
     }
 
-    @Transactional
     public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio) throws Exception {
-        System.out.println("유저: " + nickname);
-        User entity = userRepository.findByNickname(nickname)
+        Users entity = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
 
         if (!image.isEmpty())
-            updateImage("profile", image);
+            updateImage("profile", entity, image);
         if (!bio.isEmpty())
             entity.getProfile().updateBio(bio);
 
-        userRepository.save(entity);
         return new ProfileUpdateResDto(entity);
     }
 }

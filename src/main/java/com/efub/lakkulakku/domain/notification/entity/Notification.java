@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.notification.entity;
 
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +21,12 @@ public class Notification extends BaseTimeEntity {
 	private UUID id;
 
 	@OneToOne
-	@JoinColumn(name = "user_id")
-	private User userId;
+	@JoinColumn(name = "users_id")
+	private Users usersId;
 
 	@OneToOne
 	@JoinColumn(name = "friend_id")
-	private User friendId;
+	private Users friendId;
 
 	private String notiType;
 
