@@ -1,5 +1,7 @@
 package com.efub.lakkulakku.domain.users.service;
 
+import com.efub.lakkulakku.domain.profile.ProfileRepository;
+import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.user.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
@@ -14,10 +16,19 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class UsersService {
     private final UsersRepository usersRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public Users signup(SignupReqDto reqDto) {
-        return usersRepository.save(reqDto.toEntity());
+//        return usersRepository.save(reqDto.toEntity());
+        Users user = usersRepository.save(reqDto.toEntity());
+        Profile profile = Profile.builder()
+                            .file(null)
+                            .users(user)
+                            .bio("반갑습니다 :)")
+                            .build();
+        profileRepository.save(profile);
+        return user;
     }
 
     @Transactional

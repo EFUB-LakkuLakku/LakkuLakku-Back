@@ -34,5 +34,4 @@ public class Friend extends BaseTimeEntity {
         this.userId = userId;
         this.targetId = targetId;
     }
-
 }
