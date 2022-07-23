@@ -9,7 +9,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -19,7 +18,8 @@ public enum ErrorCode {
     DUPLICATE_NICKNAME(CONFLICT, "C0002", "DUPLICATE_NICKNAME_EXISTS"),
     DUPLICATE_EMAIL(CONFLICT, "C0003", "DUPLICATE_EMAIL_EXISTS"),
     USER_NOT_FOUND(NOT_FOUND, "C0004", "CANNOT_FIND_USER"),
-
+    DUPLICATE_FRIEND(CONFLICT, "C0004", "DUPLICATE_FRIEND_EXISTS"),
+    USER_NOT_FOUND(NOT_FOUND, "C0005", "USER_NOT_FOUND");
 
     // Standard
 
