@@ -1,4 +1,4 @@
-package com.efub.lakkulakku.domain.user.dto;
+package com.efub.lakkulakku.domain.users.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +10,11 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class WithdrawReqDto {
 
-    @NotBlank
-    private String nickname;
+	@NotBlank
+	private String nickname;
 
-    @Builder
-    public WithdrawReqDto(String nickname) {
-        this.nickname = nickname;
-    }
+	@Builder
+	public WithdrawReqDto(String nickname) {
+		this.nickname = nickname;
+	}
 }
