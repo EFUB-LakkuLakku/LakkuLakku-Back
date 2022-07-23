@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class ErrorResponse {
-    private HttpStatus status;
-    private ErrorCode code;
-    private String message;
-    private LocalDateTime date = LocalDateTime.now();
+	private HttpStatus status;
+	private ErrorCode code;
+	private String message;
+	private LocalDateTime date = LocalDateTime.now();
 
-    @Builder
-    public ErrorResponse(HttpStatus status, ErrorCode code, String message) {
-        this.status = status;
-        this.code = code;
-        this.message = message;
-    }
+	@Builder
+	public ErrorResponse(HttpStatus status, ErrorCode code, String message) {
+		this.status = status;
+		this.code = code;
+		this.message = message;
+	}
 }

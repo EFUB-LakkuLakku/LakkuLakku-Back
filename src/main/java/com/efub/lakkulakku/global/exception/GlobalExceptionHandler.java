@@ -3,8 +3,8 @@ package com.efub.lakkulakku.global.exception;
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
-import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
@@ -60,18 +60,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @ExceptionHandler(DuplicateFriendException.class)
+    protected final ResponseEntity<ErrorResponse> handleDuplicateFriendException(DuplicateFriendException e) {
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(ErrorCode.DUPLICATE_FRIEND)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
     // 존재하지 않는 유저
     @ExceptionHandler(UserNotFoundException.class)
     protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
         final ErrorResponse response = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(ErrorCode.USER_NOT_FOUND)
-
-    @ExceptionHandler(DuplicateFriendException.class)
-    protected final ResponseEntity<ErrorResponse> handleDuplicateFriendException(DuplicateFriendException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_FRIEND)
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -94,12 +98,6 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(ErrorCode.FILE_UPLOAD_FAILURE)
-
-    @ExceptionHandler(UserNotFoundException.class)
-    protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.USER_NOT_FOUND)
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);
