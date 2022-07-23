@@ -18,11 +18,6 @@ jobs:
           touch .env
           echo "${{ secrets.ENV_VARS }}" >> .env
 
-      - name: create application yml file
-        run: |
-          touch /home/ubuntu/srv/ubuntu/src/main/resources/application.yml
-          echo "${{ secrets.APP_YML }}" >> /home/ubuntu/srv/ubuntu/src/main/resources/application.yml
-
       - name: create remote directory
         uses: appleboy/ssh-action@master
         with:
@@ -40,16 +35,14 @@ jobs:
           remote_user: ubuntu
           remote_key: ${{ secrets.KEY }}
 
-      - name: delete useless images and containers
+      - name: swap memory configuration
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo yes y | sudo docker image prune
-            sudo yes y | sudo docker container prune
-            sudo yes y | sudo docker system prune -af
+            sh /home/ubuntu/srv/ubuntu/config/scripts/memory.sh
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
@@ -59,3 +52,12 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             sh /home/ubuntu/srv/ubuntu/config/scripts/deploy.sh
+
+      - name: delete unused images and containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            sh /home/ubuntu/srv/ubuntu/config/scripts/delete.sh

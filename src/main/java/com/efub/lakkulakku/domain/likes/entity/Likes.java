@@ -16,17 +16,17 @@ import java.util.UUID;
 
 public class Likes extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(length = 16)
-    private UUID id;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(length = 16)
+	private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_id")
-    private Diary diary;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "diary_id")
+	private Diary diary;
 
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private Users users;
+	@ManyToOne
+	@JoinColumn(name = "users_id")
+	private Users users;
 }
