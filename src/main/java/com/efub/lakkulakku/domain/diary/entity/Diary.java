@@ -1,7 +1,8 @@
 package com.efub.lakkulakku.domain.diary.entity;
 
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-//import com.efub.lakkulakku.domain.diary.dto.DiaryResDto;
+import com.efub.lakkulakku.domain.diary.dto.DiaryInfoResDto;
+import com.efub.lakkulakku.domain.diary.dto.DiaryResDto;
 import com.efub.lakkulakku.domain.image.entity.Image;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
@@ -33,7 +34,7 @@ public class Diary extends BaseTimeEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "users_id")
-	private Users users;
+	private Users user;
 
 	@Column(length = 10)
 	@NotNull
@@ -46,23 +47,23 @@ public class Diary extends BaseTimeEntity {
 	@Column(length = 5)
 	private String titleEmoji;
 
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments = new ArrayList<>();
 
 	@OneToOne
 	@JoinColumn(name = "template_id")
 	private Template template;
 
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Image> images = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Likes> likes = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Text> texts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary")
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Sticker> stickers = new ArrayList<>();
 
 	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
@@ -78,8 +79,17 @@ public class Diary extends BaseTimeEntity {
 	}
 
 	@Builder
-	public Diary(Users user, String date) {
-		this.users = users;
+	public Diary(Users user, String date, String title, String titleEmoji, List<Comment> comments, Template template,
+				 List<Image> images, List<Likes> likes, List<Text> texts, List<Sticker> stickers) {
+		this.user = user;
 		this.date = date;
+		this.title = title;
+		this.titleEmoji = titleEmoji;
+		this.comments = comments;
+		this.template = template;
+		this.images = images;
+		this.likes = likes;
+		this.texts = texts;
+		this.stickers = stickers;
 	}
 }
