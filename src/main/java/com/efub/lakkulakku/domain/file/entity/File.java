@@ -1,6 +1,7 @@
 package com.efub.lakkulakku.domain.file.entity;
 
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,5 +33,17 @@ public class File extends BaseTimeEntity {
 
 	@NotNull
 	private String url;
+
+	@Builder
+	public File(String filename, String filetype, String url)
+	{
+		this.filename = filename;
+		this.filetype = filetype;
+		this.url = url;
+	}
+
+	public void updateImage(String image){
+		this.url = image;
+	}
 
 }

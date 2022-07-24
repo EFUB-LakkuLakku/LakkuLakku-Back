@@ -1,5 +1,4 @@
 package com.efub.lakkulakku.domain.diary.exception;
-
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 public class DiaryNotFoundException extends ResourceNotFoundException {

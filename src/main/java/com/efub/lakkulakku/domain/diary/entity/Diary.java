@@ -3,11 +3,11 @@ package com.efub.lakkulakku.domain.diary.entity;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
 //import com.efub.lakkulakku.domain.diary.dto.DiaryResDto;
 import com.efub.lakkulakku.domain.image.entity.Image;
-import com.efub.lakkulakku.domain.like.entity.Like;
+import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.text.entity.Text;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,8 +32,8 @@ public class Diary extends BaseTimeEntity {
 	private UUID id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "users_id")
+	private Users users;
 
 	@Column(length = 10)
 	@NotNull
@@ -57,7 +57,7 @@ public class Diary extends BaseTimeEntity {
 	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "diary")
-	private List<Like> likes = new ArrayList<>();
+	private List<Likes> likes = new ArrayList<>();
 
 	@OneToMany(mappedBy = "diary")
 	private List<Text> texts = new ArrayList<>();
@@ -65,10 +65,10 @@ public class Diary extends BaseTimeEntity {
 	@OneToMany(mappedBy = "diary")
 	private List<Sticker> stickers = new ArrayList<>();
 
-	@Column(length = 10)
+	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
 	private Integer cntComment;
 
-	@Column(length = 10)
+	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
 	private Integer cntLike;
 
 	@PrePersist
@@ -78,8 +78,8 @@ public class Diary extends BaseTimeEntity {
 	}
 
 	@Builder
-	public Diary(User user, String date) {
-		this.user = user;
+	public Diary(Users users, String date) {
+		this.users = users;
 		this.date = date;
 	}
 }
