@@ -8,6 +8,7 @@ import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 //import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.likes.exception.DiaryNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +81,17 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
+    
+    // 존재하지 않는 다이어리
+	  @ExceptionHandler(DiaryNotFoundException.class)
+	  protected final ResponseEntity<ErrorResponse> handleDiaryNotFoundException(DiaryNotFoundException e) {
+		   final ErrorResponse response = ErrorResponse.builder()
+				         .status(HttpStatus.BAD_REQUEST)
+				         .code(ErrorCode.DIARY_NOT_FOUND)
+				         .message(e.getMessage())
+				         .build();
+		    return ResponseEntity.status(response.getStatus()).body(response);
+  	}
 
     // io 예외
     @ExceptionHandler(S3IOException.class)
