@@ -5,6 +5,7 @@ import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.user.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
+import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UsersService {
+
     private final UsersRepository usersRepository;
     private final ProfileRepository profileRepository;
 
@@ -43,6 +45,4 @@ public class UsersService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
         usersRepository.delete(users);
     }
-
-
 }
