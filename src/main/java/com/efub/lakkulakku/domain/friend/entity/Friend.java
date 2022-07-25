@@ -15,23 +15,23 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Friend extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(length = 16)
-    private UUID id;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	@Column(length = 16)
+	private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private Users userId;
+	@ManyToOne
+	@JoinColumn(name = "users_id")
+	private Users userId;
 
-    @ManyToOne
-    @JoinColumn(name = "target_id")
-    private Users targetId;
+	@ManyToOne
+	@JoinColumn(name = "target_id")
+	private Users targetId;
 
-    @Builder
-    public Friend(Users userId, Users targetId) {
-        this.userId = userId;
-        this.targetId = targetId;
-    }
+	@Builder
+	public Friend(Users userId, Users targetId) {
+		this.userId = userId;
+		this.targetId = targetId;
+	}
 }
