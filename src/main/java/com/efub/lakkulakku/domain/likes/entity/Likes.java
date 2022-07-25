@@ -13,7 +13,6 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-
 public class Likes extends BaseTimeEntity {
 
 	@Id

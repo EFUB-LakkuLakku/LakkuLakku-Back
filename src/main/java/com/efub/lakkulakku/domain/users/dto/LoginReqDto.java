@@ -10,15 +10,15 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class LoginReqDto {
 
-    @NotBlank
-    private String email;
+	@NotBlank
+	private String email;
 
-    @NotBlank
-    private String password;
+	@NotBlank
+	private String password;
 
-    @Builder
-    public LoginReqDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+	@Builder
+	public LoginReqDto(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 }
