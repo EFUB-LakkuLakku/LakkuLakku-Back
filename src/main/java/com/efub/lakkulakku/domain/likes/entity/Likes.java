@@ -1,10 +1,10 @@
-package com.efub.lakkulakku.domain.like.entity;
+package com.efub.lakkulakku.domain.likes.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jdk.jshell.Snippet;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,8 +12,12 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-public class Like extends BaseTimeEntity {
+
+public class Likes extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(generator = "uuid2")
@@ -26,6 +30,8 @@ public class Like extends BaseTimeEntity {
 	private Diary diary;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "users_id")
+	private Users users;
+
+
 }
