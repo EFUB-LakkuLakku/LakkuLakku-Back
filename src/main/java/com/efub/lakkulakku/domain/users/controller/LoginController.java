@@ -55,8 +55,14 @@ public class LoginController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
-		String token = usersService.login(loginDto.getEmail(), loginDto.getPassword());
-		return new ResponseEntity<LoginResDto>(new LoginResDto(token), HttpStatus.OK);
+		LoginResDto responseDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
+		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
+
+	@GetMapping("/re-issue")
+	public ResponseEntity<LoginResDto> reIssue(@RequestParam("email") String email, @RequestParam("refreshToken") String refreshToken) {
+		LoginResDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
+		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
 
 }
