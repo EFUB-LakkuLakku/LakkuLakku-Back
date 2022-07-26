@@ -11,6 +11,9 @@ spring:
     generate-ddl: true
     show-sql: true
 
+  jwt:
+    secret-key: ${SECRET-KEY}
+
 cloud:
   aws:
     credentials:
