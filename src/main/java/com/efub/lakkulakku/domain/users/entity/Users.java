@@ -42,11 +42,14 @@ public class Users extends BaseTimeEntity {
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 
+
+	private String role;
 	@Builder
-	public Users(Long uid, String email, String password, String nickname) {
+	public Users(Long uid, String email, String password, String nickname, String role) {
 		this.uid = uid;
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
+		this.role = role;
 	}
 }

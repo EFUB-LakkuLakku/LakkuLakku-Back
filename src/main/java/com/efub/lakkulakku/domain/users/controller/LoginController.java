@@ -9,6 +9,7 @@ import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,6 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGIN_SUCCESS
 public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
-
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody SignupReqDto reqDto) {
@@ -50,16 +50,13 @@ public class LoginController {
 		}
 	}
 
+
+
+
 	@PostMapping("/login")
-	public ResponseEntity<LoginResDto> login(@Valid @RequestBody LoginReqDto loginReqDto) {
-		Users user = usersService.findUsersByEmail(loginReqDto);
-
-		if (!loginReqDto.getPassword().matches(user.getPassword())) {
-			throw new RuntimeException("잘못된 비밀번호입니다.");  // TODO: 에러 핸들링 후 코드 변경
-		}
-
-		// TODO: jwt 추가 후 data null -> token
-		return ResponseEntity.ok(LoginResDto.builder().message(LOGIN_SUCCESS).data(null).build());
+	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
+		String token = usersService.login(loginDto.getEmail(), loginDto.getPassword());
+		return new ResponseEntity<LoginResDto>(new LoginResDto(token), HttpStatus.OK);
 	}
 
 }
