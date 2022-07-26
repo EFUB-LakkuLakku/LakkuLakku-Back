@@ -5,6 +5,8 @@ import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import jdk.jshell.Snippet;
 import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,11 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-
 public class Likes extends BaseTimeEntity {
 
 	@Id
@@ -32,6 +30,4 @@ public class Likes extends BaseTimeEntity {
 	@ManyToOne
 	@JoinColumn(name = "users_id")
 	private Users users;
-
-
 }

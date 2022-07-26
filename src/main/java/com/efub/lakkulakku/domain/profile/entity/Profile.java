@@ -1,8 +1,9 @@
 package com.efub.lakkulakku.domain.profile.entity;
 
 import com.efub.lakkulakku.domain.file.entity.File;
-import com.efub.lakkulakku.domain.user.entity.User;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,5 +27,23 @@ public class Profile extends BaseTimeEntity {
 	private File file;
 
 	@OneToOne
-	private User user;
+	private Users users;
+
+	private String bio;
+
+	@Builder
+	public Profile(File file, Users users, String bio)
+	{
+		this.file = file;
+		this.users = users;
+		this.bio = bio;
+	}
+
+	public void updateBio(String bio){
+		this.bio = bio;
+	}
+
+	public void updateFile(File file){
+		this.file = file;
+	}
 }
