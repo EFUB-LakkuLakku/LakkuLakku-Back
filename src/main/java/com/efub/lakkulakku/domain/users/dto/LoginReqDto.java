@@ -21,4 +21,6 @@ public class LoginReqDto {
 		this.email = email;
 		this.password = password;
 	}
+
+
 }
