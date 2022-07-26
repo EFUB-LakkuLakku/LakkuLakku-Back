@@ -63,5 +63,4 @@ public class Text extends BaseTimeEntity {
 	@Column(length = 20)
 	@NotNull
 	private String ycoord;
-
 }

@@ -21,7 +21,7 @@ public class Friend extends BaseTimeEntity {
     @Column(length = 16)
     private UUID id;
 
-    @ManyToOne //변경 부분
+    @ManyToOne
     @JoinColumn(name = "users_id")
     private Users userId;
 

@@ -1,7 +1,7 @@
 package com.efub.lakkulakku.domain.users.controller;
 
-import com.efub.lakkulakku.domain.user.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
+import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.WITHDRAW_SUCC
 @RequiredArgsConstructor
 public class WithdrawalController {
 
-    private final UsersService usersService;
+	private final UsersService usersService;
 
-    @PostMapping("/withdrawal")
-    public ResponseEntity<LoginResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
-        usersService.deleteUser(withdrawReqDto);
-        return ResponseEntity.ok(LoginResDto.builder().message(WITHDRAW_SUCCESS).build());
-    }
+	@PostMapping("/withdrawal")
+	public ResponseEntity<LoginResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
+		usersService.deleteUser(withdrawReqDto);
+		return ResponseEntity.ok(LoginResDto.builder().message(WITHDRAW_SUCCESS).build());
+	}
 }

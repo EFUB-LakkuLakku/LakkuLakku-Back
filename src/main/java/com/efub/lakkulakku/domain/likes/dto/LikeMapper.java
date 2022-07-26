@@ -18,4 +18,8 @@ public class LikeMapper {
 				.createdOn(entity.getCreatedOn())
 				.build();
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9f51a6020de79553c3490404677e79779253420c

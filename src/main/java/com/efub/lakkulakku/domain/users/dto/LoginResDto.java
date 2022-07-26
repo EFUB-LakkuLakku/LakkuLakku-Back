@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResDto {
 
-    private String message;
-    private Object data;  // TODO: token
+	private String message;
+	private Object data;  // TODO: token
 
-    @Builder
-    public LoginResDto(String message, Object data) {
-        this.message = message;
-        this.data = data;
-    }
+	@Builder
+	public LoginResDto(String message, Object data) {
+		this.message = message;
+		this.data = data;
+	}
 }
