@@ -5,6 +5,7 @@ import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
+import com.efub.lakkulakku.domain.users.exception.BadTokenRequestException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 //import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
@@ -98,6 +99,17 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(ErrorCode.FILE_UPLOAD_FAILURE)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    // Security
+    @ExceptionHandler(BadTokenRequestException.class)
+    protected final ResponseEntity<ErrorResponse> handleBadTokenRequestException(BadTokenRequestException e) {
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(ErrorCode.TOKEN_VALIDATE_FAILURE)
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);
