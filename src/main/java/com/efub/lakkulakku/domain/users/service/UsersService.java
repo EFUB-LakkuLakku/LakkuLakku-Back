@@ -29,7 +29,6 @@ public class UsersService {
 
     @Transactional
     public Users signup(SignupReqDto reqDto) {
-//        return usersRepository.save(reqDto.toEntity());
         Users user = usersRepository.save(reqDto.toEntity());
         Profile profile = Profile.builder()
                             .file(null)
@@ -48,7 +47,7 @@ public class UsersService {
 
     public String login(String email, String password) {
         Users user = usersRepository
-                .findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+                .findByEmail(email).orElseThrow(UserNotFoundException::new);
         checkPassword(password, user.getPassword());
         return jwtProvider.createToken(user.getEmail(), user.getRole());
     }

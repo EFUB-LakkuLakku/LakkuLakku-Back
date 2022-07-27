@@ -55,7 +55,6 @@ public class DiaryService {
 	public void updateDiary(String date, DiaryInfoResDto diaryInfoResDto) {
 		Diary diary = diaryRepository.findByDate(date)
 				.orElseThrow(DiaryNotFoundException::new);
-
 		//diary.updateDiary(diaryInfoResDto.getDiary());
 	}
 }
