@@ -1,19 +1,24 @@
 package com.efub.lakkulakku.global.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.efub.lakkulakku.domain.users.service.CustomUsersDetailsService;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
+
+	private final CustomUsersDetailsService customUsersDetailsService;
 	@Value("${spring.jwt.secret-key}")
 	private String SECRET_KEY;
 	private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
@@ -35,5 +40,28 @@ public class JwtProvider {
 				.setExpiration(new Date(date.getTime() + TOKEN_VALID_TIME)) // 토큰 유효 시간 저장
 				.signWith(SignatureAlgorithm.HS256, SECRET_KEY) // 해싱 알고리즘 및 키 설정
 				.compact(); // 생성
+	}
+
+	public Authentication validateToken(HttpServletRequest request, String token) {
+		String exception = "exception";
+		try {
+			Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+			return getAuthentication(token);
+		} catch (MalformedJwtException | SignatureException | UnsupportedJwtException e) {
+			request.setAttribute(exception, "토큰의 형식을 확인하세요.");
+		} catch (ExpiredJwtException e) {
+			request.setAttribute(exception, "토큰이 만료되었습니다.");
+		} catch (IllegalArgumentException e) {
+			request.setAttribute(exception, "JWT compact of handler are invalid");
+		} return null;
+	}
+
+	private Authentication getAuthentication(String token) {
+		UserDetails userDetails = customUsersDetailsService.loadUserByUsername(getUserEmail(token));
+		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+	}
+
+	private String getUserEmail(String token){
+		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
 	}
 }
