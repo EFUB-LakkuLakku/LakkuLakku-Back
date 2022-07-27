@@ -9,6 +9,7 @@ import com.efub.lakkulakku.domain.users.exception.BadTokenRequestException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 //import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.users.exception.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,6 +111,16 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(ErrorCode.TOKEN_VALIDATE_FAILURE)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    protected final ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(ErrorCode.TOKEN_EXPIRED)
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(response.getStatus()).body(response);

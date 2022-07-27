@@ -3,9 +3,7 @@ package com.efub.lakkulakku.domain.users.service;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.profile.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
-import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
-import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
-import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
+import com.efub.lakkulakku.domain.users.dto.*;
 import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.PasswordNotMatchedException;
@@ -21,11 +19,11 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 public class UsersService {
 
-    private final UsersRepository usersRepository;
-    private final ProfileRepository profileRepository;
+	private final UsersRepository usersRepository;
+	private final ProfileRepository profileRepository;
 
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtProvider jwtProvider;
 
     @Transactional
     public Users signup(SignupReqDto reqDto) {
@@ -39,32 +37,41 @@ public class UsersService {
         return user;
     }
 
-    @Transactional
-    public Users findUsersByEmail(LoginReqDto loginReqDto) {
-        return usersRepository.findByEmail(loginReqDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
-    }
+	@Transactional
+	public Users findUsersByEmail(LoginReqDto loginReqDto) {
+		return usersRepository.findByEmail(loginReqDto.getEmail())
+				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+	}
 
-    public String login(String email, String password) {
-        Users user = usersRepository
-                .findByEmail(email).orElseThrow(UserNotFoundException::new);
-        checkPassword(password, user.getPassword());
-        return jwtProvider.createToken(user.getEmail(), user.getRole());
-    }
+	public LoginResDto login(String email, String password) {
+		Users user = usersRepository
+				.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+		checkPassword(password, user.getPassword());
+		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
+		return new LoginResDto(accessToken, refreshToken);
+	}
 
-    private void checkPassword(String password, String encodedPassword) {
-        boolean isSame = passwordEncoder.matches(password, encodedPassword);
-        if(!isSame) {
-            throw new PasswordNotMatchedException();
-        }
-    }
+	public LoginResDto reIssueAccessToken(String email, String refreshToken) {
+		Users user = usersRepository.findByEmail(email).orElseThrow(() -> new com.efub.lakkulakku.domain.users.exception.UserNotFoundException());
+		jwtProvider.checkRefreshToken(email, refreshToken);
+		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+		return new LoginResDto(accessToken, refreshToken);
+	}
 
-    @Transactional
-    public void deleteUser(WithdrawReqDto withdrawReqDto) {
-        Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
-        usersRepository.delete(users);
-    }
+	private void checkPassword(String password, String encodedPassword) {
+		boolean isSame = passwordEncoder.matches(password, encodedPassword);
+		if (!isSame) {
+			throw new PasswordNotMatchedException();
+		}
+	}
+
+	@Transactional
+	public void deleteUser(WithdrawReqDto withdrawReqDto) {
+		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
+				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+		usersRepository.delete(users);
+	}
 
 
 }
