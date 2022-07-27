@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.users.controller;
 
+
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGIN_SUCCESS;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -36,7 +37,7 @@ public class LoginController {
 		if (usersRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();
 		} else {
-			return ResponseEntity.ok("사용할 수 있는 이메일입니다.");
+			return ResponseEntity.ok(AVAILABLE_EMAIL);
 
 		}
 	}
@@ -46,7 +47,8 @@ public class LoginController {
 		if (usersRepository.existsByNickname(nickname)) {
 			throw new DuplicateNicknameException();
 		} else {
-			return ResponseEntity.ok("사용할 수 있는 닉네임입니다.");
+			return ResponseEntity.ok(AVAILABLE_NICKNAME);
+
 		}
 	}
 
