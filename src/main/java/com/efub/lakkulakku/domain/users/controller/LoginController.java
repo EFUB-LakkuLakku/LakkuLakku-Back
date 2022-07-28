@@ -31,6 +31,7 @@ public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
 
+
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
@@ -56,7 +57,6 @@ public class LoginController {
 			return ResponseEntity.ok("사용할 수 있는 닉네임입니다.");
 		}
 	}
-
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
