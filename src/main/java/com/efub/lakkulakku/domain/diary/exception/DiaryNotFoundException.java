@@ -6,4 +6,9 @@ public class DiaryNotFoundException extends ResourceNotFoundException {
 	public DiaryNotFoundException() {
 		super("해당 다이어리를 찾을 수 없습니다");
 	}
+
+	@Override
+	public String getMessage() {
+		return super.getMessage();
+	}
 }

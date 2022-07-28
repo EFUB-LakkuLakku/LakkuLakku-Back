@@ -3,10 +3,13 @@ package com.efub.lakkulakku.global.exception;
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
+import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
+import com.efub.lakkulakku.domain.users.exception.BadTokenRequestException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 //import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.users.exception.TokenExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,57 +20,57 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Diary 관련 error handler
-    @ExceptionHandler(DuplicateDiaryException.class)
-    protected final ResponseEntity<ErrorResponse> handleDuplicateDiaryException(DuplicateDiaryException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_DIARY_DATE)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+	// Diary 관련 error handler
+	@ExceptionHandler(DuplicateDiaryException.class)
+	protected final ResponseEntity<ErrorResponse> handleDuplicateDiaryException(DuplicateDiaryException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.DUPLICATE_DIARY_DATE)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
-    // 기본적인 RunTimeException handler
-    @ExceptionHandler(RuntimeException.class)
-    protected final ResponseEntity<ErrorResponse> handleRunTimeException(RuntimeException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_DIARY_DATE)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+	// 기본적인 RunTimeException handler
+	@ExceptionHandler(RuntimeException.class)
+	protected final ResponseEntity<ErrorResponse> handleRunTimeException(RuntimeException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.DUPLICATE_DIARY_DATE)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
-    @ExceptionHandler(DuplicateEmailException.class)
-    protected final ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_EMAIL)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+	@ExceptionHandler(DuplicateEmailException.class)
+	protected final ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.DUPLICATE_EMAIL)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
-    @ExceptionHandler(DuplicateNicknameException.class)
-    protected final ResponseEntity<ErrorResponse> handleDuplicateNicknameException(DuplicateNicknameException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_NICKNAME)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+	@ExceptionHandler(DuplicateNicknameException.class)
+	protected final ResponseEntity<ErrorResponse> handleDuplicateNicknameException(DuplicateNicknameException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.DUPLICATE_NICKNAME)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
-    @ExceptionHandler(DuplicateFriendException.class)
-    protected final ResponseEntity<ErrorResponse> handleDuplicateFriendException(DuplicateFriendException e) {
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(ErrorCode.DUPLICATE_FRIEND)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+	@ExceptionHandler(DuplicateFriendException.class)
+	protected final ResponseEntity<ErrorResponse> handleDuplicateFriendException(DuplicateFriendException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.DUPLICATE_FRIEND)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
 	// 존재하지 않는 유저
 	@ExceptionHandler(UserNotFoundException.class)
@@ -101,6 +104,25 @@ public class GlobalExceptionHandler {
 				.build();
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
+
+	// Security
+	@ExceptionHandler(BadTokenRequestException.class)
+	protected final ResponseEntity<ErrorResponse> handleBadTokenRequestException(BadTokenRequestException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.TOKEN_VALIDATE_FAILURE)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	@ExceptionHandler(TokenExpiredException.class)
+	protected final ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.TOKEN_EXPIRED)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 }
-
-

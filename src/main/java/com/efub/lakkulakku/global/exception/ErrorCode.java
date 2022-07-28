@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -22,9 +19,14 @@ public enum ErrorCode {
 
 	// Standard
 
-	// Exception
-	S3_UPLOAD_FAILURE(INTERNAL_SERVER_ERROR, "E0001", "NETWORK_FAILURE"),
-	FILE_UPLOAD_FAILURE(BAD_REQUEST, "E0002", "WRONG_FILE_TYPE");
+    // Exception
+    S3_UPLOAD_FAILURE(INTERNAL_SERVER_ERROR, "E0001", "NETWORK_FAILURE"),
+    FILE_UPLOAD_FAILURE(BAD_REQUEST, "E0002", "WRONG_FILE_TYPE"),
+    TOKEN_VALIDATE_FAILURE(BAD_REQUEST, "E1001", "INVALID_TOKEN"),
+    TOKEN_EXPIRED(BAD_REQUEST, "E1002", "TOKEN_EXPIRED"),
+
+    //SUCCESS
+    LOGOUT_SUCCESS(OK, "S0001", "LOGOUT_SUCCESS");
 
     private final HttpStatus status;
     private final String code;

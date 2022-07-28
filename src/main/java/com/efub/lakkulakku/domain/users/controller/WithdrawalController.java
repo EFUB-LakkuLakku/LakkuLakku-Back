@@ -21,9 +21,9 @@ public class WithdrawalController {
 
 	private final UsersService usersService;
 
-	@PostMapping("/withdrawal")
+	/*@PostMapping("/withdrawal")
 	public ResponseEntity<LoginResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
 		usersService.deleteUser(withdrawReqDto);
 		return ResponseEntity.ok(LoginResDto.builder().message(WITHDRAW_SUCCESS).build());
-	}
+	}*/
 }

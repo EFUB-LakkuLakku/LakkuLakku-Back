@@ -3,7 +3,6 @@ package com.efub.lakkulakku.domain.users.entity;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -45,6 +42,7 @@ public class Users extends BaseTimeEntity {
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 
+	private String role;
 
 	@Builder
 	public Users(Long uid, String email, String password, String nickname) {
@@ -52,5 +50,6 @@ public class Users extends BaseTimeEntity {
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
+		role = "USER";
 	}
 }
