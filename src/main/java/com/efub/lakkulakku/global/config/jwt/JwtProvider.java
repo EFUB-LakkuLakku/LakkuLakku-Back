@@ -27,9 +27,14 @@ public class JwtProvider {
 	private final CustomUsersDetailsService customUsersDetailsService;
 	@Value("${spring.jwt.secret-key}")
 	private String SECRET_KEY;
+
+
 	private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
 
 	private final RedisService redisService;
+
+	@Value("${spring.jwt.blacklist.access-token}")
+	private String blackListATPrefix;
 
 	// 의존성 주입 후, 초기화를 수행
 	// 객체 초기화, secretKey Base64로 인코딩한다.
@@ -65,6 +70,10 @@ public class JwtProvider {
 	public Authentication validateToken(HttpServletRequest request, String token) {
 		String exception = "exception";
 		try {
+			String expiredAT = redisService.getValues(blackListATPrefix + token);
+			if (expiredAT != null) {
+				throw new ExpiredJwtException(null, null, null);
+			}
 			Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
 			return getAuthentication(token);
 		} catch (MalformedJwtException | SignatureException | UnsupportedJwtException e) {
@@ -73,7 +82,8 @@ public class JwtProvider {
 			request.setAttribute(exception, "토큰이 만료되었습니다.");
 		} catch (IllegalArgumentException e) {
 			request.setAttribute(exception, "JWT compact of handler are invalid");
-		} return null;
+		}
+		return null;
 	}
 
 	private Authentication getAuthentication(String token) {
@@ -90,5 +100,12 @@ public class JwtProvider {
 		if (!refreshToken.equals(redisRT)) {
 			throw new TokenExpiredException();
 		}
+	}
+
+	public void logout(String userId, String accessToken) {
+		Date expiration = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().getExpiration();
+		long expiredAccessTokenTime = expiration.getTime() - new Date().getTime();
+		redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
+		redisService.deleteValues(userId); // Delete RefreshToken In Redis
 	}
 }

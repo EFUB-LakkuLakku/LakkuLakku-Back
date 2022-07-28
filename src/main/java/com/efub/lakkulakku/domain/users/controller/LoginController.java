@@ -7,15 +7,22 @@ import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import com.efub.lakkulakku.domain.users.service.UsersService;
+import com.efub.lakkulakku.global.exception.ErrorCode;
+import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGIN_SUCCESS;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGOUT_SUCCESS;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -61,6 +68,15 @@ public class LoginController {
 	public ResponseEntity<LoginResDto> reIssue(@RequestParam("email") String email, @RequestParam("refreshToken") String refreshToken) {
 		LoginResDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity<BasicResponse> logout(@AuthUsers Users user, HttpServletRequest request) {
+		String accessToken = request.getHeader("Authorization").substring(7);
+		usersService.logout(user.getEmail(), accessToken);
+		BasicResponse response = new BasicResponse(HttpStatus.OK, ErrorCode.LOGOUT_SUCCESS, LOGOUT_SUCCESS);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 }

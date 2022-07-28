@@ -25,17 +25,17 @@ public class UsersService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
-    @Transactional
-    public Users signup(SignupReqDto reqDto) {
-        Users user = usersRepository.save(reqDto.toEntity());
-        Profile profile = Profile.builder()
-                            .file(null)
-                            .users(user)
-                            .bio("반갑습니다 :)")
-                            .build();
-        profileRepository.save(profile);
-        return user;
-    }
+	@Transactional
+	public Users signup(SignupReqDto reqDto) {
+		Users user = usersRepository.save(reqDto.toEntity());
+		Profile profile = Profile.builder()
+				.file(null)
+				.users(user)
+				.bio("반갑습니다 :)")
+				.build();
+		profileRepository.save(profile);
+		return user;
+	}
 
 	@Transactional
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
@@ -64,6 +64,11 @@ public class UsersService {
 		if (!isSame) {
 			throw new PasswordNotMatchedException();
 		}
+
+	}
+
+	public void logout(String email, String accessToken) {
+		jwtProvider.logout(email, accessToken);
 	}
 
 	@Transactional

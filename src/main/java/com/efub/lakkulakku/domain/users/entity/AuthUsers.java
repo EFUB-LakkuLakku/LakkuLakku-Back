@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 public class AuthUsers extends User {
-
 	private final Users users;
 
 	public AuthUsers(Users users) {
