@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FriendResDto {
 	private Long uid;
-	private Profile profile_image_id;
+	private String profileImageUrl;
 	private String nickname;
 
 
 	@Builder
 	public FriendResDto(Users user) {
 		this.uid = user.getUid();
-		this.profile_image_id = user.getProfile();
+		this.profileImageUrl = user.getProfile().getFile().getUrl();
 		this.nickname = user.getNickname();
 	}
 
