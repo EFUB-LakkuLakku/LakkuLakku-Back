@@ -4,6 +4,7 @@ public class ResponseConstant {
 
 	// Users
 	public static final String LOGIN_SUCCESS = "성공적으로 로그인되었습니다.";
+
 	public static final String WITHDRAW_SUCCESS = "성공적으로 탈퇴되었습니다.";
 	public static final String AVAILABLE_NICKNAME = "사용할 수 있는 닉네임입니다.";
 	public static final String AVAILABLE_EMAIL = "사용할 수 있는 이메일입니다.";

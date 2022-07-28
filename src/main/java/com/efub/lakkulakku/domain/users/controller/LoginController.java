@@ -12,17 +12,14 @@ import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.exception.ErrorCode;
 import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
-import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGIN_SUCCESS;
-import static com.efub.lakkulakku.global.constant.ResponseConstant.LOGOUT_SUCCESS;
+
+import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -44,7 +41,7 @@ public class LoginController {
 		if (usersRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();
 		} else {
-			return ResponseEntity.ok("사용할 수 있는 이메일입니다.");
+			return ResponseEntity.ok(AVAILABLE_NICKNAME);
 
 		}
 	}
@@ -54,7 +51,7 @@ public class LoginController {
 		if (usersRepository.existsByNickname(nickname)) {
 			throw new DuplicateNicknameException();
 		} else {
-			return ResponseEntity.ok("사용할 수 있는 닉네임입니다.");
+			return ResponseEntity.ok(AVAILABLE_NICKNAME);
 		}
 	}
 
@@ -74,7 +71,7 @@ public class LoginController {
 	public ResponseEntity<BasicResponse> logout(@AuthUsers Users user, HttpServletRequest request) {
 		String accessToken = request.getHeader("Authorization").substring(7);
 		usersService.logout(user.getEmail(), accessToken);
-		BasicResponse response = new BasicResponse(HttpStatus.OK, ErrorCode.LOGOUT_SUCCESS, LOGOUT_SUCCESS);
+		BasicResponse response = new BasicResponse(HttpStatus.OK, ErrorCode.LOGOUT_SUCCESS, "LOGOUT_SUCCESS");
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
