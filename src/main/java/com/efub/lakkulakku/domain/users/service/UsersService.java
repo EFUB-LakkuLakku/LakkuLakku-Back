@@ -40,12 +40,12 @@ public class UsersService {
 	@Transactional
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
 		return usersRepository.findByEmail(loginReqDto.getEmail())
-				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 	public LoginResDto login(String email, String password) {
 		Users user = usersRepository
-				.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+				.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		checkPassword(password, user.getPassword());
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
@@ -53,7 +53,7 @@ public class UsersService {
 	}
 
 	public LoginResDto reIssueAccessToken(String email, String refreshToken) {
-		Users user = usersRepository.findByEmail(email).orElseThrow(() -> new com.efub.lakkulakku.domain.users.exception.UserNotFoundException());
+		Users user = usersRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		jwtProvider.checkRefreshToken(email, refreshToken);
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		return new LoginResDto(accessToken, refreshToken);
@@ -74,7 +74,7 @@ public class UsersService {
 	@Transactional
 	public void deleteUser(WithdrawReqDto withdrawReqDto) {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
-				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+				.orElseThrow(UserNotFoundException::new);
 		usersRepository.delete(users);
 	}
 
