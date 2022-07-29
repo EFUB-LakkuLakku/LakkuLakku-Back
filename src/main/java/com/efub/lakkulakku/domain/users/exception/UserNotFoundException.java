@@ -1,13 +1,15 @@
 package com.efub.lakkulakku.domain.users.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.NOTFOUND_USER;
+
 public class UserNotFoundException extends IllegalArgumentException {
 
-    public UserNotFoundException() {
-        super("해당 유저를 찾을 수 없습니다.");
-    }
+	public UserNotFoundException() {
+		super(NOTFOUND_USER);
+	}
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
+	@Override
+	public String getMessage() {
+		return super.getMessage();
+	}
 }
