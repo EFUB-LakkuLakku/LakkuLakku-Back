@@ -46,4 +46,5 @@ public class Comment extends BaseTimeEntity {
 	public void prePersist() {
 		this.isSecret = this.isSecret != null && this.isSecret;
 	}
+
 }

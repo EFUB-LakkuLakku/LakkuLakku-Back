@@ -1,64 +1,52 @@
 package com.efub.lakkulakku.domain.comment.service;
 
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
-import com.efub.lakkulakku.domain.comment.dto.CommentSaveDto;
-import com.efub.lakkulakku.domain.comment.dto.CommentUpdateDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
-import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
-import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
-import com.efub.lakkulakku.domain.users.repository.UsersRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-public class CommentService {
+import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
+import com.efub.lakkulakku.domain.diary.entity.Diary;
 
-	private final CommentRepository commentRepository;
-	private final UsersRepository usersRepository;
-	//private final DiaryRepository diaryRepository;
+import java.util.UUID;
 
-	@Transactional
-	public void commentSave(UUID id, CommentSaveDto commentSaveDto) {
-		//Users users = usersRepository.findById(id);
+public interface CommentService {
 
-		Comment comment = commentSaveDto.toEntity();
+	void addComment(CommentResDto commentResDto);
 
-		commentRepository.save(comment);
+	void removeComment(UUID id);
+	//void update(UUID id, CommentResDto commentResDto);
 
+	//void addRecomment(UUID parentId, CommentResDto commentResDto);
+	//void removeRecomment(UUID parentId);
+	//void editRecomment() ;
+
+	//Comment findById(UUID id) throws Exception;
+
+	default Comment dtoToEntity(CommentResDto commentResDto) {
+
+		//Diary diary = Diary.builder().id(commentResDto.getId()).build();
+
+		Comment comment = Comment.builder()
+				.id(commentResDto.getId())
+				.content(commentResDto.getContent())
+				//.userId(commentResDto.getUserId())
+				//.diary(diary)
+				.build();
+
+		return comment;
 	}
 
-	@Transactional
-	public void recommentSave(UUID id, UUID parentId, CommentSaveDto commentSaveDto) {
-		//Users users = usersRepository.findById(id);
+	default CommentResDto entityToDTO(Comment comment) {
 
-		Comment comment = commentSaveDto.toEntity();
+		CommentResDto commentResDto = CommentResDto.builder()
+				.id(comment.getId())
+				.content(comment.getContent())
+				//.users(comment.getUsers())
+				.build();
 
-		commentRepository.save(comment);
-
-	}
-
-	@Transactional
-	public void update(UUID id, CommentUpdateDto commentUpdateDto) {
-
-		//usersRepository.findByUserId(SecurityUtil.getLoginUserId()).orElseThrow(() -> new UnauthorizedException());
-
-		Comment comment = commentUpdateDto.toEntity();
-
-		commentRepository.save(comment);
-	}
-
-	@Transactional
-	public void delete(UUID id) {
-
-		Comment comment = commentRepository.findById(id)
-				.orElseThrow(CommentNotFoundException::new);
-
-		commentRepository.delete(comment);
+		return commentResDto;
 	}
 
 }
+
