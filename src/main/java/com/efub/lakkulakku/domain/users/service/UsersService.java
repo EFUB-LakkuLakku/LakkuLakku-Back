@@ -31,6 +31,7 @@ public class UsersService {
 
 	@Transactional
 	public Users signup(SignupReqDto reqDto) {
+		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
 		Users user = usersRepository.save(reqDto.toEntity());
 		Profile profile = Profile.builder()
 				.file(null)
