@@ -33,7 +33,7 @@ public class LoginController {
 	public ResponseEntity<String> signup(@RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
 		//나중에 토큰 방법 추가 후 토큰을 responseBody로 보내기
-		return ResponseEntity.ok("성공적으로 가입되었습니다.");
+		return ResponseEntity.ok(SIGNUP_SUCCESS);
 	}
 
 	@GetMapping("/signup/email")

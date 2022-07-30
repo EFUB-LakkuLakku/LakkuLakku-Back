@@ -1,8 +1,10 @@
 package com.efub.lakkulakku.domain.users.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.BAD_TOKEN_REQUEST;
+
 public class BadTokenRequestException extends RuntimeException {
 	public BadTokenRequestException() {
-		super("토큰을 확인하세요.");
+		super(BAD_TOKEN_REQUEST);
 	}
 
 	@Override

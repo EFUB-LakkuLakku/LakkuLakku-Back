@@ -1,9 +1,11 @@
 package com.efub.lakkulakku.domain.users.exception;
 
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.EXPIRED_TOKEN;
+
 public class TokenExpiredException extends RuntimeException {
 	public TokenExpiredException() {
-		super("토큰이 만료되었습니다.");
+		super(EXPIRED_TOKEN);
 	}
 
 	@Override
