@@ -24,7 +24,7 @@ public class Template extends BaseTimeEntity {
 	@OneToOne(mappedBy = "template")
 	private Diary diary;
 
-	@Column(length = 20)
+	@Column(length = 2084)
 	@NotNull
 	private String url;
 
