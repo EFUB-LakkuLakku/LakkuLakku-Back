@@ -15,8 +15,7 @@ public interface CommentService {
 	void addComment(CommentResDto commentResDto);
 
 	void removeComment(UUID id);
-	//void update(UUID id, CommentResDto commentResDto);
-
+	void update(UUID id, CommentResDto commentResDto);
 	//void addRecomment(UUID parentId, CommentResDto commentResDto);
 	//void removeRecomment(UUID parentId);
 	//void editRecomment() ;
@@ -31,6 +30,7 @@ public interface CommentService {
 				.id(commentResDto.getId())
 				.content(commentResDto.getContent())
 				//.userId(commentResDto.getUserId())
+				.isSecret(commentResDto.getIsSecret())
 				//.diary(diary)
 				.build();
 

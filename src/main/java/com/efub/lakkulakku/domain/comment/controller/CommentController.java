@@ -54,20 +54,20 @@ public class CommentController {
 		return ResponseEntity.ok("댓글이 삭제되었습니다.");
 	}
 
-	/*@PutMapping("/{date}/comments")
-	public ResponseEntity<?> commentEdit(@PathVariable UUID id, @Valid @RequestBody CommentResDto commentResDto) {
+	@PutMapping("/{date}/comments")
+	public ResponseEntity<?> commentEdit(@PathVariable UUID id, /*@Valid*/ @RequestBody CommentResDto commentResDto) {
 
-		/*Comment comment = commentRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("수정할 수 있는 권한이 없습니다."));
-
+ 		/*if (!comment.getUsers().equals(loggedUser)) {
+			throw new IllegalArgumentException("수정할 수 있는 권한이 없습니다.");
+		}*/
 		commentService.update(id, commentResDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
-	}*/
+	}
 
 	/*@PostMapping("/{date}/comments")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> recommentAdd(@PathVariable UUID parentId/*, @RequestBody CCommentResDto commentResDto) {
+	public ResponseEntity<?> recommentAdd(@PathVariable UUID parentId, @RequestBody CommentResDto commentResDto) {
 		Comment comment = commentRepository.findById(parentId)
 				.orElseThrow(() -> new IllegalArgumentException("상위 댓글이 존재하지 않습니다."));
 		commentService.addRecomment(parentId, commentResDto);
@@ -77,14 +77,14 @@ public class CommentController {
 	/*@DeleteMapping("/{date}/comments")
 	public ResponseEntity<?> recommentRemove(@PathVariable UUID parentId) {
 		commentService.removeRecomment(parentId);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return ResponseEntity.ok("댓글이 삭제되었습니다.");
 	}
 
-	@PutMapping("/{date}/comments")
+	/*@PutMapping("/{date}/comments")
 	public ResponseEntity<?> recommentEdit(@PathVariable UUID id, @Valid @RequestBody CommentDto commentDto) {
 		Comment comment = commentRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("수정할 수 있는 권한이 없습니다."));
 		commentService.editRecomment(sessionUser.getUserId(), id, commentDto);
-		return ResponseEntity.ok("댓글이 삭제되었습니다.");
+		return new ResponseEntity<>(HttpStatus.OK);
 	}*/ //대댓글 수정하기
 }

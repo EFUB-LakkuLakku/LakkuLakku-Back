@@ -30,24 +30,50 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public void removeComment(UUID id) {
+
 		Comment comment = commentRepository.findById(id)
 				.orElseThrow(CommentNotFoundException::new);
-		//UUID id = (comment, delComment);
+
 		//Comment comment = dtoToEntity(commentResDto);
 		commentRepository.delete(comment);
 
 	}
 
-	/*@Override
+	@Override
 	public void update(UUID id, CommentResDto commentResDto) {
-		Comment comment = commentRepository.findById(id)
-				.orElseThrow(CommentNotFoundException::new);
-		//Comment comment = dtoToEntity(commentResDto);
+
+		Comment comment = dtoToEntity(commentResDto);
+		//Users loggedUser = usersService.getLoggedUser();
+
+		/*comment = Comment.builder()
+				.id(commentResDto.getId())
+				.content(commentResDto.getContent())
+				//.users(usersRepository.getById(commentResDto.getUserId()))
+				.build();*/
 
 		commentRepository.save(comment);
-		//commentResDto.content().ifPresent(comment::updateContent);
+
+	}
+
+	/*@Override
+	public void addRecomment(UUID parentId, CommentResDto commentResDto) {
+
+		Comment comment = dtoToEntity(commentResDto);
+		/*commentRepository.findById(id).ifPresent(
+				comment -> recommentRepository.save(recomment.toRecommentEntity(user, comment))
+		);
+		commentRepository.save(comment);
 
 		//return comment.getId();
+	}*/
+
+	/*private void checkSecretComment(UUID userId, Comment comment, CommentResDto commentResDto) {
+
+		// 비밀댓글 체크
+		if(commentResDto.getIsSecret()) {
+			commentResDto.setContent("비밀 댓글입니다.");
+		}
+		commentResDto.setIsSecret(comment.getIsSecret());
 	}*/
 
 	/*@Override
