@@ -1,8 +1,6 @@
 package com.efub.lakkulakku.domain.diary.entity;
 
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-import com.efub.lakkulakku.domain.diary.dto.DiaryInfoResDto;
-import com.efub.lakkulakku.domain.diary.dto.DiaryResDto;
 import com.efub.lakkulakku.domain.image.entity.Image;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
@@ -17,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +37,7 @@ public class Diary extends BaseTimeEntity {
 
 	@Column(length = 10)
 	@NotNull
-	private String date;
+	private LocalDate date;
 
 	@Column(length = 50)
 	@NotNull
@@ -79,7 +78,7 @@ public class Diary extends BaseTimeEntity {
 	}
 
 	@Builder
-	public Diary(Users user, String date, String title, String titleEmoji, List<Comment> comments, Template template,
+	public Diary(Users user, LocalDate date, String title, String titleEmoji, List<Comment> comments, Template template,
 				 List<Image> images, List<Likes> likes, List<Text> texts, List<Sticker> stickers) {
 		this.user = user;
 		this.date = date;
@@ -92,4 +91,5 @@ public class Diary extends BaseTimeEntity {
 		this.texts = texts;
 		this.stickers = stickers;
 	}
+
 }

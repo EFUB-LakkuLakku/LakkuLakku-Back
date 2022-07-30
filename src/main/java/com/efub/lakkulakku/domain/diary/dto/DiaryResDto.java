@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +14,7 @@ public class DiaryResDto {
 
 	private UUID id;
 	private UUID userId;
-	private String date;
+	private LocalDate date;
 	private String title;
 	private String titleEmoji;
 	private UUID templateId;
@@ -21,7 +22,7 @@ public class DiaryResDto {
 	private Integer cntLike;
 
 	@Builder
-	public DiaryResDto(UUID id, UUID userId, String date,
+	public DiaryResDto(UUID id, UUID userId, LocalDate date,
 					   String title, String titleEmoji, UUID templateId,
 					   Integer cntComment, Integer cntLike) {
 		this.id = id;

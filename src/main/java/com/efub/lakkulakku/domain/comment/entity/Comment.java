@@ -1,10 +1,10 @@
 package com.efub.lakkulakku.domain.comment.entity;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Comment extends BaseTimeEntity {
 
@@ -37,11 +39,12 @@ public class Comment extends BaseTimeEntity {
 	@Column
 	private UUID parentId;
 
-	@Column(columnDefinition = "boolean default 0")//
+	@Column(columnDefinition = "boolean default 0")
 	private Boolean isSecret;
 
 	@PrePersist
 	public void prePersist() {
 		this.isSecret = this.isSecret != null && this.isSecret;
 	}
+
 }

@@ -1,8 +1,10 @@
 package com.efub.lakkulakku.domain.diary.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.DUPLICATE_DIARY;
+
 public class DuplicateDiaryException extends IllegalArgumentException {
 	public DuplicateDiaryException() {
-		super("해당 날짜에 이미 다이어리가 존재합니다.");
+		super(DUPLICATE_DIARY);
 	}
 
 	@Override
