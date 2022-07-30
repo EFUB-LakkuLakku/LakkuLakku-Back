@@ -46,9 +46,6 @@ public class LikesService {
 
 		//Optional<Likes> likesOpt = findById(likeResDto);
 
-		/*Likes likes = likesRepository.findByDate(date)
-				.orElseThrow(DiaryNotFoundException::new);*/
-
 		Likes likes = likesRepository.findLikesById(id)
 				.orElseThrow(DiaryNotFoundException::new);
 
@@ -64,6 +61,12 @@ public class LikesService {
 				.findLikesById(likeResDto.getId());
 
 	}
+
+	/*private Optional<Likes> findById(LikeResDto likeResDto) {
+		return likesRepository
+				.findById(likeResDto.getId());
+
+	}*/
 
 	/*private boolean isNotAlreadyLike(Users user, Diary diary) {
 		return likesRepository.findLikesByUserandDiary(user, diary).isEmpty();

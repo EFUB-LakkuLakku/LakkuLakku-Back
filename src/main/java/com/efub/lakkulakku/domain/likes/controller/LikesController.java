@@ -26,8 +26,8 @@ import java.util.UUID;
 public class LikesController {
 
 	private final LikesService likesService;
-	private final DiaryRepository diaryRepository;
-	private final LikesRepository likesRepository;
+	//private final DiaryRepository diaryRepository;
+	//private final LikesRepository likesRepository;
 
 	@PostMapping("/{date}/like")
 	public ResponseEntity<?> likes(@RequestBody @Valid LikeResDto likeResDto

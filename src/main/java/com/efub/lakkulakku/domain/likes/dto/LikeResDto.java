@@ -13,14 +13,12 @@ public class LikeResDto {
 
 	private UUID id;
 	private UUID userId;
-	private UUID diaryId;
 	private LocalDateTime createdOn;
 
 	@Builder
 	public LikeResDto(UUID id, UUID userId, UUID diaryId, LocalDateTime createdOn) {
 		this.id = id;
 		this.userId = userId;
-		this.diaryId = diaryId;
 		this.createdOn = createdOn;
 	}
 }

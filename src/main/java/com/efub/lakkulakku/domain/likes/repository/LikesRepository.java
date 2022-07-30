@@ -11,10 +11,7 @@ import java.util.UUID;
 
 public interface LikesRepository extends JpaRepository<Likes, UUID> {
 
-	//void likes(Likes likes);
-	//void unlikes(UUID id) throws Exception;
-	//Optional<Likes> findLikesByUserandDiaryId(Users user, UUID id);
+	//Optional<Likes> findById(Users user, UUID id);
 	Optional<Likes> findLikesById(UUID id);
-	//Boolean existsByDate(String date);
-
+	//Optional<Likes> findLikesByUserAndDiaryId(Users users, UUID diaryId);
 }
