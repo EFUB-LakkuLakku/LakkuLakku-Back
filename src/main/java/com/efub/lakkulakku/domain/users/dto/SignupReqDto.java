@@ -29,4 +29,8 @@ public class SignupReqDto {
 				.build();
 	}
 
+	public void setPassword(String password){
+		this.password = password;
+	}
+
 }

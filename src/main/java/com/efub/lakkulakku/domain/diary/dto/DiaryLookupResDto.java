@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DiaryInfoResDto {
+public class DiaryLookupResDto {
 
 	private DiaryResDto diary;
 	private List<TextResDto> textList;
@@ -24,8 +24,8 @@ public class DiaryInfoResDto {
 	private List<LikeResDto> likeList;
 
 	@Builder
-	public DiaryInfoResDto(DiaryResDto diary, List<TextResDto> textList, List<ImageResDto> imageList,
-						   List<StickerResDto> stickerList, List<CommentResDto> commentList, List<LikeResDto> likeList) {
+	public DiaryLookupResDto(DiaryResDto diary, List<TextResDto> textList, List<ImageResDto> imageList,
+							 List<StickerResDto> stickerList, List<CommentResDto> commentList, List<LikeResDto> likeList) {
 		this.diary = diary;
 		this.textList = textList;
 		this.imageList = imageList;

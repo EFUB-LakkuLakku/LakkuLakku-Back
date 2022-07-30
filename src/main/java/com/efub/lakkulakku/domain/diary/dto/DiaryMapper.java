@@ -22,11 +22,11 @@ public class DiaryMapper {
 	private final CommentMapper commentMapper;
 	private final LikeMapper likeMapper;
 
-	public DiaryInfoResDto toDiaryInfoResDto(Diary entity) {
+	public DiaryLookupResDto toDiaryInfoResDto(Diary entity) {
 		if (entity == null)
 			return null;
 
-		return DiaryInfoResDto.builder()
+		return DiaryLookupResDto.builder()
 				.diary(toDiaryResDto(entity))
 				.textList(entity.getTexts().stream().map(textMapper::toTextResDto).collect(Collectors.toList()))
 				.imageList(entity.getImages().stream().map(imageMapper::toImageResDto).collect(Collectors.toList()))

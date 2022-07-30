@@ -11,6 +11,16 @@ spring:
     generate-ddl: true
     show-sql: true
 
+  jwt:
+    secret-key: ${SECRET-KEY}
+    blacklist:
+      access-token: BlackList_AccessToken_
+
+  redis:
+    host:
+    port:
+
+
 cloud:
   aws:
     credentials:
