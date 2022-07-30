@@ -70,15 +70,12 @@ public class LikesService {
 	}*/
 
 	/*public void updateLikesCount(UUID diaryId, Integer plusOrMinus) {
-
         Optional<Diary> diaryOpt = diaryRepository.findById(diaryId);
         if (diaryOpt.isEmpty()) {
             throw new CustomException(Diary_NOT_FOUND);
         }
-
         UpdateRequest request = new UpdateRequest("diaries", diaryId)
                 .doc("like_count", diaryOpt.get().getLikeCount() + plusOrMinus);
-
 	}*/
 
 }

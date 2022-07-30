@@ -16,8 +16,5 @@ public interface LikesRepository extends JpaRepository<Likes, UUID> {
 	//Optional<Likes> findLikesByUserandDiaryId(Users user, UUID id);
 	Optional<Likes> findLikesById(UUID id);
 	//Boolean existsByDate(String date);
-	//Optional<Likes> findByDate(String date);
-	//void deleteLikesByDiary(Diary diary);
-	//void deleteById(UUID id);
 
 }
