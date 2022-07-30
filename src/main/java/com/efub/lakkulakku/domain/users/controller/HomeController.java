@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.users.controller;
 
+import com.efub.lakkulakku.domain.diary.exception.BadDateRequestException;
 import com.efub.lakkulakku.domain.users.dto.HomeResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
@@ -24,6 +25,9 @@ public class HomeController {
 		//TODO : LocalDateTime의 범위를 넘어가는 경우 에러 발생
 		//TODO : 시큐리티 적용 후 유저 변경
 		Users user = usersRepository.findByNickname("ywyw").get(); // 테스트용 유저
+
+		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
+			throw new BadDateRequestException();
 
 		return ResponseEntity.ok()
 				.body(usersService.getHome(user, year, month));
