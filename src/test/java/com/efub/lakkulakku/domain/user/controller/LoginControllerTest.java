@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.SIGNUP_SUCCESS;
@@ -30,6 +31,9 @@ public class LoginControllerTest {
 	@Autowired
 	private UsersRepository usersRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@AfterEach
 	public void tearDown() throws Exception {
 		usersRepository.deleteAll();
@@ -46,11 +50,12 @@ public class LoginControllerTest {
 		@DisplayName("POST-회원가입 성공")
 		public void signup() throws Exception {
 
+
 			// given
 			SignupReqDto signupReqDto = SignupReqDto.builder()
 					.email("signuptest@gmail.com")
 					.nickname("회원가입테스트")
-					.password("signuptest")
+					.password(passwordEncoder.encode("1234"))
 					.build();
 
 			HttpEntity<SignupReqDto> requestEntity = new HttpEntity<>(signupReqDto);
