@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.diary.service;
 
-import com.efub.lakkulakku.domain.diary.dto.DiaryInfoResDto;
+import com.efub.lakkulakku.domain.diary.dto.DiaryLookupResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryMapper;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 
 
 @Service
@@ -21,12 +22,12 @@ public class DiaryService {
 	private final DiaryMapper diaryMapper;
 	private final UsersRepository userRepository;
 
-	public DiaryInfoResDto getDiaryInfo(Diary diary) {
+	public DiaryLookupResDto getDiaryInfo(Diary diary) {
 		return diaryMapper.toDiaryInfoResDto(diary);
 	}
 
 	@Transactional
-	public void createDiary(String diaryDate) {
+	public void createDiary(LocalDate diaryDate) {
 		//TODO : 현재 로그인한 유저를 받아와야 함
 		Users user = userRepository.findByEmail("ewhaefub@gmail.com").get();
 		Diary diary = Diary.builder()
@@ -45,17 +46,16 @@ public class DiaryService {
 	}
 
 	@Transactional
-	public void deleteDiary(String date) {
+	public void deleteDiary(LocalDate date) {
 		Diary diary = diaryRepository.findByDate(date)
 				.orElseThrow(DiaryNotFoundException::new);
 		diaryRepository.delete(diary);
 	}
 
 	@Transactional
-	public void updateDiary(String date, DiaryInfoResDto diaryInfoResDto) {
+	public void updateDiary(LocalDate date, DiaryLookupResDto diaryLookupResDto) {
 		Diary diary = diaryRepository.findByDate(date)
 				.orElseThrow(DiaryNotFoundException::new);
-
-		diary.updateDiary(diaryInfoResDto.getDiary());
+//		diaryRepository.save(diary);
 	}
 }
