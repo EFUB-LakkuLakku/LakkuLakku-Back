@@ -24,6 +24,7 @@ public class UsersService {
 
 	private final UsersRepository usersRepository;
 	private final ProfileRepository profileRepository;
+	private final HomeMapper homeMapper;
 
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
@@ -79,6 +80,19 @@ public class UsersService {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
 				.orElseThrow(UserNotFoundException::new);
 		usersRepository.delete(users);
+	}
+
+	public HomeResDto getHome(Users user, String year, String month) {
+		if (year == null) {
+			Date date = new Date();
+			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			int nowYear = localDate.getYear();
+			int nowMonth = localDate.getMonthValue();
+
+			return homeMapper.toHomeResDto(user, Integer.toString(nowYear), Integer.toString(nowMonth));
+		} else {
+			return homeMapper.toHomeResDto(user, year, month);
+		}
 	}
 
 }
