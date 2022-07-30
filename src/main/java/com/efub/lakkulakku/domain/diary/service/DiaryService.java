@@ -51,11 +51,10 @@ public class DiaryService {
 		diaryRepository.delete(diary);
 	}
 
-//	@Transactional
-//	public void updateDiary(String date, DiaryInfoResDto diaryInfoResDto) {
-//		Diary diary = diaryRepository.findByDate(date)
-//				.orElseThrow(DiaryNotFoundException::new);
-//
-//		diary.updateDiary(diaryInfoResDto.getDiary());
-//	}
+	@Transactional
+	public void updateDiary(String date, DiaryInfoResDto diaryInfoResDto) {
+		Diary diary = diaryRepository.findByDate(date)
+				.orElseThrow(DiaryNotFoundException::new);
+		//diary.updateDiary(diaryInfoResDto.getDiary());
+	}
 }

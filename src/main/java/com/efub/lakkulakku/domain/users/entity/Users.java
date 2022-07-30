@@ -38,9 +38,11 @@ public class Users extends BaseTimeEntity {
 	@NotNull
 	private String nickname;
 
-	@OneToOne(mappedBy = "users")
+	@OneToOne
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
+
+	private String role;
 
 	@Builder
 	public Users(Long uid, String email, String password, String nickname) {
@@ -48,5 +50,6 @@ public class Users extends BaseTimeEntity {
 		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
+		role = "USER";
 	}
 }
