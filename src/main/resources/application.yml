@@ -17,7 +17,7 @@ spring:
       access-token: BlackList_AccessToken_
 
   redis:
-    host: localhost
+    host: ${HOST}
     port: 6379
 
 
