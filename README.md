@@ -73,6 +73,8 @@
 10. spring data redis
 11. spring cloud aws
 12. mysql driver
+![Untitled (5)](https://user-images.githubusercontent.com/68282057/182026455-482f03dc-966b-481c-8e58-6a1e9ed21a94.png)
+
 
 ## 🌕 프로젝트 구조
 ### 설명
