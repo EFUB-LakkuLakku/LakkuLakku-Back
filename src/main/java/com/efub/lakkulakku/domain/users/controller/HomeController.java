@@ -26,8 +26,8 @@ public class HomeController {
 		//TODO : 시큐리티 적용 후 유저 변경
 		Users user = usersRepository.findByNickname("ywyw").get(); // 테스트용 유저
 
-		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
-			throw new BadDateRequestException();
+//		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
+//			throw new BadDateRequestException();
 
 		return ResponseEntity.ok()
 				.body(usersService.getHome(user, year, month));
