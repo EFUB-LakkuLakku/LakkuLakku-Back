@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.Column;
 import java.util.UUID;
@@ -17,6 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FriendResDto {
 	private Long uid;
+
+	@Nullable
 	private String profileImageUrl;
 	private String nickname;
 

@@ -1,11 +1,11 @@
 package com.efub.lakkulakku.domain.users.exception;
 
-import static com.efub.lakkulakku.global.constant.ResponseConstant.NOTMATCH_PASSWORD;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.PASSWORD_NOT_MATCH;
 
 public class PasswordNotMatchedException extends IllegalArgumentException {
 
 	public PasswordNotMatchedException() {
-		super(NOTMATCH_PASSWORD);
+		super(PASSWORD_NOT_MATCH);
 	}
 
 	@Override
