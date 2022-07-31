@@ -27,12 +27,12 @@ public class Profile extends BaseTimeEntity {
 	private UUID id;
 
 
+	@OneToOne(mappedBy = "profile")
+	private Users users;
+
 	@OneToOne
 	@JoinColumn(name = "profile_image_id")
 	private File file;
-
-	@OneToOne(mappedBy = "profile")
-	private Users users;
 
 	private String bio;
 

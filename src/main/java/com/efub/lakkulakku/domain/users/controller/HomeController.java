@@ -4,6 +4,7 @@ import com.efub.lakkulakku.domain.diary.exception.BadDateRequestException;
 import com.efub.lakkulakku.domain.users.dto.HomeResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,10 @@ public class HomeController {
 	private final UsersService usersService;
 
 	@GetMapping
-	public ResponseEntity<HomeResDto> getHomeByDate(@PathVariable(value = "year", required = false) String year, @PathVariable(value = "month", required = false) String month) {
+	public ResponseEntity<HomeResDto> getHomeByDate(@AuthUsers Users user, @PathVariable(value = "year", required = false) String year, @PathVariable(value = "month", required = false) String month) {
 		//TODO : LocalDateTime의 범위를 넘어가는 경우 에러 발생
 		//TODO : 시큐리티 적용 후 유저 변경
-		Users user = usersRepository.findByNickname("ywyw").get(); // 테스트용 유저
-
+		//Users user = usersRepository.findByNickname("ywyw").get(); // 테스트용 유저
 		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
 			throw new BadDateRequestException();
 
