@@ -18,7 +18,13 @@
         <td width="20%" align="center"><img src = "https://github.com/SeojungH.png"/></td>
     </tr>
     <tr width="100%">
-        <td width="30%" align="center"></td>
+        <td width="30%" align="center">
+[다이어리] 다이어리 생성, 수정, 삭제, 편집
+[스티커] 스티커 조회
+[템플릿] 템플릿 조회
+[시큐리티] JWT 토큰 구현
+[기타] 데이터베이스 설계
+        </td>
         <td width="30%" align="center">
 [홈] 홈 조회<br>
 [프로필] 유저 프로필 수정<br>
@@ -28,10 +34,14 @@
 [기타] 데이터베이스 설계, 아키텍처 설계, AWS(EC2, RDS, S3 등) 세팅</td>
         <td width="30%" align="center">
 [유저] 회원 가입, 이메일과 닉네임 중복 확인 기능<br>
-[시큐리티] jwt 구현, Redis를 통한 Blacklist 구현<br>
+[시큐리티] JWT 토큰 구현, Redis를 통한 Blacklist 구현<br>
 [친구] 친구 추가, 삭제, 조회, 찾기 기능<br>
 [기타] 데이터베이스 설계</td>
-        <td width="30%" align="center"></td>
+        <td width="30%" align="center">
+[유저] 유저 정보 수정<br>
+[다이어리] 댓글 작성 및 삭제, 좋아요 추가 및 취소<br>
+[기타] 데이터베이스 설계<br>
+</td>
    </tr>
 </table>
 
