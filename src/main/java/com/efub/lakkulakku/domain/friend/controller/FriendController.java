@@ -7,6 +7,7 @@ import com.efub.lakkulakku.domain.friend.service.FriendService;
 import com.efub.lakkulakku.domain.profile.ProfileRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,6 @@ public class FriendController {
 	private final FriendService friendService;
 	private final UsersRepository usersRepository;
 
-	private final ProfileRepository profileRepository;
 
 
 	@PostMapping("/search")
@@ -35,24 +35,21 @@ public class FriendController {
 
 	}
 
-	@PostMapping
-	public ResponseEntity<?> addFriend(@RequestBody FriendReqDto reqDto) {
-		Users user = usersRepository.findByNickname("애플").get(); //TODO : Test 유저, 나중에 로그인 된 유저 넣기
-		Optional<Users> target = usersRepository.findByUid(reqDto.getUid());
+	@PostMapping()
+	public ResponseEntity<?> addFriend(@AuthUsers Users user,  @RequestBody FriendReqDto reqDto) {
 		friendService.addFriend(reqDto, user);
 		return ResponseEntity.ok(FRIEND_SUCCESS);
 	}
 
-	@GetMapping
-	public List<FriendResDto> getFriends() {
-		Users user = usersRepository.findByNickname("애플").get();//TODO : Test 유저, 나중에 로그인 된 유저 넣기
+	@GetMapping()
+	public List<FriendResDto> getFriends(@AuthUsers Users user) {
+
 		return friendService.getFriends(user);
 	}
 
 
-	@DeleteMapping
-	public ResponseEntity<?> deleteFriend(@RequestBody FriendReqDto reqDto) {
-		Users user = usersRepository.findByNickname("애플").get(); //TODO : Test 유저, 나중에 로그인 된 유저 넣기
+	@DeleteMapping()
+	public ResponseEntity<?> deleteFriend(@AuthUsers Users user, @RequestBody FriendReqDto reqDto) {
 		friendService.deleteFriend(reqDto, user);
 		return ResponseEntity.ok(DELETE_FRIEND_SUCCESS);
 	}

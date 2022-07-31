@@ -29,7 +29,7 @@ public class JwtProvider {
 	private String SECRET_KEY;
 
 
-	private static final Long TOKEN_VALID_TIME = 1000L * 60 * 3; // 3m
+	private static final Long TOKEN_VALID_TIME = 1000L * 60 * 120; // 2h
 
 	private final RedisService redisService;
 

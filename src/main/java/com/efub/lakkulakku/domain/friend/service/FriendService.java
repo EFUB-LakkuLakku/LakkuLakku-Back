@@ -66,6 +66,7 @@ public class FriendService {
 	@Transactional
 	public FriendResDto buildDto(Users user) {
 		FriendResDto friendResDto = new FriendResDto(user);
+
 		return friendResDto;
 	}
 
