@@ -96,8 +96,7 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(PasswordNotMatchedException.class)
-	protected final ResponseEntity<ErrorResponse> handlePasswordNotMatchedException(PasswordNotMatchedException e)
-	{
+	protected final ResponseEntity<ErrorResponse> handlePasswordNotMatchedException(PasswordNotMatchedException e) {
 		final ErrorResponse response = ErrorResponse.builder()
 				.status(HttpStatus.BAD_REQUEST)
 				.code(ErrorCode.PASSWORD_NOT_MATCH)
@@ -163,11 +162,12 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
 
-	@ExceptionHandler(TokenExpiredException.class)
-	protected final ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
+
+	@ExceptionHandler(RefreshTokenExpiredException.class)
+	protected final ResponseEntity<ErrorResponse> handleAccessTokenExpiredException(RefreshTokenExpiredException e) {
 		final ErrorResponse response = ErrorResponse.builder()
 				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.TOKEN_EXPIRED)
+				.code(ErrorCode.REFRESHTOKEN_EXPIRED)
 				.message(e.getMessage())
 				.build();
 		return ResponseEntity.status(response.getStatus()).body(response);
