@@ -13,12 +13,13 @@ public interface LikesRepository extends JpaRepository<Likes, UUID> {
 
 	Optional<Likes> findById(UUID id);
 
-	Optional<Likes> findByUsersId(Users userId);
+	//Optional<Likes> findByUsersId(Users userId);
 
-	Optional<Likes> findByDiaryId(Diary diaryId);
+	//Optional<Likes> findByDiaryId(Diary diaryId);
 
-	Optional<Likes> findLikesByUsersIdAndDiaryId(UUID userId, UUID diaryId);
+	//Optional<Likes> findLikesByUsersIdAndDiaryId(UUID userId, UUID diaryId);
 
-	void deleteByUsersIdAndDiaryId(UUID userId, UUID diaryId);
+	//void deleteByUsersIdAndDiaryId(UUID userId, UUID diaryId);
+	void deleteById(UUID id);
 
 }

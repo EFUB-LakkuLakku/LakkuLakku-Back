@@ -47,12 +47,12 @@ public class LikesService {
 				"diary id : " + likesRepository.findByDiaryId(likes.getDiary()).get().getId());*/
 	}
 
-	public void deleteLikesByUsersIdAndDiaryId(UUID userId, UUID diaryId) {
+	public void deleteLikesById(UUID id) {
 
-		Optional<Likes> optional = likesRepository.findLikesByUsersIdAndDiaryId(userId, diaryId);
+		Optional<Likes> optional = likesRepository.findById(id);
 
 		if (optional.isPresent()) {
-			likesRepository.deleteByUsersIdAndDiaryId(userId, diaryId);
+			likesRepository.deleteById(id);
 		}
 
 		likesRepository.findAll();
@@ -61,12 +61,6 @@ public class LikesService {
 	private Optional<Likes> findById(LikeResDto likeResDto) {
 		return likesRepository
 				.findById(likeResDto.getId());
-
-	}
-
-	private Optional<Likes> findByUsersIdAndDiaryId(LikeResDto likeResDto) {
-		return likesRepository
-				.findLikesByUsersIdAndDiaryId(likeResDto.getUserId(), likeResDto.getDiaryId());
 
 	}
 }

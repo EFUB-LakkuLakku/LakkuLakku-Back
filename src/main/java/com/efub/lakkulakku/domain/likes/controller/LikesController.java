@@ -42,14 +42,14 @@ public class LikesController {
 		return ResponseEntity.ok(LIKES_ADD_SUCCESS);
 	}
 
-	@DeleteMapping("/{date}/like")
+	@DeleteMapping("/{date}/like/{id}")
 	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> deleteLikesByUsersIdAndDiaryId(/*@PathVariable("id") */@RequestBody UUID userId, @RequestBody UUID diaryId, @RequestBody @Valid LikeResDto likeResDto) {
+	public ResponseEntity<?> deleteLikesById(@PathVariable("id") UUID id, @RequestBody @Valid LikeResDto likeResDto) {
 
 		/*if (!diaryRepository.existsByDate(date))
 			throw new DiaryNotFoundException();*/
 
-		likesService.deleteLikesByUsersIdAndDiaryId(userId, diaryId);
+		likesService.deleteLikesById(id);
 		return ResponseEntity.ok(LIKES_DELETE_SUCCESS);
 	}
 }
