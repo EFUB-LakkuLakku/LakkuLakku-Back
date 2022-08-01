@@ -16,6 +16,7 @@ public class LikeMapper {
 				.id(entity.getId())
 				.userId(entity.getUsers().getId())
 				.createdOn(entity.getCreatedOn())
+				.diaryId(entity.getDiary().getId())
 				.build();
 	}
 }

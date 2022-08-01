@@ -11,7 +11,14 @@ import java.util.UUID;
 
 public interface LikesRepository extends JpaRepository<Likes, UUID> {
 
-	//Optional<Likes> findById(Users user, UUID id);
-	Optional<Likes> findLikesById(UUID id);
-	//Optional<Likes> findLikesByUserAndDiaryId(Users users, UUID diaryId);
+	Optional<Likes> findById(UUID id);
+
+	Optional<Likes> findByUsersId(Users userId);
+
+	Optional<Likes> findByDiaryId(Diary diaryId);
+
+	Optional<Likes> findLikesByUsersIdAndDiaryId(UUID userId, UUID diaryId);
+
+	void deleteByUsersIdAndDiaryId(UUID userId, UUID diaryId);
+
 }
