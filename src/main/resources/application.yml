@@ -17,8 +17,8 @@ spring:
       access-token: BlackList_AccessToken_
 
   redis:
-    host:
-    port:
+    host: ${HOST}
+    port: 6379
 
 
 cloud:
@@ -27,7 +27,7 @@ cloud:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
     s3:
-      bucket: efub-s3
+      bucket: lakku-lakku.com
     region:
       static: ap-northeast-2
     stack:

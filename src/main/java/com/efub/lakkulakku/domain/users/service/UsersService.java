@@ -3,8 +3,8 @@ package com.efub.lakkulakku.domain.users.service;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.profile.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
-import com.efub.lakkulakku.domain.users.dto.*;
 import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
+import com.efub.lakkulakku.domain.users.dto.*;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.PasswordNotMatchedException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +24,14 @@ public class UsersService {
 
 	private final UsersRepository usersRepository;
 	private final ProfileRepository profileRepository;
+	private final HomeMapper homeMapper;
 
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
 	@Transactional
 	public Users signup(SignupReqDto reqDto) {
+		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
 		Users user = usersRepository.save(reqDto.toEntity());
 		Profile profile = Profile.builder()
 				.file(null)
@@ -40,12 +45,12 @@ public class UsersService {
 	@Transactional
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
 		return usersRepository.findByEmail(loginReqDto.getEmail())
-				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 	public LoginResDto login(String email, String password) {
 		Users user = usersRepository
-				.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
+				.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		checkPassword(password, user.getPassword());
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
@@ -53,7 +58,7 @@ public class UsersService {
 	}
 
 	public LoginResDto reIssueAccessToken(String email, String refreshToken) {
-		Users user = usersRepository.findByEmail(email).orElseThrow(() -> new com.efub.lakkulakku.domain.users.exception.UserNotFoundException());
+		Users user = usersRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		jwtProvider.checkRefreshToken(email, refreshToken);
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		return new LoginResDto(accessToken, refreshToken);
@@ -74,9 +79,21 @@ public class UsersService {
 	@Transactional
 	public void deleteUser(WithdrawReqDto withdrawReqDto) {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
-				.orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+				.orElseThrow(UserNotFoundException::new);
 		usersRepository.delete(users);
 	}
 
+	public HomeResDto getHome(Users user, String year, String month) {
+		if (year == null) {
+			Date date = new Date();
+			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			int nowYear = localDate.getYear();
+			int nowMonth = localDate.getMonthValue();
+
+			return homeMapper.toHomeResDto(user, Integer.toString(nowYear), Integer.toString(nowMonth));
+		} else {
+			return homeMapper.toHomeResDto(user, year, month);
+		}
+	}
 
 }

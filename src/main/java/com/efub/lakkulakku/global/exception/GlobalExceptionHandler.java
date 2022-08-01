@@ -7,12 +7,8 @@ import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
-import com.efub.lakkulakku.domain.users.exception.BadTokenRequestException;
-import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
-import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
+import com.efub.lakkulakku.domain.users.exception.*;
 //import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
-import com.efub.lakkulakku.domain.users.exception.TokenExpiredException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -99,11 +95,23 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
 
+	@ExceptionHandler(PasswordNotMatchedException.class)
+	protected final ResponseEntity<ErrorResponse> handlePasswordNotMatchedException(PasswordNotMatchedException e)
+	{
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.PASSWORD_NOT_MATCH)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+
+	}
+
 	// 존재하지 않는 유저
 	@ExceptionHandler(UserNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
 		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
+				.status(HttpStatus.NOT_FOUND)
 				.code(ErrorCode.USER_NOT_FOUND)
 				.message(e.getMessage())
 				.build();

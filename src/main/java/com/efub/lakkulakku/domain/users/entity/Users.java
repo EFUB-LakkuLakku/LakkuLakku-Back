@@ -38,7 +38,7 @@ public class Users extends BaseTimeEntity {
 	@NotNull
 	private String nickname;
 
-	@OneToOne
+	@OneToOne(mappedBy = "users")
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 

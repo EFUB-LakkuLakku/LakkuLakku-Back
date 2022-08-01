@@ -1,8 +1,10 @@
 package com.efub.lakkulakku.domain.users.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.DUPLICATE_EMAIL;
+
 public class DuplicateNicknameException extends IllegalArgumentException {
 	public DuplicateNicknameException() {
-		super("중복된 닉네임이 존재합니다.");
+		super(DUPLICATE_EMAIL);
 	}
 
 	@Override

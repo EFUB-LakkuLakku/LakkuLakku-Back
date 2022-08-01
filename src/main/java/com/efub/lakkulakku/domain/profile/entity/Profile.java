@@ -31,7 +31,7 @@ public class Profile extends BaseTimeEntity {
 	@JoinColumn(name = "profile_image_id")
 	private File file;
 
-	@OneToOne(mappedBy = "profile")
+	@OneToOne
 	private Users users;
 
 	private String bio;

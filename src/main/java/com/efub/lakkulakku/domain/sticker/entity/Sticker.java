@@ -45,7 +45,7 @@ public class Sticker extends BaseTimeEntity {
 	@NotNull
 	private String category;
 
-	@Column(length = 20)
+	@Column(length = 2084)
 	@NotNull
 	private String url;
 }
