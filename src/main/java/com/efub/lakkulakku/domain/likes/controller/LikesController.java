@@ -44,7 +44,7 @@ public class LikesController {
 
 	@DeleteMapping("/{date}/like")
 	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> deleteLikesById(/*@PathVariable("id") */@RequestBody UUID userId, @RequestBody UUID diaryId, @RequestBody @Valid LikeResDto likeResDto) {
+	public ResponseEntity<?> deleteLikesByUsersIdAndDiaryId(/*@PathVariable("id") */@RequestBody UUID userId, @RequestBody UUID diaryId, @RequestBody @Valid LikeResDto likeResDto) {
 
 		/*if (!diaryRepository.existsByDate(date))
 			throw new DiaryNotFoundException();*/
