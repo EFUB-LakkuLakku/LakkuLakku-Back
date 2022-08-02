@@ -11,11 +11,15 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProfileUpdateReqDto {
 
+    @NotBlank
+    private String nickname;
+
     private String image;
     private String bio;
 
     @Builder
-    public ProfileUpdateReqDto(String image, String bio) {
+    public ProfileUpdateReqDto(String nickname, String image, String bio) {
+        this.nickname = nickname;
         this.image = image;
         this.bio = bio;
     }
