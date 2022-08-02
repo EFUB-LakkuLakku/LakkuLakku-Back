@@ -2,6 +2,7 @@ package com.efub.lakkulakku.domain.notification.entity;
 
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
