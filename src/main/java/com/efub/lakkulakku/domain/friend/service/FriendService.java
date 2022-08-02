@@ -6,6 +6,8 @@ import com.efub.lakkulakku.domain.friend.entity.Friend;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.repository.FriendRepository;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class FriendService {
 	private final FriendRepository friendRepository;
 	private final UsersRepository usersRepository;
+	private final NotificationRepository notificationRepository;
 
 	@Transactional
 	public void addFriend(FriendReqDto reqDto, Users user) {
@@ -36,6 +39,12 @@ public class FriendService {
 						.targetId(targetUser)
 						.build();
 				friendRepository.save(friends);
+				Notification notification = Notification.builder()
+						.userId(user)
+						.friendId(targetUser)
+						.notiType("follow")
+						.message("님과 새 친구가 되었습니다").build();
+				notificationRepository.save(notification);
 			}
 		} else {
 			throw new UserNotFoundException();
@@ -66,7 +75,6 @@ public class FriendService {
 	@Transactional
 	public FriendResDto buildDto(Users user) {
 		FriendResDto friendResDto = new FriendResDto(user);
-
 		return friendResDto;
 	}
 
