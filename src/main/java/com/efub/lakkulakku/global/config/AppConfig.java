@@ -36,7 +36,7 @@ public class AppConfig {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.authorizeRequests()
-				.antMatchers("/api/v1/users/signup", "/api/v1/users/login", "/api/v1/users/re-issue").permitAll()
+				.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
