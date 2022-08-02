@@ -32,4 +32,6 @@ public class Notification extends BaseTimeEntity {
 
 	// TODO : 알림 내용 column 필요
 	private String message;
+
+
 }
