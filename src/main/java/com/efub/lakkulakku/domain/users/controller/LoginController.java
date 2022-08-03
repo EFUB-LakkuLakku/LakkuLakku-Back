@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
 @RestController
@@ -28,7 +27,6 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
-
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {

@@ -38,6 +38,10 @@ public class ResponseConstant {
 	public static final String NOTFOUND_DIARY = "해당 다이어리를 찾을 수 없습니다.";
 	public static final String BAD_DATE_REQUEST = "잘못된 날짜입니다.";
 
+	/*Likes*/
+	public static final String LIKES_ADD_SUCCESS = "좋아요가 추가되었습니다";
+	public static final String LIKES_DELETE_SUCCESS = "좋아요가 취소되었습니다";
+
 	/* Token */
 	public static final String BAD_TOKEN_REQUEST = "토큰을 확인하세요";
 	public static final String EXPIRED_REFRESHTOKEN = "refresh 토큰이 만료되었습니다.";
