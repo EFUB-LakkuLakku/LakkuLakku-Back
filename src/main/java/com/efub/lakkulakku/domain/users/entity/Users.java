@@ -6,16 +6,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Entity
+
+@Setter
 @Getter
 @NoArgsConstructor
-
+@Entity
 public class Users extends BaseTimeEntity {
 
 	@Id
@@ -51,5 +54,9 @@ public class Users extends BaseTimeEntity {
 		this.password = password;
 		this.nickname = nickname;
 		role = "USER";
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

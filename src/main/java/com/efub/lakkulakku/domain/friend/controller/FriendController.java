@@ -43,7 +43,6 @@ public class FriendController {
 
 	@GetMapping()
 	public List<FriendResDto> getFriends(@AuthUsers Users user) {
-
 		return friendService.getFriends(user);
 	}
 
@@ -53,6 +52,5 @@ public class FriendController {
 		friendService.deleteFriend(reqDto, user);
 		return ResponseEntity.ok(DELETE_FRIEND_SUCCESS);
 	}
-
 
 }

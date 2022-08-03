@@ -1,8 +1,9 @@
 package com.efub.lakkulakku.global.config.jwt;
 
+import com.efub.lakkulakku.domain.users.exception.RefreshTokenExpiredException;
 import com.efub.lakkulakku.domain.users.service.CustomUsersDetailsService;
 import io.jsonwebtoken.*;
-import com.efub.lakkulakku.domain.users.exception.TokenExpiredException;
+
 import com.efub.lakkulakku.global.redis.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -36,15 +37,13 @@ public class JwtProvider {
 	@Value("${spring.jwt.blacklist.access-token}")
 	private String blackListATPrefix;
 
-	// 의존성 주입 후, 초기화를 수행
-	// 객체 초기화, secretKey Base64로 인코딩한다.
 	@PostConstruct
 	protected void init() {
 		SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
 	}
 
 	public String createAccessToken(String userId, String roles) {
-		Long tokenInvalidTime = 1000L * 60 * 3; // 3m
+		Long tokenInvalidTime = 1000L * 60 * 120; // 2h
 		return this.createToken(userId, roles, tokenInvalidTime);
 	}
 
@@ -60,11 +59,11 @@ public class JwtProvider {
 		claims.put("roles", roles); // 권한 설정, key/ value 쌍으로 저장
 		Date date = new Date();
 		return Jwts.builder()
-				.setClaims(claims) // 발행 유저 정보 저장
-				.setIssuedAt(date) // 발행 시간 저장
-				.setExpiration(new Date(date.getTime() + TOKEN_VALID_TIME)) // 토큰 유효 시간 저장
-				.signWith(SignatureAlgorithm.HS256, SECRET_KEY) // 해싱 알고리즘 및 키 설정
-				.compact(); // 생성
+				.setClaims(claims)
+				.setIssuedAt(date)
+				.setExpiration(new Date(date.getTime() + TOKEN_VALID_TIME))
+				.signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+				.compact();
 	}
 
 	public Authentication validateToken(HttpServletRequest request, String token) {
@@ -79,7 +78,7 @@ public class JwtProvider {
 		} catch (MalformedJwtException | SignatureException | UnsupportedJwtException e) {
 			request.setAttribute(exception, "토큰의 형식을 확인하세요.");
 		} catch (ExpiredJwtException e) {
-			request.setAttribute(exception, "토큰이 만료되었습니다.");
+			request.setAttribute(exception, "access 토큰이 만료되었습니다.");
 		} catch (IllegalArgumentException e) {
 			request.setAttribute(exception, "JWT compact of handler are invalid");
 		}
@@ -98,7 +97,7 @@ public class JwtProvider {
 	public void checkRefreshToken(String userId, String refreshToken) {
 		String redisRT = redisService.getValues(userId);
 		if (!refreshToken.equals(redisRT)) {
-			throw new TokenExpiredException();
+			throw new RefreshTokenExpiredException();
 		}
 	}
 
@@ -106,6 +105,6 @@ public class JwtProvider {
 		Date expiration = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().getExpiration();
 		long expiredAccessTokenTime = expiration.getTime() - new Date().getTime();
 		redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
-		redisService.deleteValues(userId); // Delete RefreshToken In Redis
+		redisService.deleteValues(userId);
 	}
 }

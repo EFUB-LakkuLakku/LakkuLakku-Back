@@ -18,7 +18,7 @@ public class ProfileUpdateResDto {
         this.id = user.getId();
         this.nickname = user.getNickname();
 
-        if (user.getProfile() == null) {
+        if (user.getProfile() == null || user.getProfile().getFile() == null) {
             this.profileImageUrl = null;
             this.bio = null;
         }
