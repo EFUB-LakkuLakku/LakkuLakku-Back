@@ -3,6 +3,7 @@ package com.efub.lakkulakku.domain.image.entity;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.file.entity.File;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -28,21 +29,32 @@ public class Image extends BaseTimeEntity {
 
 	@Column(length = 20)
 	@NotNull
-	private String width;
+	private Integer width;
 
 	@Column(length = 20)
 	@NotNull
-	private String height;
+	private Integer height;
 
 	@Column(length = 20)
 	@NotNull
-	private String xcoord;
+	private Integer x;
 
 	@Column(length = 20)
 	@NotNull
-	private String ycoord;
+	private Integer y;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id")
 	private File file;
+
+	@Builder
+	public Image(Diary diary, Integer width, Integer height,
+				 Integer x, Integer y, File file) {
+		this.diary = diary;
+		this.width = width;
+		this.height = height;
+		this.x = x;
+		this.y = y;
+		this.file = file;
+	}
 }
