@@ -43,7 +43,8 @@ public class FriendService {
 						.userId(user)
 						.friendId(targetUser)
 						.notiType("follow")
-						.message("님과 새 친구가 되었습니다").build();
+						.build();
+				notification.makeMessage(targetUser, "follow", null);
 				notificationRepository.save(notification);
 			}
 		} else {
