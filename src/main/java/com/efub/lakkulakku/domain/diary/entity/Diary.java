@@ -1,6 +1,7 @@
 package com.efub.lakkulakku.domain.diary.entity;
 
 import com.efub.lakkulakku.domain.comment.entity.Comment;
+import com.efub.lakkulakku.domain.diary.dto.DiaryEntityUpdateDto;
 import com.efub.lakkulakku.domain.image.entity.Image;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
@@ -12,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,6 +35,7 @@ public class Diary extends BaseTimeEntity {
 	private UUID id;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "users_id")
 	private Users user;
 
@@ -49,7 +53,7 @@ public class Diary extends BaseTimeEntity {
 	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "template_id")
 	private Template template;
 
@@ -73,23 +77,38 @@ public class Diary extends BaseTimeEntity {
 
 	@PrePersist
 	public void prePersist() {
-		this.cntComment = this.cntComment == null ? 0 : this.cntComment;
-		this.cntLike = this.cntLike == null ? 0 : this.cntLike;
+		this.title = "제목을 입력해주세요";
+		this.titleEmoji = "📒";
+		this.cntComment = 0;
+		this.cntLike = 0;
 	}
 
 	@Builder
-	public Diary(Users user, LocalDate date, String title, String titleEmoji, List<Comment> comments, Template template,
+	public Diary(Users user, LocalDate date, List<Comment> comments,
 				 List<Image> images, List<Likes> likes, List<Text> texts, List<Sticker> stickers) {
 		this.user = user;
 		this.date = date;
-		this.title = title;
-		this.titleEmoji = titleEmoji;
 		this.comments = comments;
-		this.template = template;
 		this.images = images;
 		this.likes = likes;
 		this.texts = texts;
 		this.stickers = stickers;
 	}
 
+	public void setTemplate(Template template) {
+		this.template = template;
+	}
+
+	public void updateDiary(DiaryEntityUpdateDto dto) {
+		this.title = dto.getTitle();
+		this.titleEmoji = dto.getTitleEmoji();
+		this.comments = dto.getCommentList();
+		this.template = dto.getTemplate();
+		this.images = dto.getImageList();
+		this.likes = dto.getLikesList();
+		this.texts = dto.getTextList();
+		this.stickers = dto.getStickerList();
+		this.cntComment = dto.getCntComment();
+		this.cntLike = dto.getCntLike();
+	}
 }
