@@ -1,10 +1,10 @@
 package com.efub.lakkulakku.domain.users.exception;
 
-import static com.efub.lakkulakku.global.constant.ResponseConstant.DUPLICATE_EMAIL;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.DUPLICATE_NICKNAME;
 
 public class DuplicateNicknameException extends IllegalArgumentException {
 	public DuplicateNicknameException() {
-		super(DUPLICATE_EMAIL);
+		super(DUPLICATE_NICKNAME);
 	}
 
 	@Override

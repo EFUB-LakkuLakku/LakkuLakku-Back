@@ -54,14 +54,14 @@ public class UsersService {
 		checkPassword(password, user.getPassword());
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
-		return new LoginResDto(accessToken, refreshToken);
+		return new LoginResDto(accessToken, refreshToken, user.getNickname());
 	}
 
 	public LoginResDto reIssueAccessToken(String email, String refreshToken) {
 		Users user = usersRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		jwtProvider.checkRefreshToken(email, refreshToken);
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
-		return new LoginResDto(accessToken, refreshToken);
+		return new LoginResDto(accessToken, refreshToken, user.getNickname());
 	}
 
 	private void checkPassword(String password, String encodedPassword) {

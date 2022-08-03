@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.validation.Valid;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
@@ -28,16 +28,14 @@ public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
 
-
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup(@RequestBody SignupReqDto reqDto) {
+	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
-		//나중에 토큰 방법 추가 후 토큰을 responseBody로 보내기
 		return ResponseEntity.ok(SIGNUP_SUCCESS);
 	}
 
 	@GetMapping("/signup/email")
-	public ResponseEntity<?> checkEmailDuplicate(@RequestParam String email) {
+	public ResponseEntity<?> checkEmailDuplicate(@Valid @RequestParam String email) {
 		if (usersRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();
 		} else {
@@ -47,7 +45,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/signup/nickname")
-	public ResponseEntity<?> checkNicknameDuplicate(@RequestParam String nickname) {
+	public ResponseEntity<?> checkNicknameDuplicate(@Valid @RequestParam String nickname) {
 		if (usersRepository.existsByNickname(nickname)) {
 			throw new DuplicateNicknameException();
 		} else {

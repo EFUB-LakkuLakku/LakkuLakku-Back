@@ -23,8 +23,9 @@ public class LikeMapper {
 
 		return LikeResDto.builder()
 				.id(entity.getId())
-				.userId(entity.getUsers().getId())
 				.createdOn(entity.getCreatedOn())
+				.diaryId(entity.getDiary().getId())
+				.isLike(entity.getIsLike())
 				.build();
 	}
 

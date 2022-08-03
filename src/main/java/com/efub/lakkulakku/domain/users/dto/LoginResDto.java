@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 public class LoginResDto {
 	private String accessToken;
 	private String refreshToken;
+	private String nickname;
 
 	@Builder
-	public LoginResDto(String accessToken, String refreshToken) {
+	public LoginResDto(String accessToken, String refreshToken, String nickname) {
 
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
+		this.nickname = nickname;
 	}
 }

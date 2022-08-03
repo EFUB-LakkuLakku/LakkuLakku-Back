@@ -10,6 +10,9 @@ import java.util.UUID;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, UUID> {
 	Optional<Likes> findById(UUID id);
-	void deleteAllByDiaryId(UUID id);
+  Optional<Likes> findByDiaryAndUsers(Diary diary, Users users);
+	void deleteById(UUID id);
+  void deleteAllByDiaryId(UUID id);
+	boolean existsByDiaryAndUsers(Diary diary, Users user);
 	int countByDiaryId(UUID id);
 }

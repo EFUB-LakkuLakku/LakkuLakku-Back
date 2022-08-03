@@ -7,6 +7,8 @@ import jdk.jshell.Snippet;
 import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Likes extends BaseTimeEntity {
 
@@ -31,9 +35,28 @@ public class Likes extends BaseTimeEntity {
 	@JoinColumn(name = "users_id")
 	private Users users;
 
+
 	@Builder
 	public Likes(Diary diary, Users users) {
 		this.diary = diary;
 		this.users = users;
+
+	@Column(columnDefinition = "boolean default 1")
+	private Boolean isLike;
+
+	@PrePersist
+	public void prePersist() {
+		this.isLike = true;
+	}
+
+	@Builder
+	public Likes(Users users, Diary diary, boolean isLike) {
+		this.users = users;
+		this.diary = diary;
+		this.isLike = isLike;
+	}
+
+	public void setIsLike(){
+		this.isLike = this.isLike ? false : true;
 	}
 }
