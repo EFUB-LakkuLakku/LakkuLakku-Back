@@ -99,6 +99,14 @@ public class Diary extends BaseTimeEntity {
 		this.template = template;
 	}
 
+	public void setCntComment(Integer cntComment) {
+		this.cntComment = cntComment;
+	}
+
+	public void setCntLike(Integer cntLike) {
+		this.cntLike = cntLike;
+	}
+
 	public void updateDiary(DiaryEntityUpdateDto dto) {
 		this.title = dto.getTitle();
 		this.titleEmoji = dto.getTitleEmoji();

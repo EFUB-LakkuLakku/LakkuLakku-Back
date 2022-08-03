@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface LikesRepository extends JpaRepository<Likes, UUID> {
 	Optional<Likes> findById(UUID id);
 	void deleteAllByDiaryId(UUID id);
+	int countByDiaryId(UUID id);
 }

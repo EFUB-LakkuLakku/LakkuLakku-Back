@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.diary.service;
 
+import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.dto.DiaryLookupResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryMapper;
 import com.efub.lakkulakku.domain.diary.dto.DiarySaveReqDto;
@@ -7,6 +8,7 @@ import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.exception.BadDateRequestException;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.template.repository.TemplateRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
@@ -24,6 +26,8 @@ public class DiaryService {
 
 	private final DiaryRepository diaryRepository;
 	private final TemplateRepository templateRepository;
+	private final CommentRepository commentRepository;
+	private final LikesRepository likesRepository;
 	private final DiaryMapper diaryMapper;
 
 	public void checkDiaryIsInDate(LocalDate date) {
@@ -34,7 +38,16 @@ public class DiaryService {
 			throw new BadDateRequestException();
 	}
 
+	public Diary updateDiaryCntCommentAndCntLikes(Diary diary){
+		int cntComment = commentRepository.countByDiaryId(diary.getId());
+		int cntLike = likesRepository.countByDiaryId(diary.getId());
+		diary.setCntComment(cntComment);
+		diary.setCntLike(cntLike);
+		return diary;
+	}
+
 	public DiaryLookupResDto getDiaryInfo(Diary diary) {
+		diary = updateDiaryCntCommentAndCntLikes(diary);
 		return diaryMapper.toDiaryLookupResDto(diary);
 	}
 
