@@ -14,11 +14,17 @@ public class ResponseConstant {
 	// signup
 	public static final String SIGNUP_SUCCESS = "성공적으로 가입되었습니다.";
 
+	//settings
+	public static final String PASSWORD_CHANGE_SUCCESS = "성공적으로 비밀번호가 변경되었습니다.";
+
 	// exception
 	public static final String DUPLICATE_NICKNAME = "중복된 닉네임이 존재합니다.";
 	public static final String DUPLICATE_EMAIL = "중복된 이메일이 존재합니다.";
 	public static final String PASSWORD_NOT_MATCH = "비밀번호가 일치하지 않습니다.";
 	public static final String NOTFOUND_USER = "해당 유저를 찾을 수 없습니다.";
+
+	public static final String PASSWORDS_NOT_EQUAL = "입력한 새 비밀번호가 서로 일치하지 않습니다.";
+	public static final String BEFORE_PASSWORD_NOT_MATCH = "현재 비밀번호가 일치하지 않습니다.";
 
 	/* Friends */
 	public static final String FRIEND_SUCCESS = "성공적으로 친구가 되었습니다.";

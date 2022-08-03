@@ -12,10 +12,14 @@ import com.efub.lakkulakku.domain.users.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.DateTimeException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -40,6 +44,15 @@ public class GlobalExceptionHandler {
 				.message(e.getMessage())
 				.build();
 		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	//vaild 오류
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex){
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getAllErrors()
+				.forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+		return ResponseEntity.badRequest().body(errors);
 	}
 
 	/*================== Diary Exception ==================*/
@@ -100,6 +113,28 @@ public class GlobalExceptionHandler {
 		final ErrorResponse response = ErrorResponse.builder()
 				.status(HttpStatus.BAD_REQUEST)
 				.code(ErrorCode.PASSWORD_NOT_MATCH)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+
+	}
+
+	@ExceptionHandler(PasswordsNotEqualException.class)
+	protected final ResponseEntity<ErrorResponse> handlePasswordsNotEqualException(PasswordsNotEqualException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.PASSWORDS_NOT_EQUAL)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+
+	}
+
+	@ExceptionHandler(BeforePasswordNotMatchException.class)
+	protected final ResponseEntity<ErrorResponse> handleBeforePasswordNotMatchException(BeforePasswordNotMatchException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.BEFORE_PASSWORD_NOT_MATCH)
 				.message(e.getMessage())
 				.build();
 		return ResponseEntity.status(response.getStatus()).body(response);
