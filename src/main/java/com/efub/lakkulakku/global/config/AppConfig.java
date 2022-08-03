@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class AppConfig {
+public class AppConfig{
 
 	private final JwtProvider jwtProvider;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -48,7 +48,9 @@ public class AppConfig {
 	}
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable()
+		http.cors()
+				.configurationSource(corsConfigurationSource())
+				.and().csrf().disable()
 				.exceptionHandling()
 				.authenticationEntryPoint(customAuthenticationEntryPoint)
 				.and()
@@ -62,4 +64,5 @@ public class AppConfig {
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
+
 }
