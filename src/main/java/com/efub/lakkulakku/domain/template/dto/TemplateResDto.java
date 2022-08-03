@@ -11,13 +11,13 @@ import java.util.UUID;
 public class TemplateResDto {
 
 	private UUID id;
-	private String url;
 	private String category;
+	private String url;
 
 	@Builder
-	public TemplateResDto(UUID id, String url, String category) {
+	public TemplateResDto(UUID id, String category, String url) {
 		this.id = id;
-		this.url = url;
 		this.category = category;
+		this.url = url;
 	}
 }
