@@ -4,6 +4,7 @@ import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.image.dto.ImageResDto;
 import com.efub.lakkulakku.domain.likes.dto.LikeResDto;
 import com.efub.lakkulakku.domain.sticker.dto.StickerResDto;
+import com.efub.lakkulakku.domain.template.dto.TemplateResDto;
 import com.efub.lakkulakku.domain.text.dto.TextResDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,6 +18,7 @@ import java.util.List;
 public class DiaryLookupResDto {
 
 	private DiaryResDto diary;
+	private TemplateResDto template;
 	private List<TextResDto> textList;
 	private List<ImageResDto> imageList;
 	private List<StickerResDto> stickerList;
@@ -24,9 +26,10 @@ public class DiaryLookupResDto {
 	private List<LikeResDto> likeList;
 
 	@Builder
-	public DiaryLookupResDto(DiaryResDto diary, List<TextResDto> textList, List<ImageResDto> imageList,
+	public DiaryLookupResDto(DiaryResDto diary, TemplateResDto template, List<TextResDto> textList, List<ImageResDto> imageList,
 							 List<StickerResDto> stickerList, List<CommentResDto> commentList, List<LikeResDto> likeList) {
 		this.diary = diary;
+		this.template = template;
 		this.textList = textList;
 		this.imageList = imageList;
 		this.stickerList = stickerList;
