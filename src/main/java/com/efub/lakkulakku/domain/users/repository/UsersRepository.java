@@ -22,5 +22,6 @@ public interface UsersRepository extends JpaRepository<Users, UUID> {
 	Optional<Users> findByNickname(@Param("nickname") String nickname);
 
 	Optional<Users> findByUid(Long uid);
+	Optional<Users> findById(UUID id);
 
 }
