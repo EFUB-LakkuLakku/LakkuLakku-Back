@@ -1,9 +1,11 @@
 package com.efub.lakkulakku.domain.comment.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.NO_AUTHORIZATION;
+
 public class UnauthorizedException extends IllegalArgumentException {
 
 	public UnauthorizedException() {
-		super("수정할 수 있는 권한이 없습니다.");
+		super(NO_AUTHORIZATION);
 	}
 
 	@Override

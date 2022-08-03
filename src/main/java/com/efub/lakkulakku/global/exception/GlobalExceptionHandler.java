@@ -1,5 +1,8 @@
 package com.efub.lakkulakku.global.exception;
 
+import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.diary.exception.BadDateRequestException;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
@@ -238,6 +241,39 @@ public class GlobalExceptionHandler {
 		final ErrorResponse response = ErrorResponse.builder()
 				.status(HttpStatus.BAD_REQUEST)
 				.code(ErrorCode.REFRESHTOKEN_EXPIRED)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+
+
+	/*================== Comment Exception ==================*/
+	@ExceptionHandler(CommentNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.NOT_FOUND)
+				.code(ErrorCode.COMMENT_NOT_FOUND)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	@ExceptionHandler(ParentNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.NOT_FOUND)
+				.code(ErrorCode.PARENT_NOT_FOUND)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	@ExceptionHandler(UnauthorizedException.class)
+	protected final ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.UNAUTHORIZED)
+				.code(ErrorCode.UNAUTHORIZED_USER)
 				.message(e.getMessage())
 				.build();
 		return ResponseEntity.status(response.getStatus()).body(response);

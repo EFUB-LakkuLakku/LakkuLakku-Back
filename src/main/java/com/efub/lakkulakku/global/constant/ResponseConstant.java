@@ -57,6 +57,8 @@ public class ResponseConstant {
 	/*Comment*/
 	public static final String COMMENT_ADD_SUCCESS = "해당 댓글이 작성되었습니다.";
 	public static final String COMMENT_DELETE_SUCCESS = "댓글이 삭제되었습니다.";
+	public static final String NOTFOUND_PARENT = "상위 댓글이 존재하지 않습니다.";
+	public static final String NO_AUTHORIZATION = "권한이 없습니다.";
 
 	/* Token */
 	public static final String BAD_TOKEN_REQUEST = "토큰을 확인하세요";
