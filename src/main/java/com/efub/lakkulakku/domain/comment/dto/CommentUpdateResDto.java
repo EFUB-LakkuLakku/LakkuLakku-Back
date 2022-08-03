@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-public class CommentResDto {
+public class CommentUpdateResDto {
 
 	private UUID id;
 	private UUID userId;
@@ -18,12 +18,11 @@ public class CommentResDto {
 	private UUID parentId;
 	private String content;
 	private Boolean isSecret;
-	private LocalDateTime createdOn;
-	private String message;
+	private LocalDateTime modifiedOn;
 
 	@Builder
-	public CommentResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
-						 Boolean isSecret, LocalDateTime createdOn, String message) {
+	public CommentUpdateResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
+						 Boolean isSecret, LocalDateTime modifiedOn) {
 		this.id = id;
 		this.userId = userId;
 		this.profileImageUrl = profileImageUrl;
@@ -31,8 +30,9 @@ public class CommentResDto {
 		this.parentId = parentId;
 		this.content = content;
 		this.isSecret = isSecret;
-		this.createdOn = createdOn;
-		this.message = message;
+		this.modifiedOn = modifiedOn;
+
 	}
 
 }
+
