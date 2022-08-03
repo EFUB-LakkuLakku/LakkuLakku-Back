@@ -40,6 +40,7 @@ public class Likes extends BaseTimeEntity {
 	public Likes(Diary diary, Users users) {
 		this.diary = diary;
 		this.users = users;
+	}
 
 	@Column(columnDefinition = "boolean default 1")
 	private Boolean isLike;

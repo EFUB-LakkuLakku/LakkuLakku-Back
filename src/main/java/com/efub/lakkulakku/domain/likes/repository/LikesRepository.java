@@ -1,6 +1,8 @@
 package com.efub.lakkulakku.domain.likes.repository;
 
+import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
+import com.efub.lakkulakku.domain.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
