@@ -39,18 +39,24 @@ public class FriendService {
 						.targetId(targetUser)
 						.build();
 				friendRepository.save(friends);
-				Notification notification = Notification.builder()
+				Notification userNotification = Notification.builder()
 						.userId(user)
 						.friendId(targetUser)
 						.notiType("follow")
 						.build();
-				notification.makeMessage(targetUser, "follow", null);
-				notificationRepository.save(notification);
+				Notification targetNotification = Notification.builder()
+						.userId(targetUser)
+						.friendId(user)
+						.notiType("follow")
+						.build();
+				userNotification.makeMessage(targetUser, "follow", null);
+				targetNotification.makeMessage(user, "follow", null);
+				notificationRepository.save(userNotification);
+				notificationRepository.save(targetNotification);
 			}
 		} else {
 			throw new UserNotFoundException();
 		}
-
 
 	}
 
@@ -96,7 +102,7 @@ public class FriendService {
 	@Transactional
 	public void deleteFriend(FriendReqDto reqDto, Users user) {
 		Users delFriend = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(() -> new UserNotFoundException());//에러 필요? -> 삭제할 때 없을 수 유저가 있음
+				.orElseThrow(() -> new UserNotFoundException());
 		UUID id = isFriend(user, delFriend);
 		friendRepository.deleteById(id);
 	}
