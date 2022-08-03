@@ -27,7 +27,7 @@ public class Profile extends BaseTimeEntity {
 	private UUID id;
 
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_image_id")
 	private File file;
 

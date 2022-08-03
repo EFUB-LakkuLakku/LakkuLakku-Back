@@ -50,4 +50,12 @@ public class Comment extends BaseTimeEntity {
 		this.content = content;
 	}
 
+	@Builder
+	public Comment(Diary diary, Users users, String content, UUID parentId, Boolean isSecret) {
+		this.diary = diary;
+		this.users = users;
+		this.content = content;
+		this.parentId = parentId;
+		this.isSecret = isSecret;
+	}
 }

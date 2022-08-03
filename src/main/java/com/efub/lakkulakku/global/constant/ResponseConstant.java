@@ -38,6 +38,18 @@ public class ResponseConstant {
 	public static final String NOTFOUND_DIARY = "해당 다이어리를 찾을 수 없습니다.";
 	public static final String BAD_DATE_REQUEST = "잘못된 날짜입니다.";
 
+	// edit
+	public static final String NOTFOUND_TEMPLATE = "해당 속지를 찾을 수 없습니다.";
+	public static final String NOTFOUND_TEXT = "해당 텍스트를 찾을 수 없습니다.";
+	public static final String NOTFOUND_IMAGE = "해당 이미지를 찾을 수 없습니다.";
+	public static final String NOTFOUND_STICKER = "해당 스티커를 찾을 수 없습니다.";
+	public static final String NOTFOUND_COMMENT = "존재하지 않는 댓글입니다";
+	public static final String NOTFOUND_LIKE = "해당 다이어리의 좋아요 정보를 찾을 수 없습니다.";
+
+	/* Image */
+	public static final String SIZECHECK_FAILURE_IMAGE = "해당 이미지의 정보를 불러올 수 없습니다.";
+	public static final String MISSING_IMAGE = "일부 이미지가 누락되었습니다. 다시 업로드해주세요.";
+
 	/*Likes*/
 	public static final String LIKES_ADD_SUCCESS = "좋아요가 추가되었습니다";
 	public static final String LIKES_DELETE_SUCCESS = "좋아요가 취소되었습니다";

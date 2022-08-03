@@ -12,5 +12,6 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 	Optional<Comment> findById(UUID id);
 	void deleteById(UUID id);
 	Optional<Comment> findByParentId(UUID parentId);
-
+	void deleteAllByDiaryId(UUID id);
+	int countByDiaryId(UUID id);
 }

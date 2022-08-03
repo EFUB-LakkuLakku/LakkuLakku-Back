@@ -1,9 +1,13 @@
 package com.efub.lakkulakku.domain.comment.exception;
 
-public class CommentNotFoundException extends IllegalArgumentException {
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+
+import static com.efub.lakkulakku.global.constant.ResponseConstant.NOTFOUND_COMMENT;
+
+public class CommentNotFoundException extends ResourceNotFoundException {
 
 	public CommentNotFoundException() {
-		super("존재하지 않는 댓글입니다.");
+		super(NOTFOUND_COMMENT);
 	}
 
 	@Override

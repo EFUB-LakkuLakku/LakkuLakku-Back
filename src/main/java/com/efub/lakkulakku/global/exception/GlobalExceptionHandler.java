@@ -8,7 +8,12 @@ import com.efub.lakkulakku.domain.file.exception.S3IOException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.users.exception.*;
-//import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.image.exception.ImageFileMissingException;
+import com.efub.lakkulakku.domain.image.exception.ImageNotFoundException;
+import com.efub.lakkulakku.domain.image.exception.ImageSizeCheckFailureException;
+import com.efub.lakkulakku.domain.users.exception.BadTokenRequestException;
+import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
+import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +91,36 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
 
+	/*================== Image Exception ==================*/
+	@ExceptionHandler(ImageFileMissingException.class)
+	protected final ResponseEntity<ErrorResponse> handleImageFileMissingException(ImageFileMissingException e){
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.IMAGE_MISSING)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	@ExceptionHandler(ImageNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleImageNotFoundException(ImageNotFoundException e){
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.NOT_FOUND)
+				.code(ErrorCode.IMAGE_NOT_FOUND)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
+
+	@ExceptionHandler(ImageSizeCheckFailureException.class)
+	protected final ResponseEntity<ErrorResponse> handleImageSizeCheckFailureException (ImageSizeCheckFailureException e){
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.code(ErrorCode.IMAGE_SIZE_CHECK_FAILURE)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+	}
 
 	/*================== User Exception ==================*/
 	@ExceptionHandler(DuplicateEmailException.class)

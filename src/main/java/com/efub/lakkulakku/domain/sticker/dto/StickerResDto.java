@@ -11,21 +11,21 @@ import java.util.UUID;
 public class StickerResDto {
 
 	private UUID id;
-	private String width;
-	private String height;
-	private String xcoord;
-	private String ycoord;
+	private Integer width;
+	private Integer height;
+	private Integer x;
+	private Integer y;
 	private String category;
 	private String url;
 
 	@Builder
-	public StickerResDto(UUID id, String width, String height,
-						 String xcoord, String ycoord, String category, String url) {
+	public StickerResDto(UUID id, Integer width, Integer height,
+						 Integer x, Integer y, String category, String url) {
 		this.id = id;
 		this.width = width;
 		this.height = height;
-		this.xcoord = xcoord;
-		this.ycoord = ycoord;
+		this.x = x;
+		this.y = y;
 		this.category = category;
 		this.url = url;
 	}

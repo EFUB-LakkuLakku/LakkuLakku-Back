@@ -14,7 +14,9 @@ import java.util.UUID;
 @Repository
 public interface DiaryRepository extends JpaRepository<Diary, UUID> {
 	Boolean existsByDate(LocalDate date);
+
 	@Query(value = "SELECT * FROM diary d WHERE d.users_id=:userId AND YEAR(d.date)=:year AND MONTH(d.date)=:month", nativeQuery = true)
 	List<Diary> findUsersDiaryByYearAndMonth(@Param("userId") UUID userId, @Param("year") String year, @Param("month") String month);
+
 	Optional<Diary> findByDate(LocalDate date);
 }
