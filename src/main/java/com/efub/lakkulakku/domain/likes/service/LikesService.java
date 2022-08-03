@@ -38,21 +38,33 @@ public class LikesService {
 		Diary diary = diaryRepository.findById(likeReqDto.getDiaryId()).get();
 
 		if (likesRepository.existsByDiaryAndUsers(diary, user)) { // 좋아요 존재하면
+
 			Likes likes = likesRepository.findByDiaryAndUsers(diary, user).orElseThrow();
 			likes.setIsLike();
-			return new LikeResDto(likes.getId(), likes.getDiary().getId(), likes.getCreatedOn(), LIKES_DELETE_SUCCESS, likes.getIsLike());
+			String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
+			return LikeResDto.builder()
+					.id(likes.getId())
+					.diaryId(likes.getDiary().getId())
+					.createdOn(likes.getCreatedOn())
+					.message(message)
+					.isLike(likes.getIsLike())
+					.build();
 		}
 
 		// 존재하지 않으면 like 객체 생성
 		else {
-			Likes likes = Likes.builder()
-					.users(user)
-					.diary(diary)
-					.build();
+
+			Likes likes = likesRepository.findByDiaryAndUsers(diary, user).orElseThrow();
 
 			likesRepository.save(likes);
-
-			return new LikeResDto(likes.getId(), likes.getDiary().getId(), likes.getCreatedOn(), LIKES_ADD_SUCCESS, likes.getIsLike());
+			String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
+			return LikeResDto.builder()
+					.id(likes.getId())
+					.diaryId(likes.getDiary().getId())
+					.createdOn(likes.getCreatedOn())
+					.message(message)
+					.isLike(likes.getIsLike())
+					.build();
 		}
 
 	}
