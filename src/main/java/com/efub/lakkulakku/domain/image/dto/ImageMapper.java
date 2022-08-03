@@ -46,7 +46,7 @@ public class ImageMapper {
 		BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
 		int width = bufferedImage.getWidth();
 		int height = bufferedImage.getHeight();
-		File file = profileService.uploadImage(user.getNickname(), "Image", multipartFile);
+		File file = profileService.uploadImage("image", user.getNickname(), multipartFile);
 		return Image.builder()
 				.diary(diary)
 				.width(width)
