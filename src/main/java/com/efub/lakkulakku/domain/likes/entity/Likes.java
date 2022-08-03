@@ -35,7 +35,6 @@ public class Likes extends BaseTimeEntity {
 	@JoinColumn(name = "users_id")
 	private Users users;
 
-
 	@Builder
 	public Likes(Diary diary, Users users) {
 		this.diary = diary;

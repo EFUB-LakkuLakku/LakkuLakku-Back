@@ -12,23 +12,25 @@ import java.util.UUID;
 public class CommentUpdateResDto {
 
 	private UUID id;
+	private UUID userId;
 	private String profileImageUrl;
 	private String nickname;
 	private UUID parentId;
 	private String content;
 	private Boolean isSecret;
-	private LocalDateTime createdOn;
+	private LocalDateTime modifiedOn;
 
 	@Builder
-	public CommentUpdateResDto(UUID id, String profileImageUrl, String nickname, UUID parentId, String content,
-						 Boolean isSecret, LocalDateTime createdOn) {
+	public CommentUpdateResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
+						 Boolean isSecret, LocalDateTime modifiedOn) {
 		this.id = id;
+		this.userId = userId;
 		this.profileImageUrl = profileImageUrl;
 		this.nickname = nickname;
 		this.parentId = parentId;
 		this.content = content;
 		this.isSecret = isSecret;
-		this.createdOn = createdOn;
+		this.modifiedOn = modifiedOn;
 
 	}
 

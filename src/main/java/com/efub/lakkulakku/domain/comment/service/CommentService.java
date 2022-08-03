@@ -1,13 +1,18 @@
 package com.efub.lakkulakku.domain.comment.service;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
 import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
 import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.likes.dto.LikeResDto;
+import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -28,77 +35,75 @@ public class CommentService {
 	private final DiaryRepository diaryRepository;
 
 	@Transactional
-	public void addComment(CommentResDto commentResDto) {
-		Users user = userRepository.findByEmail("seojunng@gmail.com").get();
-		Diary diary = diaryRepository.findByDate(LocalDate.parse("2022-08-22")).get();
+	public CommentResDto addComment(Users user, LocalDate date, CommentReqDto commentReqDto) {
+
+		Diary diary = diaryRepository.findById(commentReqDto.getDiaryId()).get();
 
 		Comment comment = Comment.builder()
-				.id(commentResDto.getId())
-				.parentId(commentResDto.getParentId())
-				.content(commentResDto.getContent())
 				.users(user)
-				//.diary(diary)
-				.isSecret(commentResDto.getIsSecret())
+				.content(commentReqDto.getContent())
+				.diary(diary)
+				.parentId(commentReqDto.getParentId())
+				.isSecret(commentReqDto.isSecret())
 				.build();
 
-		/*commentRepository.findById(id).ifPresent(
-				comment -> commentRepository.save(comment)
-		);*/
-
 		commentRepository.save(comment);
+
+		String message = COMMENT_ADD_SUCCESS;
+
+		return CommentResDto.builder()
+				.id(comment.getId())
+				.userId(comment.getUsers().getId())
+				//.profileImageUrl(profileImageUrl)
+				.nickname(user.getNickname())
+				.parentId(comment.getParentId())
+				.content(comment.getContent())
+				.isSecret(comment.getIsSecret())
+				.createdOn(comment.getCreatedOn())
+				.message(message)
+				.build();
 
 	}
 
 	@Transactional
-	public void removeComment(UUID id/*, UUID parentId*/) {
+	public void removeComment(UUID id) {
 
-		Comment comment = commentRepository.findById(id)
-				.orElseThrow(CommentNotFoundException::new);
+		if(!commentRepository.existsById(id))
+			throw new CommentNotFoundException();
 
 		commentRepository.deleteById(id);
 
 	}
 
 	@Transactional
-	public CommentUpdateResDto update(UUID id, CommentResDto commentResDto) {
+	public CommentUpdateResDto update(Users user, UUID id, LocalDate date, CommentReqDto commentReqDto) {
 
-		Comment comment = commentRepository.findById(id) //댓글 작성한 유저 불러오기로 변경
-				.orElseThrow(UnauthorizedException::new);
+		if (!commentRepository.findById(id).get().getUsers().getId().equals(user.getId()))
+			throw new UnauthorizedException();
 
-		//if (!comment.getUsers().equals(loggedUser))
+		if(!commentRepository.existsById(id))
+			throw new CommentNotFoundException();
 
-		comment.update(commentResDto.getContent());
+		Comment comment = commentRepository.findById(id).orElseThrow();
+
+		comment.update(commentReqDto.getContent());
 
 		commentRepository.save(comment);
 
-		return new CommentUpdateResDto(comment.getId(), comment.getParentId(), comment.getContent(),
-				comment.getIsSecret(),comment.getCreatedOn());
-
-	}
-
-	@Transactional
-	public void addRecomment(UUID id, UUID parentId, CommentResDto commentResDto) {
-
-		Users user = userRepository.findByEmail("seojunng@gmail.com").get();
-
-		Comment recomment = Comment.builder()
-				.id(commentResDto.getId())
-				.parentId(commentResDto.getParentId())
-				.content(commentResDto.getContent())
-				.users(user)
-				//.diary(diary)
-				.isSecret(commentResDto.getIsSecret())
+		return CommentUpdateResDto.builder()
+				.id(comment.getId())
+				.userId(comment.getUsers().getId())
+				//.profileImageUrl(profileImageUrl)
+				.nickname(user.getNickname())
+				.parentId(comment.getParentId())
+				.content(comment.getContent())
+				.isSecret(comment.getIsSecret())
+				.modifiedOn(comment.getModifiedOn())
 				.build();
 
-		//Comment recomment = Comment.addRecomment(diary, commentResDto.getContent(), users, parent);
-
-		commentRepository.findByParentId(parentId).ifPresent(
-				comment -> commentRepository.save(recomment));
-
-		//commentRepository.save(recomment);
 	}
 
-	private Optional<Comment> findById(CommentResDto commentResDto, UUID id) {
+	/*private Optional<Comment> findById(CommentResDto commentResDto, UUID id) {
 		return commentRepository
 				.findById(id);
 	}
@@ -106,5 +111,5 @@ public class CommentService {
 	private Optional<Comment> findByParentId(CommentResDto commentResDto, UUID parentId) {
 		return commentRepository
 				.findByParentId(parentId);
-	}
+	}*/
 }
