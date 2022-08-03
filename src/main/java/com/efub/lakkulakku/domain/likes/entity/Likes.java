@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -34,9 +35,22 @@ public class Likes extends BaseTimeEntity {
 	@JoinColumn(name = "users_id")
 	private Users users;
 
+	@Column(columnDefinition = "boolean default 1")
+	private Boolean isLike;
+
+	@PrePersist
+	public void prePersist() {
+		this.isLike = true;
+	}
+
 	@Builder
-	public Likes(Users users, Diary diary) {
+	public Likes(Users users, Diary diary, boolean isLike) {
 		this.users = users;
 		this.diary = diary;
+		this.isLike = isLike;
+	}
+
+	public void setIsLike(){
+		this.isLike = this.isLike ? false : true;
 	}
 }

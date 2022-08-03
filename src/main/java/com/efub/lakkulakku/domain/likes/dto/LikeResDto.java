@@ -12,15 +12,17 @@ import java.util.UUID;
 public class LikeResDto {
 
 	private UUID id;
-	private UUID userId;
 	private LocalDateTime createdOn;
 	private UUID diaryId;
+	private String message;
+	private boolean isLike;
 
 	@Builder
-	public LikeResDto(UUID id, UUID userId, UUID diaryId, LocalDateTime createdOn) {
+	public LikeResDto(UUID id, UUID diaryId, LocalDateTime createdOn, String message, boolean isLike) {
 		this.id = id;
-		this.userId = userId;
 		this.diaryId = diaryId;
 		this.createdOn = createdOn;
+		this.message = message;
+		this.isLike = isLike;
 	}
 }

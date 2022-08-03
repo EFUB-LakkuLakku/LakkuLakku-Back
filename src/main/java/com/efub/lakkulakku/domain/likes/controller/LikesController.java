@@ -1,28 +1,22 @@
 package com.efub.lakkulakku.domain.likes.controller;
 
-import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.likes.dto.LikeReqDto;
 import com.efub.lakkulakku.domain.likes.dto.LikeResDto;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
-import com.efub.lakkulakku.domain.likes.exception.DiaryNotFoundException;
-import com.efub.lakkulakku.domain.likes.service.LikesService;
 import com.efub.lakkulakku.domain.likes.service.LikesService;
 import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
-
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,23 +27,13 @@ public class LikesController {
 	private final DiaryRepository diaryRepository;
 
 	@PostMapping("/{date}/like")
-	public ResponseEntity<?> createLike(@RequestBody @Valid LikeResDto likeResDto) {
+	public ResponseEntity<?> createLike(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody LikeReqDto likeReqDto) {
 
-		/*if (!diaryRepository.existsByDate(date))
-			throw new DiaryNotFoundException();*/
+		if (!diaryRepository.existsByDate(date))
+			throw new DiaryNotFoundException();
 
-		likesService.createLike(likeResDto);
-		return ResponseEntity.ok(LIKES_ADD_SUCCESS);
+		LikeResDto likeResDto = likesService.createLike(user, date, likeReqDto);
+		return ResponseEntity.ok(likeResDto);
 	}
 
-	@DeleteMapping("/{date}/like/{id}")
-	//@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> deleteLikesById(@PathVariable("id") UUID id, @RequestBody @Valid LikeResDto likeResDto) {
-
-		/*if (!diaryRepository.existsByDate(date))
-			throw new DiaryNotFoundException();*/
-
-		likesService.deleteLikesById(id);
-		return ResponseEntity.ok(LIKES_DELETE_SUCCESS);
-	}
 }
