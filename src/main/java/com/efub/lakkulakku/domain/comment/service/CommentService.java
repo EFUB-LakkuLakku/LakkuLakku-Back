@@ -1,52 +1,110 @@
 package com.efub.lakkulakku.domain.comment.service;
 
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-
-import java.util.UUID;
-
+import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
-public interface CommentService {
+@Service
+@RequiredArgsConstructor
+public class CommentService {
 
-	void addComment(CommentResDto commentResDto);
+	private final CommentRepository commentRepository;
+	private final UsersRepository userRepository;
+	private final DiaryRepository diaryRepository;
 
-	void removeComment(UUID id);
-	void update(UUID id, CommentResDto commentResDto);
-	//void addRecomment(UUID parentId, CommentResDto commentResDto);
-	//void removeRecomment(UUID parentId);
-	//void editRecomment() ;
-
-	//Comment findById(UUID id) throws Exception;
-
-	default Comment dtoToEntity(CommentResDto commentResDto) {
-
-		//Diary diary = Diary.builder().id(commentResDto.getId()).build();
+	@Transactional
+	public void addComment(CommentResDto commentResDto) {
+		Users user = userRepository.findByEmail("seojunng@gmail.com").get();
+		Diary diary = diaryRepository.findByDate(LocalDate.parse("2022-08-22")).get();
 
 		Comment comment = Comment.builder()
 				.id(commentResDto.getId())
+				.parentId(commentResDto.getParentId())
 				.content(commentResDto.getContent())
-				//.userId(commentResDto.getUserId())
-				.isSecret(commentResDto.getIsSecret())
+				.users(user)
 				//.diary(diary)
+				.isSecret(commentResDto.getIsSecret())
 				.build();
 
-		return comment;
+		/*commentRepository.findById(id).ifPresent(
+				comment -> commentRepository.save(comment)
+		);*/
+
+		commentRepository.save(comment);
+
 	}
 
-	default CommentResDto entityToDTO(Comment comment) {
+	@Transactional
+	public void removeComment(UUID id/*, UUID parentId*/) {
 
-		CommentResDto commentResDto = CommentResDto.builder()
-				.id(comment.getId())
-				.content(comment.getContent())
-				//.users(comment.getUsers())
+		Comment comment = commentRepository.findById(id)
+				.orElseThrow(CommentNotFoundException::new);
+
+		commentRepository.deleteById(id);
+
+	}
+
+	@Transactional
+	public CommentUpdateResDto update(UUID id, CommentResDto commentResDto) {
+
+		Comment comment = commentRepository.findById(id) //댓글 작성한 유저 불러오기로 변경
+				.orElseThrow(UnauthorizedException::new);
+
+		//if (!comment.getUsers().equals(loggedUser))
+
+		comment.update(commentResDto.getContent());
+
+		commentRepository.save(comment);
+
+		return new CommentUpdateResDto(comment.getId(), comment.getParentId(), comment.getContent(),
+				comment.getIsSecret(),comment.getCreatedOn());
+
+	}
+
+	@Transactional
+	public void addRecomment(UUID id, UUID parentId, CommentResDto commentResDto) {
+
+		Users user = userRepository.findByEmail("seojunng@gmail.com").get();
+
+		Comment recomment = Comment.builder()
+				.id(commentResDto.getId())
+				.parentId(commentResDto.getParentId())
+				.content(commentResDto.getContent())
+				.users(user)
+				//.diary(diary)
+				.isSecret(commentResDto.getIsSecret())
 				.build();
 
-		return commentResDto;
+		//Comment recomment = Comment.addRecomment(diary, commentResDto.getContent(), users, parent);
+
+		commentRepository.findByParentId(parentId).ifPresent(
+				comment -> commentRepository.save(recomment));
+
+		//commentRepository.save(recomment);
 	}
 
+	private Optional<Comment> findById(CommentResDto commentResDto, UUID id) {
+		return commentRepository
+				.findById(id);
+	}
+
+	private Optional<Comment> findByParentId(CommentResDto commentResDto, UUID parentId) {
+		return commentRepository
+				.findByParentId(parentId);
+	}
 }
-
