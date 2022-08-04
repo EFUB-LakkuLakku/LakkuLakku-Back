@@ -50,23 +50,23 @@ public class Diary extends BaseTimeEntity {
 	@Column(length = 5)
 	private String titleEmoji;
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "template_id")
 	private Template template;
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Image> images = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Likes> likes = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Text> texts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Sticker> stickers = new ArrayList<>();
 
 	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
@@ -110,12 +110,24 @@ public class Diary extends BaseTimeEntity {
 	public void updateDiary(DiaryEntityUpdateDto dto) {
 		this.title = dto.getTitle();
 		this.titleEmoji = dto.getTitleEmoji();
-		this.comments = dto.getCommentList();
+
+		this.comments.clear();
+		this.comments.addAll(dto.getCommentList());
+
 		this.template = dto.getTemplate();
-		this.images = dto.getImageList();
-		this.likes = dto.getLikesList();
-		this.texts = dto.getTextList();
-		this.stickers = dto.getStickerList();
+
+		this.images.clear();
+		this.images.addAll(dto.getImageList());
+
+		this.likes.clear();
+		this.likes.addAll(dto.getLikesList());
+
+		this.texts.clear();
+		this.texts.addAll(dto.getTextList());
+
+		this.stickers.clear();
+		this.stickers.addAll(dto.getStickerList());
+
 		this.cntComment = dto.getCntComment();
 		this.cntLike = dto.getCntLike();
 	}
