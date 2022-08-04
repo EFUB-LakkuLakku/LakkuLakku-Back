@@ -27,8 +27,6 @@ public class TemplateMapper {
 		if (diary == null || dto == null)
 			return null;
 
-//		templateRepository.deleteById(diary.getTemplate().getId());
-
 		return Template.builder()
 				.diary(diary)
 				.url(dto.getUrl())

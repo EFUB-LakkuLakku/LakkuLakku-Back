@@ -10,5 +10,4 @@ import java.util.UUID;
 @Repository
 public interface StickerRepository extends JpaRepository<Sticker, UUID> {
 	Optional<Sticker> findById(UUID id);
-	void deleteAllByDiaryId(UUID id);
 }

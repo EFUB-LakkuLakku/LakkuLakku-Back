@@ -10,5 +10,4 @@ import java.util.UUID;
 @Repository
 public interface TextRepository extends JpaRepository<Text, UUID> {
 	Optional<Text> findById(UUID id);
-	void deleteAllByDiaryId(UUID id);
 }
