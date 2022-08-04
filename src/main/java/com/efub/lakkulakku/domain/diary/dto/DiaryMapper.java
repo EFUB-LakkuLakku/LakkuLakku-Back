@@ -58,12 +58,54 @@ public class DiaryMapper {
 	}
 
 	public Diary saveDiary(Diary entity, DiarySaveReqDto dto) throws IOException {
-		if (entity == null || dto == null)
+		if (dto == null)
 			return null;
 
-		DiaryLookupResDto diaryLookupResDto = dto.getDiaryLookupResDto();
+		DiaryLookupReqDto diaryLookupResDto = dto.getDiaryLookupReqDto();
 		DiaryResDto diaryResDto = diaryLookupResDto.getDiary();
 
+		DiaryEntityUpdateDto diaryEntityUpdateDto = DiaryEntityUpdateDto.builder()
+				.title(diaryResDto.getTitle())
+				.titleEmoji(diaryResDto.getTitleEmoji())
+				.template(templateMapper.toEntity(entity, diaryLookupResDto.getTemplate()))
+				.commentList(diaryLookupResDto.getCommentList().stream().filter(Objects::nonNull).map(commentResDto -> commentMapper.toEntity(entity, commentResDto)).collect(Collectors.toList()))
+				.imageList(imageToEntity(entity, dto))
+				.likesList(diaryLookupResDto.getLikeList().stream().filter(Objects::nonNull).map(likeResDto -> likeMapper.toEntity(entity, likeResDto)).collect(Collectors.toList()))
+				.textList(diaryLookupResDto.getTextList().stream().filter(Objects::nonNull).map(textReqDto -> textMapper.toEntity(entity, textReqDto)).collect(Collectors.toList()))
+				.stickerList(diaryLookupResDto.getStickerList().stream().filter(Objects::nonNull).map(stickerReqDto -> stickerMapper.toEntity(entity, stickerReqDto)).collect(Collectors.toList()))
+				.cntComment(diaryResDto.getCntComment())
+				.cntLike(diaryResDto.getCntLike())
+				.build();
+
+		entity.updateDiary(diaryEntityUpdateDto);
+		return entity;
+	}
+
+	public Diary updateDiary(Diary entity, DiarySaveReqDto dto) throws IOException {
+		if (dto == null)
+			return null;
+
+		DiaryLookupReqDto diaryLookupResDto = dto.getDiaryLookupReqDto();
+		DiaryResDto diaryResDto = diaryLookupResDto.getDiary();
+
+		DiaryEntityUpdateDto diaryEntityUpdateDto = DiaryEntityUpdateDto.builder()
+				.title(diaryResDto.getTitle())
+				.titleEmoji(diaryResDto.getTitleEmoji())
+				.template(templateMapper.toEntity(entity, diaryLookupResDto.getTemplate()))
+				.commentList(diaryLookupResDto.getCommentList().stream().filter(Objects::nonNull).map(commentResDto -> commentMapper.toEntity(entity, commentResDto)).collect(Collectors.toList()))
+				.imageList(imageToEntity(entity, dto))
+				.likesList(diaryLookupResDto.getLikeList().stream().filter(Objects::nonNull).map(likeResDto -> likeMapper.toEntity(entity, likeResDto)).collect(Collectors.toList()))
+				.textList(diaryLookupResDto.getTextList().stream().filter(Objects::nonNull).map(textReqDto -> textMapper.toEntity(entity, textReqDto)).collect(Collectors.toList()))
+				.stickerList(diaryLookupResDto.getStickerList().stream().filter(Objects::nonNull).map(stickerReqDto -> stickerMapper.toEntity(entity, stickerReqDto)).collect(Collectors.toList()))
+				.cntComment(diaryResDto.getCntComment())
+				.cntLike(diaryResDto.getCntLike())
+				.build();
+
+		entity.updateDiary(diaryEntityUpdateDto);
+		return entity;
+	}
+
+	public List<Image> imageToEntity(Diary entity, DiarySaveReqDto dto) throws IOException {
 		List<Image> imageList = new ArrayList<>();
 		if (dto.getMultipartFileList() != null) {
 			ImageToEntityDto imageToEntityDto = ImageToEntityDto.builder()
@@ -71,23 +113,8 @@ public class DiaryMapper {
 					.diary(entity)
 					.multipartFileList(dto.getMultipartFileList())
 					.build();
-			imageList = imageMapper.toEntityList(diaryLookupResDto.getImageList(), imageToEntityDto);
+			imageList = imageMapper.toEntityList(dto.getDiaryLookupReqDto().getImageList(), imageToEntityDto);
 		}
-
-		DiaryEntityUpdateDto diaryEntityUpdateDto = DiaryEntityUpdateDto.builder()
-				.title(diaryResDto.getTitle())
-				.titleEmoji(diaryResDto.getTitleEmoji())
-				.template(templateMapper.toEntity(entity, diaryLookupResDto.getTemplate()))
-				.commentList(diaryLookupResDto.getCommentList().stream().filter(Objects::nonNull).map(commentResDto -> commentMapper.toEntity(entity, commentResDto)).collect(Collectors.toList()))
-				.imageList(imageList)
-				.likesList(diaryLookupResDto.getLikeList().stream().filter(Objects::nonNull).map(likeResDto -> likeMapper.toEntity(entity, likeResDto)).collect(Collectors.toList()))
-				.textList(diaryLookupResDto.getTextList().stream().filter(Objects::nonNull).map(textResDto -> textMapper.toEntity(entity, textResDto)).collect(Collectors.toList()))
-				.stickerList(diaryLookupResDto.getStickerList().stream().filter(Objects::nonNull).map(stickerDiaryResDto -> stickerMapper.toEntity(entity, stickerDiaryResDto)).collect(Collectors.toList()))
-				.cntComment(diaryResDto.getCntComment())
-				.cntLike(diaryResDto.getCntLike())
-				.build();
-
-		entity.updateDiary(diaryEntityUpdateDto);
-		return entity;
+		return imageList;
 	}
 }
