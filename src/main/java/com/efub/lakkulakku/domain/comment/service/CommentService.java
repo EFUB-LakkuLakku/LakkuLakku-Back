@@ -109,7 +109,7 @@ public class CommentService {
 
 	}
 
-	@org.springframework.transaction.annotation.Transactional
+	@Transactional
 	public String checkProfileImageUrl(Users user) {
 		if (user.getProfile() == null || user.getProfile().getFile() == null) {
 			return null;
