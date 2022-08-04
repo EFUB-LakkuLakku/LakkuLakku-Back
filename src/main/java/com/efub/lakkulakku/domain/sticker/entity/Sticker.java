@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.relational.core.sql.In;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -45,6 +44,10 @@ public class Sticker extends BaseTimeEntity {
 
 	@Column(length = 20)
 	@NotNull
+	private Integer rotation;
+
+	@Column(length = 20)
+	@NotNull
 	private String category;
 
 	@Column(length = 2084)
@@ -53,12 +56,14 @@ public class Sticker extends BaseTimeEntity {
 
 	@Builder
 	public Sticker(Diary diary, Integer width, Integer height,
-				   Integer x, Integer y, String category, String url) {
+				   Integer x, Integer y, Integer rotation,
+				   String category, String url) {
 		this.diary = diary;
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 		this.category = category;
 		this.url = url;
 	}

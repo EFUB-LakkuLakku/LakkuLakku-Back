@@ -21,11 +21,13 @@ public class TextResDto {
 	private String content;
 	private Integer x;
 	private Integer y;
+	private Integer rotation;
 
 	@Builder
 	public TextResDto(UUID id, String style, Integer weight, Integer size,
-					  Integer width, Integer height, String align, String color,
-					  String content, Integer x, Integer y) {
+					  Integer width, Integer height,
+					  String align, String color, String content,
+					  Integer x, Integer y, Integer rotation) {
 		this.id = id;
 		this.style = style;
 		this.weight = weight;
@@ -37,5 +39,6 @@ public class TextResDto {
 		this.content = content;
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 	}
 }

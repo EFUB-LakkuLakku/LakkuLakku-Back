@@ -15,13 +15,17 @@ public class ImageResDto {
 	private Integer height;
 	private Integer x;
 	private Integer y;
+	private Integer rotation;
 	private String url;
 
 	@Builder
-	public ImageResDto(UUID id, Integer width, Integer height, Integer x, Integer y, String url) {
+	public ImageResDto(UUID id, Integer width, Integer height,
+					   Integer x, Integer y, Integer rotation,
+					   String url) {
 		this.id = id;
 		this.width = width;
 		this.height = height;
+		this.rotation = rotation;
 		this.x = x;
 		this.y = y;
 		this.url = url;
