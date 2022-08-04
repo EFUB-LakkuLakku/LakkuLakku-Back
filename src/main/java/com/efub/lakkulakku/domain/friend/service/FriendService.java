@@ -39,20 +39,8 @@ public class FriendService {
 						.targetId(targetUser)
 						.build();
 				friendRepository.save(friends);
-				Notification userNotification = Notification.builder()
-						.userId(user)
-						.friendId(targetUser)
-						.notiType("follow")
-						.build();
-				Notification targetNotification = Notification.builder()
-						.userId(targetUser)
-						.friendId(user)
-						.notiType("follow")
-						.build();
-				userNotification.makeMessage(targetUser, "follow", null);
-				targetNotification.makeMessage(user, "follow", null);
-				notificationRepository.save(userNotification);
-				notificationRepository.save(targetNotification);
+				toFriendNotification(user, targetUser);
+				toFriendNotification(targetUser, user);
 			}
 		} else {
 			throw new UserNotFoundException();
@@ -105,5 +93,17 @@ public class FriendService {
 				.orElseThrow(() -> new UserNotFoundException());
 		UUID id = isFriend(user, delFriend);
 		friendRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void toFriendNotification(Users user, Users targetUser)
+	{
+		Notification notification = Notification.builder()
+				.userId(targetUser)
+				.friendId(user)
+				.notiType("친구")
+				.build();
+		notification.makeMessage(user, "친구", null);
+		notificationRepository.save(notification);
 	}
 }

@@ -1,23 +1,18 @@
 package com.efub.lakkulakku.domain.comment.controller;
 
-import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
-import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
 import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
-import com.efub.lakkulakku.domain.comment.entity.Comment;
 import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.comment.service.CommentService;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
-import com.efub.lakkulakku.domain.likes.dto.LikeResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

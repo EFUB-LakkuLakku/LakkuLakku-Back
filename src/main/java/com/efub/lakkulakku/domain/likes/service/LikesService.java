@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.LIKES_ADD_SUCCESS;
 import static com.efub.lakkulakku.global.constant.ResponseConstant.LIKES_DELETE_SUCCESS;
@@ -47,13 +48,7 @@ public class LikesService {
 		String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
 
 		if (message == LIKES_ADD_SUCCESS) {
-			Notification notification = Notification.builder()
-					.userId(diary.getUser())
-					.friendId(user)
-					.notiType("likes")
-					.build();
-			notification.makeMessage(user, "likes", diary.getCreatedOn());
-			notificationRepository.save(notification);
+			toLikeNotification(user, diary.getUser(), diary.getCreatedOn());
 		}
 
 		return LikeClickResDto.builder()
@@ -63,5 +58,18 @@ public class LikesService {
 				.message(message)
 				.isLike(likes.getIsLike())
 				.build();
+	}
+
+	@Transactional
+	public void toLikeNotification(Users user, Users targetUser, LocalDateTime date)
+	{
+		Notification notification = Notification.builder()
+				.userId(user)
+				.friendId(targetUser)
+				.notiType("좋아요")
+				.build();
+		notification.makeMessage(user, "좋아요", date);
+		notificationRepository.save(notification);
+
 	}
 }
