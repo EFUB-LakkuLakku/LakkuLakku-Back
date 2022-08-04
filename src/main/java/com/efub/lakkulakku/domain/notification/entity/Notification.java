@@ -46,12 +46,12 @@ public class Notification extends BaseTimeEntity {
 	}
 
 	public void makeMessage(Users friendId, String notiType, LocalDateTime date) {
-		if (notiType.equals("follow")) {
+		if (notiType.equals("친구")) {
 			this.message = friendId.getNickname() + "님과 새 친구가 되었습니다.";
-		} else if (notiType.equals("comment")) {
-			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))+" 일기에 댓글을 눌렀습니다.";
-		} else if (notiType.equals("likes")) {
-			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)) + " 일기에 좋아요를 달았습니다.";
+		} else if (notiType.equals("댓글") || notiType.equals("대댓글")) {
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))+" 일기에 " + notiType +"을 달았습니다.";
+		} else if (notiType.equals("좋아요")) {
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)) + " 일기에 좋아요를 눌렀습니다.";
 		}
 	}
 }
