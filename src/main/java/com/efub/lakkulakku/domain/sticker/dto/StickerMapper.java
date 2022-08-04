@@ -29,16 +29,6 @@ public class StickerMapper {
 				.build();
 	}
 
-//	public Sticker checkIsEntity(Diary diary, StickerResDto dto) {
-//		Sticker sticker;
-//
-//		if (dto.getId() == null)
-//			sticker = toEntity(diary, dto);
-//		else
-//			sticker = stickerRepository.findById(dto.getId()).orElseThrow(StickerNotFoundException::new);
-//		return sticker;
-//	}
-
 	public Sticker toEntity(Diary diary, StickerReqDto dto) {
 		if (diary == null || dto == null)
 			return null;
@@ -53,9 +43,5 @@ public class StickerMapper {
 				.category(dto.getCategory())
 				.url(dto.getUrl())
 				.build();
-	}
-
-	public void deleteByDiary(Diary diary){
-		stickerRepository.deleteAllByDiary(diary);
 	}
 }

@@ -33,17 +33,6 @@ public class TextMapper {
 				.build();
 	}
 
-//	public Text checkIsEntity(Diary diary, TextResDto dto) {
-//		Text text;
-//
-//		if (dto.getId() == null)
-//			text = toEntity(diary, dto);
-//		else
-//			text = textRepository.findById(dto.getId()).orElseThrow(TextNotFoundException::new);
-//
-//		return text;
-//	}
-
 	public Text toEntity(Diary diary, TextReqDto dto) {
 		if (diary == null || dto == null)
 			return null;
@@ -62,9 +51,5 @@ public class TextMapper {
 				.y(dto.getY())
 				.rotation(dto.getRotation())
 				.build();
-	}
-
-	public void deleteByDiary(Diary diary) {
-		textRepository.deleteAllByDiary(diary);
 	}
 }
