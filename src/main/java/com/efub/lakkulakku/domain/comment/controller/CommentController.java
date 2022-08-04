@@ -48,7 +48,7 @@ public class CommentController {
 	@DeleteMapping("/{date}/comments/{id}")
 	public ResponseEntity<?> commentRemove(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @PathVariable("id") UUID id) {
 
-		if (!commentRepository.findById(id).get().getUsers().equals(user))
+		if (!commentRepository.findById(id).get().getUsers().getId().equals(user.getId()))
 			throw new UnauthorizedException();
 
 		commentService.removeComment(id);
