@@ -21,9 +21,9 @@ public class StickerResourceService {
 
 	public final String BASE_URL =
 			"https://s3.ap-northeast-2.amazonaws.com/lakku-lakku.com/sticker/";
-	public final String[] CATEGORY_NAME = new String[]{"basic", "botanical", "cute", "kitsch"};
-	public final String[] COMMON_NAME = new String[]{"%E1%84%86%E1%85%A9%E1%84%83%E1%85%A5%E1%86%AB", "bote_st_", "cute_st_", "%E1%84%8F%E1%85%B5%E1%84%8E%E1%85%B5"};
-	public final Integer[] IMAGE_COUNT = new Integer[]{56, 119, 111, 69};
+	public final String[] CATEGORY_NAME = new String[]{"basic", "cute", "kitsch", "botanical"};
+	public final String[] COMMON_NAME = new String[]{"%E1%84%86%E1%85%A9%E1%84%83%E1%85%A5%E1%86%AB", "cute_st_", "%E1%84%8F%E1%85%B5%E1%84%8E%E1%85%B5", "bote_st_"};
+	public final Integer[] IMAGE_COUNT = new Integer[]{56, 111, 69, 119};
 
 	public void saveStickerResource() {
 		for (int i = 0; i < 4; i++) {
