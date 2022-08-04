@@ -6,8 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.UUID;
 
 @Entity
@@ -36,19 +40,18 @@ public class Notification extends BaseTimeEntity {
 
 	@Builder
 	public Notification(Users userId, Users friendId, String notiType) {
-		this.usersId = userId;
-		this.friendId = friendId;
+		this.usersId = userId; //알림 받음
+		this.friendId = friendId; //알림 보냄
 		this.notiType = notiType;
 	}
 
-	public void makeMessage(Users friendId, String notiType, String content) {
-		//String message = "알림 내용이 없습니다.";
-		if (notiType.equals("follow")) {
+	public void makeMessage(Users friendId, String notiType, LocalDateTime date) {
+		if (notiType.equals("친구")) {
 			this.message = friendId.getNickname() + "님과 새 친구가 되었습니다.";
-		} else if (notiType.equals("comment")) {
-			this.message = friendId.getNickname() + "님이 나의" + content + "일기에 댓글을 눌렀습니다.";
-		} else if (notiType.equals("likes")) {
-			this.message = friendId.getNickname() + "님이 나의" + content + "일기에 좋아요를 달았습니다.";
+		} else if (notiType.equals("댓글") || notiType.equals("대댓글")) {
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofPattern("MM월 dd일"))+" 일기에 " + notiType +"을 달았습니다.";
+		} else if (notiType.equals("좋아요")) {
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofPattern("MM월 dd일")) + " 일기에 좋아요를 눌렀습니다.";
 		}
 	}
 }
