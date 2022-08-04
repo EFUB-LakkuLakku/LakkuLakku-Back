@@ -24,6 +24,7 @@ public class CommentMapper {
 
 		return CommentResDto.builder()
 				.id(entity.getId())
+				.userId(entity.getUsers().getId())
 				.nickname(entity.getUsers().getNickname())
 				.parentId(entity.getParentId())
 				.content(entity.getContent())
