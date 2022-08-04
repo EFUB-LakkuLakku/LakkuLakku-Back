@@ -39,8 +39,11 @@ public class FriendService {
 						.targetId(targetUser)
 						.build();
 				friendRepository.save(friends);
-				toFriendNotification(user, targetUser);
-				toFriendNotification(targetUser, user);
+				if(!user.getId().equals(targetUser.getId()))
+				{
+					toFriendNotification(user, targetUser);
+					toFriendNotification(targetUser, user);
+				}
 			}
 		} else {
 			throw new UserNotFoundException();

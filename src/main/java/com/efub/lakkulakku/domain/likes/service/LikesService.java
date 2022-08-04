@@ -48,7 +48,10 @@ public class LikesService {
 		String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
 
 		if (message == LIKES_ADD_SUCCESS) {
-			toLikeNotification(user, diary.getUser(), diary.getCreatedOn());
+			if(!user.getId().equals(diary.getUser().getId()))
+			{
+				toLikeNotification(user, diary.getUser(), diary.getCreatedOn());
+			}
 		}
 
 		return LikeClickResDto.builder()
@@ -64,8 +67,8 @@ public class LikesService {
 	public void toLikeNotification(Users user, Users targetUser, LocalDateTime date)
 	{
 		Notification notification = Notification.builder()
-				.userId(user)
-				.friendId(targetUser)
+				.userId(targetUser)
+				.friendId(user)
 				.notiType("좋아요")
 				.build();
 		notification.makeMessage(user, "좋아요", date);

@@ -49,9 +49,9 @@ public class Notification extends BaseTimeEntity {
 		if (notiType.equals("친구")) {
 			this.message = friendId.getNickname() + "님과 새 친구가 되었습니다.";
 		} else if (notiType.equals("댓글") || notiType.equals("대댓글")) {
-			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))+" 일기에 " + notiType +"을 달았습니다.";
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofPattern("MM월 dd일"))+" 일기에 " + notiType +"을 달았습니다.";
 		} else if (notiType.equals("좋아요")) {
-			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)) + " 일기에 좋아요를 눌렀습니다.";
+			this.message = friendId.getNickname() + "님이 나의 " + date.format(DateTimeFormatter.ofPattern("MM월 dd일")) + " 일기에 좋아요를 눌렀습니다.";
 		}
 	}
 }

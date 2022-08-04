@@ -52,7 +52,10 @@ public class CommentService {
 		if (commentReqDto.getParentId() != null) {
 			type = "대댓글";
 		}
-		toCommentNotification(user, diary.getUser(), type, diary.getCreatedOn());
+		if(!user.getId().equals(diary.getUser().getId()))
+		{
+			toCommentNotification(user, diary.getUser(), type, diary.getCreatedOn());
+		}
 
 		return CommentResDto.builder()
 				.id(comment.getId())
