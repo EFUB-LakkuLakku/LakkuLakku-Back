@@ -109,6 +109,7 @@ public class CommentService {
 
 	}
 
+	@Transactional
 	public String checkProfileImageUrl(Users user) {
 		if (user.getProfile() == null || user.getProfile().getFile() == null) {
 			return null;
