@@ -65,10 +65,14 @@ public class Text extends BaseTimeEntity {
 	@NotNull
 	private Integer y;
 
+	@Column(length = 20)
+	@NotNull
+	private Integer rotation;
+
 	@Builder
 	public Text(Diary diary, String style, Integer weight, Integer size,
 				Integer width, Integer height, String align, String color, String content,
-				Integer x, Integer y) {
+				Integer x, Integer y, Integer rotation) {
 		this.diary = diary;
 		this.style = style;
 		this.weight = weight;
@@ -80,5 +84,6 @@ public class Text extends BaseTimeEntity {
 		this.content = content;
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 	}
 }
