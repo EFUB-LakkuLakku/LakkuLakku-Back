@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.diary.controller;
 
+import com.efub.lakkulakku.domain.diary.dto.DiaryLookupReqDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryLookupResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryMessageResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiarySaveReqDto;
@@ -63,26 +64,27 @@ public class DiaryController {
 	public ResponseEntity<DiaryMessageResDto> saveDiary(@AuthUsers Users user,
 														@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
 														@RequestPart(value = "files", required = false) List<MultipartFile> files,
-														@RequestPart(value = "key") DiaryLookupResDto diaryLookupResDto) throws IOException {
+														@RequestPart(value = "key") DiaryLookupReqDto diaryLookupReqDto) throws IOException {
 
 		DiarySaveReqDto diarySaveReqDto = DiarySaveReqDto.builder()
 				.user(user)
 				.multipartFileList(files)
-				.diaryLookupResDto(diaryLookupResDto)
+				.diaryLookupReqDto(diaryLookupReqDto)
 				.build();
 		diaryService.saveDiary(date, diarySaveReqDto);
 		return ResponseEntity.ok().body(new DiaryMessageResDto(date + DIARY_UPDATE_SUCCESS));
 	}
 
-	@PatchMapping(value = "/update/{date}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping(value = "/update/{date}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<DiaryMessageResDto> updateDiary(@AuthUsers Users user,
 														  @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
 														  @RequestPart(value = "files", required = false) List<MultipartFile> files,
-														  @RequestPart(value = "key") DiaryLookupResDto diaryLookupResDto) throws IOException {
+														  @RequestPart(value = "key") DiaryLookupReqDto diaryLookupReqDto) throws IOException {
+
 		DiarySaveReqDto diarySaveReqDto = DiarySaveReqDto.builder()
 				.user(user)
 				.multipartFileList(files)
-				.diaryLookupResDto(diaryLookupResDto)
+				.diaryLookupReqDto(diaryLookupReqDto)
 				.build();
 		diaryService.updateDiary(date, diarySaveReqDto);
 		return ResponseEntity.ok().body(new DiaryMessageResDto(date + DIARY_UPDATE_SUCCESS));

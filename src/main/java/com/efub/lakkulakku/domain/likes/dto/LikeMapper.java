@@ -45,17 +45,6 @@ public class LikeMapper {
 				.build();
 	}
 
-
-	public Likes checkIsEntity(Diary diary, LikeResDto dto) {
-		Likes likes;
-
-		if (dto.getId() == null)
-			likes = toEntity(diary, dto);
-		else
-			likes = likesRepository.findById(dto.getId()).orElseThrow(LikeNotFoundException::new);
-		return likes;
-	}
-
 	public Likes toEntity(Diary diary, LikeResDto dto) {
 		if (diary == null || dto == null)
 			return null;
@@ -76,10 +65,5 @@ public class LikeMapper {
 				.diary(diary)
 				.users(user)
 				.build();
-	}
-
-	public Likes deleteAndCreateEntity(Diary diary, LikeResDto dto) {
-		likesRepository.deleteAllByDiaryId(diary.getId());
-		return toEntity(diary, dto);
 	}
 }

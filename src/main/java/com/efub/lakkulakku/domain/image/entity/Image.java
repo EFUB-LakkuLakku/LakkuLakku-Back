@@ -43,18 +43,24 @@ public class Image extends BaseTimeEntity {
 	@NotNull
 	private Integer y;
 
+	@Column(length = 20)
+	@NotNull
+	private Integer rotation;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id")
 	private File file;
 
 	@Builder
 	public Image(Diary diary, Integer width, Integer height,
-				 Integer x, Integer y, File file) {
+				 Integer x, Integer y, Integer rotation,
+				 File file) {
 		this.diary = diary;
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
+		this.rotation = rotation;
 		this.file = file;
 	}
 }

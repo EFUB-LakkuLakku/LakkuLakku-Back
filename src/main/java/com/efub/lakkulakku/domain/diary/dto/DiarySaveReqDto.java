@@ -11,12 +11,12 @@ import java.util.List;
 public class DiarySaveReqDto {
 	Users user;
 	List<MultipartFile> multipartFileList;
-	DiaryLookupResDto diaryLookupResDto;
+	DiaryLookupReqDto diaryLookupReqDto;
 
 	@Builder
-	public DiarySaveReqDto(Users user, List<MultipartFile> multipartFileList, DiaryLookupResDto diaryLookupResDto){
+	public DiarySaveReqDto(Users user, List<MultipartFile> multipartFileList, DiaryLookupReqDto diaryLookupReqDto) {
 		this.user = user;
 		this.multipartFileList = multipartFileList;
-		this.diaryLookupResDto = diaryLookupResDto;
+		this.diaryLookupReqDto = diaryLookupReqDto;
 	}
 }

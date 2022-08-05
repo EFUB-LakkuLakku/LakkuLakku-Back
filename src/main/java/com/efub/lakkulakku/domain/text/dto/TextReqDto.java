@@ -1,16 +1,15 @@
 package com.efub.lakkulakku.domain.text.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
-@NoArgsConstructor
-public class TextResDto {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class TextReqDto {
 
-	private UUID id;
+	private Integer id;
 	private String style;
 	private Integer weight;
 	private Integer size;
@@ -24,7 +23,7 @@ public class TextResDto {
 	private Integer rotation;
 
 	@Builder
-	public TextResDto(UUID id, String style, Integer weight, Integer size,
+	public TextReqDto(Integer id, String style, Integer weight, Integer size,
 					  Integer width, Integer height,
 					  String align, String color, String content,
 					  Integer x, Integer y, Integer rotation) {

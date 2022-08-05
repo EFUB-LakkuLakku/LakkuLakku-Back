@@ -2,7 +2,6 @@ package com.efub.lakkulakku.domain.sticker.dto;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.sticker.entity.Sticker;
-import com.efub.lakkulakku.domain.sticker.exception.StickerNotFoundException;
 import com.efub.lakkulakku.domain.sticker.repository.StickerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,22 +23,13 @@ public class StickerMapper {
 				.height(entity.getHeight())
 				.x(entity.getX())
 				.y(entity.getY())
+				.rotation(entity.getRotation())
 				.category(entity.getCategory())
 				.url(entity.getUrl())
 				.build();
 	}
 
-	public Sticker checkIsEntity(Diary diary, StickerResDto dto) {
-		Sticker sticker;
-
-		if (dto.getId() == null)
-			sticker = toEntity(diary, dto);
-		else
-			sticker = stickerRepository.findById(dto.getId()).orElseThrow(StickerNotFoundException::new);
-		return sticker;
-	}
-
-	public Sticker toEntity(Diary diary, StickerResDto dto) {
+	public Sticker toEntity(Diary diary, StickerReqDto dto) {
 		if (diary == null || dto == null)
 			return null;
 
@@ -49,13 +39,9 @@ public class StickerMapper {
 				.height(dto.getHeight())
 				.x(dto.getX())
 				.y(dto.getY())
+				.rotation(dto.getRotation())
 				.category(dto.getCategory())
 				.url(dto.getUrl())
 				.build();
-	}
-
-	public Sticker deleteAndCreateEntity(Diary diary, StickerResDto dto) {
-		stickerRepository.deleteAllByDiaryId(diary.getId());
-		return toEntity(diary, dto);
 	}
 }

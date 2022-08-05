@@ -2,16 +2,15 @@ package com.efub.lakkulakku.domain.text.dto;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.text.entity.Text;
-import com.efub.lakkulakku.domain.text.exception.TextNotFoundException;
 import com.efub.lakkulakku.domain.text.repository.TextRepository;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class TextMapper {
 
-	private static TextRepository textRepository;
+	private final TextRepository textRepository;
 
 	public TextResDto toTextResDto(Text entity) {
 
@@ -30,21 +29,11 @@ public class TextMapper {
 				.content(entity.getContent())
 				.x(entity.getX())
 				.y(entity.getY())
+				.rotation(entity.getRotation())
 				.build();
 	}
 
-	public Text checkIsEntity(Diary diary, TextResDto dto) {
-		Text text;
-
-		if (dto.getId() == null)
-			text = toEntity(diary, dto);
-		else
-			text = textRepository.findById(dto.getId()).orElseThrow(TextNotFoundException::new);
-
-		return text;
-	}
-
-	public Text toEntity(Diary diary, TextResDto dto) {
+	public Text toEntity(Diary diary, TextReqDto dto) {
 		if (diary == null || dto == null)
 			return null;
 
@@ -60,11 +49,7 @@ public class TextMapper {
 				.content(dto.getContent())
 				.x(dto.getX())
 				.y(dto.getY())
+				.rotation(dto.getRotation())
 				.build();
-	}
-
-	public Text deleteAndCreateEntity(Diary diary, TextResDto dto) {
-		textRepository.deleteAllByDiaryId(diary.getId());
-		return toEntity(diary, dto);
 	}
 }

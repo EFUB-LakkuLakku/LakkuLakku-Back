@@ -38,7 +38,7 @@ public class DiaryService {
 			throw new BadDateRequestException();
 	}
 
-	public Diary updateDiaryCntCommentAndCntLikes(Diary diary){
+	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
 		int cntComment = commentRepository.countByDiaryId(diary.getId());
 		int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
@@ -92,7 +92,7 @@ public class DiaryService {
 	public void updateDiary(LocalDate date, DiarySaveReqDto dto) throws IOException {
 		Diary diary = diaryRepository.findByDate(date)
 				.orElseThrow(DiaryNotFoundException::new);
-		Diary updatedDiary = diaryMapper.saveDiary(diary, dto);
+		Diary updatedDiary = diaryMapper.updateDiary(diary, dto);
 		diaryRepository.save(updatedDiary);
 	}
 }

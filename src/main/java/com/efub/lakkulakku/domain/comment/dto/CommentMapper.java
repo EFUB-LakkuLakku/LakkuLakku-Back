@@ -58,9 +58,4 @@ public class CommentMapper {
 				.isSecret(dto.getIsSecret())
 				.build();
 	}
-
-	public Comment deleteAndCreateEntity(Diary diary, CommentResDto dto) {
-		commentRepository.deleteAllByDiaryId(diary.getId());
-		return toEntity(diary, dto);
-	}
 }
