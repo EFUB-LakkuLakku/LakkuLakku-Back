@@ -134,16 +134,20 @@ public class ProfileService {
 	}
 
 	@Transactional
-	public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio) throws FileExtenstionException {
+	public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio, String profileImageUrl) throws FileExtenstionException {
 		Users entity = userRepository.findByNickname(nickname)
 				.orElseThrow(UserNotFoundException::new);
-		if (image.isEmpty()) {
+		if (profileImageUrl.isEmpty() && image.isEmpty()) {
 			updateImage("profile", entity, null);
+			updateBio(entity, bio);
 
+		} else if (!profileImageUrl.isEmpty() && image.isEmpty()) {
+			updateBio(entity, bio);
 		} else {
 			updateImage("profile", entity, image);
+			updateBio(entity, bio);
 		}
-		updateBio(entity, bio);
+
 		return new ProfileUpdateResDto(entity);
 	}
 
