@@ -77,8 +77,8 @@ public class Diary extends BaseTimeEntity {
 
 	@PrePersist
 	public void prePersist() {
-		this.title = "제목을 입력해주세요";
-		this.titleEmoji = "📒";
+		this.title = "";
+		this.titleEmoji = null;
 		this.cntComment = 0;
 		this.cntLike = 0;
 	}
