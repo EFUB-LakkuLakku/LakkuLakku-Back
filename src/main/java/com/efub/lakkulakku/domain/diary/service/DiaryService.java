@@ -40,9 +40,9 @@ public class DiaryService {
 
 	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
 		int cntComment = commentRepository.countByDiaryId(diary.getId());
-		int cntLike = likesRepository.countByDiaryId(diary.getId());
+		//int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
-		diary.setCntLike(cntLike);
+		//diary.setCntLike(cntLike);
 		return diary;
 	}
 

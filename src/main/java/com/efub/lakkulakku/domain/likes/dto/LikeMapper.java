@@ -42,6 +42,7 @@ public class LikeMapper {
 				.nickname(entity.getUsers().getNickname())
 				.profileImageUrl(entity.getUsers().getProfile().getFile().getUrl())
 				.createdOn(entity.getCreatedOn())
+				.isLike(entity.getIsLike())
 				.build();
 	}
 
