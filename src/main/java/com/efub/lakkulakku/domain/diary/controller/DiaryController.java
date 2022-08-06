@@ -38,8 +38,8 @@ public class DiaryController {
 	private final UsersRepository usersRepository;
 
 	@GetMapping("/{date}")
-	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@Valid @RequestBody UserGetReqDto userGetReq, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-		Users user = usersRepository.findByNickname(userGetReq.getNickname())
+	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname) {
+		Users user = usersRepository.findByNickname(nickname)
 				.orElseThrow(() -> new UserNotFoundException());
 		diaryService.checkDiaryIsInDate(date);
 		if (!diaryRepository.existsByDate(date))

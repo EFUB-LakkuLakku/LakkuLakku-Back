@@ -20,7 +20,7 @@ public class HomeController {
 	private final UsersRepository usersRepository;
 	private final UsersService usersService;
 
-	@GetMapping
+	@PostMapping
 	public ResponseEntity<HomeResDto> getHomeByDate(@Valid @RequestBody UserGetReqDto userGetReq, @PathVariable(value = "year", required = false) String year, @PathVariable(value = "month", required = false) String month) {
 		//TODO : LocalDateTime의 범위를 넘어가는 경우 에러 발생
 //		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
