@@ -34,8 +34,9 @@
 [기타] 데이터베이스 설계, 아키텍처 설계, AWS(EC2, RDS, S3 등) 세팅</td>
         <td width="30%" align="center">
 [유저] 회원 가입, 이메일과 닉네임 중복 확인 기능<br>
-[시큐리티] JWT 토큰 구현, Redis를 통한 Blacklist 구현<br>
+[시큐리티] JWT 토큰 구현, Redis를 통한 Blacklist 구현, 비밀번호 변경 기능<br>
 [친구] 친구 추가, 삭제, 조회, 찾기 기능<br>
+[알림] 좋아요, 댓글, 대댓글, 친구 추가 알림 기능<br>
 [기타] 데이터베이스 설계</td>
         <td width="30%" align="center">
 [유저] 유저 정보 수정<br>
