@@ -1,7 +1,9 @@
 package com.efub.lakkulakku.domain.profile.service;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -43,7 +45,6 @@ public class ProfileService {
 	private String bucket;
 
 	private final AmazonS3 amazonS3;
-	private final AmazonS3Client amazonS3Client;
 
 	private static final String FILE_EXTENSION_SEPARATOR = ".";
 	private TransactionStatus entityManager;
@@ -74,18 +75,19 @@ public class ProfileService {
 			objectMetadata.setContentLength(bytes.length);
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
-			amazonS3Client.putObject(new PutObjectRequest(bucket, fullFileName, byteArrayInputStream, objectMetadata)
+			amazonS3.putObject(new PutObjectRequest(bucket, fullFileName, byteArrayInputStream, objectMetadata)
 					.withCannedAcl(CannedAccessControlList.PublicRead));
 		} catch (IOException e) {
 			throw new S3IOException();
 		}
 
-		String url = amazonS3Client.getUrl(bucket, fullFileName).toString();
+		String url = amazonS3.getUrl(bucket, fullFileName).toString();
+		String newUrl = url.replace("lakku-lakku.com.", "").substring(0, 39) + "/lakku-lakku.com/" + fullFileName;
 
 		File file = File.builder()
 				.filename(fileInfo.get(0))
 				.filetype(fileInfo.get(1))
-				.url(url)
+				.url(newUrl)
 				.build();
 		fileRepository.save(file);
 
