@@ -9,13 +9,13 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class ProfileUpdateResDto {
-	private UUID id;
+	private Long id;
 	private String profileImageUrl;
 	private String nickname;
 	private String bio;
 
 	public ProfileUpdateResDto(Users user) {
-		this.id = user.getId();
+		this.id = user.getUid();
 		this.nickname = user.getNickname();
 		this.bio = user.getProfile().getBio();
 
