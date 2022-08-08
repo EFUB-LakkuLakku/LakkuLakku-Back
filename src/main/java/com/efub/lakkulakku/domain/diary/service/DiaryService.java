@@ -74,13 +74,6 @@ public class DiaryService {
 	}
 
 	@Transactional
-	public void deleteDiary(LocalDate date) {
-		Diary diary = diaryRepository.findByDate(date)
-				.orElseThrow(DiaryNotFoundException::new);
-		diaryRepository.delete(diary);
-	}
-
-	@Transactional
 	public void saveDiary(LocalDate date, DiarySaveReqDto dto) throws IOException {
 		Diary diary = diaryRepository.findByDate(date)
 				.orElseThrow(DiaryNotFoundException::new);

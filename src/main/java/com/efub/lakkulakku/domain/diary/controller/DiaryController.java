@@ -65,8 +65,9 @@ public class DiaryController {
 	@DeleteMapping("/{date}")
 	public ResponseEntity<DiaryMessageResDto> deleteDiary(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow();
-		diaryService.deleteDiary(date);
+		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId())
+				.orElseThrow(DiaryNotFoundException::new);
+		diaryRepository.delete(diary);
 		return ResponseEntity.ok().body(new DiaryMessageResDto(date + DIARY_DELETE_SUCCESS));
 	}
 
