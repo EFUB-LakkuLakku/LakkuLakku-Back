@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.users.controller;
 
+import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
@@ -8,6 +9,7 @@ import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.domain.users.service.AuthUsers;
+import com.efub.lakkulakku.domain.users.service.MailSendService;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.exception.ErrorCode;
 import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
@@ -27,6 +29,7 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
+	private final MailSendService mailSendService;
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
@@ -51,6 +54,16 @@ public class LoginController {
 		} else {
 			return ResponseEntity.ok(AVAILABLE_NICKNAME);
 		}
+	}
+
+	@PostMapping("/sendemail")
+	public ResponseEntity<?> sendEmail(@Valid @RequestParam("email") String email){
+		Users user = usersRepository.findByEmail(email).orElseThrow(()
+				-> new UserNotFoundException());
+		String tempPwd = usersService.getTempPwd();
+		usersService.updatePassword(tempPwd, user);
+		mailSendService.sendMail(mailSendService.createMail(tempPwd, email));
+		return ResponseEntity.ok(SEND_EMAIL_SUCCESS);
 	}
 
 	@PostMapping("/login")
