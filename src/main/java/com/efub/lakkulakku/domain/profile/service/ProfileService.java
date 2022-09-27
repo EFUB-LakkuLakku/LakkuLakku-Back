@@ -65,7 +65,7 @@ public class ProfileService {
 		String fullFileName = fileInfo.get(2);
 		String fileExtension = fileInfo.get(1);
 
-		if (!(fileExtension.equals(".png") || fileExtension.equals(".jpg") || fileExtension.equals("jpeg")))
+		if (!(fileExtension.equals(".png") || fileExtension.equals(".jpg") || fileExtension.equals(".jpeg")))
 			throw new FileExtenstionException();
 
 		try (InputStream inputStream = multipartFile.getInputStream()) {
@@ -105,50 +105,24 @@ public class ProfileService {
 	}
 
 	public void updateImage(String category, Users user, MultipartFile multipartFile) throws FileExtenstionException {
-		if (multipartFile == null) {
-			if (user.getProfile().getFile() != null) {
-				user.getProfile().getFile();
-				deleteProfileImage(user);
-			}
+		if (multipartFile.isEmpty()) {
 			user.getProfile().updateFile(null);
-		} else {
-			if (user.getProfile().getFile() != null) {
-				user.getProfile().getFile();
-				deleteProfileImage(user);
-			} else {
-				System.out.println("유저 프로필이 비어있는 상태입니다.");
-			}
+		}
+		else {
 			File newFile = uploadImage(category, user.getNickname(), multipartFile);
-
 			user.getProfile().updateFile(newFile);
 		}
-		profileRepository.save(user.getProfile());
 	}
 
-	@Transactional
-	void updateBio(Users user, String bio) {
-		if (!user.getProfile().getBio().equals(bio)) {
-			Profile profile = user.getProfile();
-			profile.updateBio(bio);
-			profileRepository.save(profile);
-		}
-		System.out.println("user = " + user);
-	}
-
-	@Transactional
-	public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio, String profileImageUrl) throws FileExtenstionException {
+	public ProfileUpdateResDto updateUserProfile(String nickname, MultipartFile image, String bio) throws FileExtenstionException {
 		Users entity = userRepository.findByNickname(nickname)
 				.orElseThrow(UserNotFoundException::new);
-		if (profileImageUrl.isEmpty() && image.isEmpty()) {
-			updateImage("profile", entity, null);
-			updateBio(entity, bio);
 
-		} else if (!profileImageUrl.isEmpty() && image.isEmpty()) {
-			updateBio(entity, bio);
-		} else {
-			updateImage("profile", entity, image);
-			updateBio(entity, bio);
-		}
+		updateImage("profile", entity, image);
+		entity.getProfile().updateBio(bio);
+		profileRepository.save(entity.getProfile());
+
+		fileRepository.deleteUnusedFiles();
 
 		return new ProfileUpdateResDto(entity);
 	}
