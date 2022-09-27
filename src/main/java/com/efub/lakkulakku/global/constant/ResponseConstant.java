@@ -66,4 +66,5 @@ public class ResponseConstant {
 	/* Token */
 	public static final String BAD_TOKEN_REQUEST = "토큰을 확인하세요";
 	public static final String EXPIRED_REFRESHTOKEN = "refresh 토큰이 만료되었습니다.";
+	public static final String REISSUE_TOKEN_SUCCESS = "토큰이 재발급되었습니다.";
 }

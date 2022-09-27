@@ -2,6 +2,7 @@ package com.efub.lakkulakku.domain.users.controller;
 
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
+import com.efub.lakkulakku.domain.users.dto.LoginInfoDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
@@ -14,6 +15,7 @@ import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.exception.ErrorCode;
 import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,14 +70,22 @@ public class LoginController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
-		LoginResDto responseDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+		LoginInfoDto loginInfoDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Set-Cookie", usersService.generateCookie("accessToken", loginInfoDto.getAccessToken()).toString());
+		responseHeaders.add("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
+		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
 	}
 
+
 	@GetMapping("/re-issue")
-	public ResponseEntity<LoginResDto> reIssue(@RequestParam("email") String email, @RequestParam("refreshToken") String refreshToken) {
-		LoginResDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	public ResponseEntity<String> reIssue(@RequestParam("email") String email, HttpServletRequest request) {
+		String refreshToken = request.getHeader("Authorization").substring(7);
+		LoginInfoDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Set-Cookie", usersService.generateCookie("accessToken", responseDto.getAccessToken()).toString());
+		responseHeaders.add("Set-Cookie",usersService.generateCookie("refreshToken", responseDto.getRefreshToken()).toString());
+		return new ResponseEntity<String>(REISSUE_TOKEN_SUCCESS, responseHeaders, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/logout")
