@@ -10,6 +10,7 @@ import com.efub.lakkulakku.domain.users.exception.PasswordNotMatchedException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -72,20 +73,33 @@ public class UsersService {
 		usersRepository.save(user);
 	}
 
-	public LoginResDto login(String email, String password) {
+	public LoginInfoDto login(String email, String password) {
 		Users user = usersRepository
 				.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		checkPassword(password, user.getPassword());
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
-		return new LoginResDto(accessToken, refreshToken, user.getNickname());
+		return new LoginInfoDto(accessToken, refreshToken, user.getNickname());
 	}
 
-	public LoginResDto reIssueAccessToken(String email, String refreshToken) {
+	public LoginInfoDto reIssueAccessToken(String email, String refreshToken) {
 		Users user = usersRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		jwtProvider.checkRefreshToken(email, refreshToken);
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
-		return new LoginResDto(accessToken, refreshToken, user.getNickname());
+		return new LoginInfoDto(accessToken, refreshToken, user.getNickname());
+	}
+
+	public ResponseCookie generateCookie(String type, String token)
+	{
+		ResponseCookie cookie = ResponseCookie.from(type, token)
+				.maxAge(7 * 24 * 60 * 60)
+				.path("/")
+				.secure(true)
+				.sameSite("None")
+				.httpOnly(true)
+				.build();
+		return cookie;
+
 	}
 
 	private void checkPassword(String password, String encodedPassword) {
@@ -95,6 +109,7 @@ public class UsersService {
 		}
 
 	}
+
 
 	public void logout(String email, String accessToken) {
 		jwtProvider.logout(email, accessToken);
