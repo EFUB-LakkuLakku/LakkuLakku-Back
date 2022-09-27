@@ -4,7 +4,7 @@
 
 ## 🌕 백엔드 팀원 소개
 
-<table border="1" cellspacing="0" cellpadding="0" width="90%">
+<table border="1" cellspacing="0" cellpadding="0" width="100%">
     <tr width="100%">
         <td width="30%" align="center"><a href= "https://github.com/nitronium102">강민지</a></td>
         <td width="30%" align="center"><a href= "https://github.com/julia-ing">최예원</a></td>
@@ -15,7 +15,7 @@
         <td width="20%" align="center"><img src = "https://github.com/nitronium102.png"></td>
         <td width="20%" align="center"><img src = "https://github.com/julia-ing.png"/></td>
         <td width="20%" align="center"><img src = "https://github.com/june0216.png"/></td>
-        <td width="80%" align="center"><img src = "https://github.com/SeojungH.png"/></td>
+        <td width="20%" align="center"><img src = "https://github.com/SeojungH.png"/></td>
     </tr>
     <tr width="100%">
         <td width="30%" align="center">
