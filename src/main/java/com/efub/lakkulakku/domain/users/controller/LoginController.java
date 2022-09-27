@@ -1,6 +1,8 @@
 package com.efub.lakkulakku.domain.users.controller;
 
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.users.dao.CertificationDao;
+import com.efub.lakkulakku.domain.users.dto.CertificationReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginInfoDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
@@ -32,6 +34,7 @@ public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
 	private final MailSendService mailSendService;
+	private final CertificationDao certificationDao;
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
@@ -58,15 +61,26 @@ public class LoginController {
 		}
 	}
 
-	@PostMapping("/sendemail")
+	//인증번호 발송
+	@PostMapping("/certification/sends")
 	public ResponseEntity<?> sendEmail(@Valid @RequestParam("email") String email){
 		Users user = usersRepository.findByEmail(email).orElseThrow(()
 				-> new UserNotFoundException());
-		String tempPwd = usersService.getTempPwd();
-		usersService.updatePassword(tempPwd, user);
-		mailSendService.sendMail(mailSendService.createMail(tempPwd, email));
+		String certiCode = usersService.getTempString();
+		//저장 -> 임시로 쓰고 버릴 것인데 DB에 저장하지 말고 redis?
+		certificationDao.createEmailCertification(email, certiCode);
+		mailSendService.sendMail(mailSendService.createMail(certiCode, email));
 		return ResponseEntity.ok(SEND_EMAIL_SUCCESS);
 	}
+
+	//인증 번호 확인
+	@PostMapping("/certification/comfirms")
+	public ResponseEntity<?> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
+		mailSendService.verifyEmail(reqDto);
+		return ResponseEntity.ok(CERTIFICATION_SUCCESS);
+	}
+
+
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {

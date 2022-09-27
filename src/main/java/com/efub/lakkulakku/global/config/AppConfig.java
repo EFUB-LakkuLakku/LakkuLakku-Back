@@ -57,7 +57,7 @@ public class AppConfig {
 				.and()
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/users/sendemail").permitAll()
+					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/users/certification/*" ).permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
