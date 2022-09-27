@@ -2,11 +2,7 @@ package com.efub.lakkulakku.domain.users.controller;
 
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.dao.CertificationDao;
-import com.efub.lakkulakku.domain.users.dto.CertificationReqDto;
-import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
-import com.efub.lakkulakku.domain.users.dto.LoginInfoDto;
-import com.efub.lakkulakku.domain.users.dto.LoginResDto;
-import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
+import com.efub.lakkulakku.domain.users.dto.*;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.DuplicateEmailException;
 import com.efub.lakkulakku.domain.users.exception.DuplicateNicknameException;
@@ -43,43 +39,39 @@ public class LoginController {
 	}
 
 	@GetMapping("/signup/email")
-	public ResponseEntity<?> checkEmailDuplicate(@Valid @RequestParam String email) {
+	public ResponseEntity<?> checkEmailDuplicate(@Valid @RequestBody String email) {
 		if (usersRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();
 		} else {
-			return ResponseEntity.ok(AVAILABLE_NICKNAME);
+			return ResponseEntity.ok(AVAILABLE_EMAIL);
 
 		}
 	}
 
 	@GetMapping("/signup/nickname")
-	public ResponseEntity<?> checkNicknameDuplicate(@Valid @RequestParam String nickname) {
-		if (usersRepository.existsByNickname(nickname)) {
+	public ResponseEntity<?> checkNicknameDuplicate(@Valid @RequestBody UserGetReqDto reqDto) {
+		if (usersRepository.existsByNickname(reqDto.getNickname())) {
 			throw new DuplicateNicknameException();
 		} else {
 			return ResponseEntity.ok(AVAILABLE_NICKNAME);
 		}
 	}
 
-	//인증번호 발송
 	@PostMapping("/certification/sends")
-	public ResponseEntity<?> sendEmail(@Valid @RequestParam("email") String email){
-		Users user = usersRepository.findByEmail(email).orElseThrow(()
+	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailGetReqDto reqDto){
+		Users user = usersRepository.findByEmail(reqDto.getEmail()).orElseThrow(()
 				-> new UserNotFoundException());
 		String certiCode = usersService.getTempString();
-		//저장 -> 임시로 쓰고 버릴 것인데 DB에 저장하지 말고 redis?
-		certificationDao.createEmailCertification(email, certiCode);
-		mailSendService.sendMail(mailSendService.createMail(certiCode, email));
+		certificationDao.createEmailCertification(reqDto.getEmail(), certiCode);
+		mailSendService.sendMail(mailSendService.createMail(certiCode, reqDto.getEmail()));
 		return ResponseEntity.ok(SEND_EMAIL_SUCCESS);
 	}
 
-	//인증 번호 확인
 	@PostMapping("/certification/comfirms")
 	public ResponseEntity<?> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
 		mailSendService.verifyEmail(reqDto);
 		return ResponseEntity.ok(CERTIFICATION_SUCCESS);
 	}
-
 
 
 	@PostMapping("/login")
@@ -93,9 +85,9 @@ public class LoginController {
 
 
 	@GetMapping("/re-issue")
-	public ResponseEntity<String> reIssue(@RequestParam("email") String email, HttpServletRequest request) {
+	public ResponseEntity<String> reIssue(@RequestBody EmailGetReqDto reqDto, HttpServletRequest request) {
 		String refreshToken = request.getHeader("Authorization").substring(7);
-		LoginInfoDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
+		LoginInfoDto responseDto = usersService.reIssueAccessToken(reqDto.getEmail(), refreshToken);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Set-Cookie", usersService.generateCookie("accessToken", responseDto.getAccessToken()).toString());
 		responseHeaders.add("Set-Cookie",usersService.generateCookie("refreshToken", responseDto.getRefreshToken()).toString());
