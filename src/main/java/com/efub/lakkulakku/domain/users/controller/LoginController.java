@@ -1,7 +1,10 @@
 package com.efub.lakkulakku.domain.users.controller;
 
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.users.dao.CertificationDao;
+import com.efub.lakkulakku.domain.users.dto.CertificationReqDto;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
+import com.efub.lakkulakku.domain.users.dto.LoginInfoDto;
 import com.efub.lakkulakku.domain.users.dto.LoginResDto;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
@@ -14,6 +17,7 @@ import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.exception.ErrorCode;
 import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +34,7 @@ public class LoginController {
 	private final UsersService usersService;
 	private final UsersRepository usersRepository;
 	private final MailSendService mailSendService;
+	private final CertificationDao certificationDao;
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
@@ -56,26 +61,45 @@ public class LoginController {
 		}
 	}
 
-	@PostMapping("/sendemail")
+	//인증번호 발송
+	@PostMapping("/certification/sends")
 	public ResponseEntity<?> sendEmail(@Valid @RequestParam("email") String email){
 		Users user = usersRepository.findByEmail(email).orElseThrow(()
 				-> new UserNotFoundException());
-		String tempPwd = usersService.getTempPwd();
-		usersService.updatePassword(tempPwd, user);
-		mailSendService.sendMail(mailSendService.createMail(tempPwd, email));
+		String certiCode = usersService.getTempString();
+		//저장 -> 임시로 쓰고 버릴 것인데 DB에 저장하지 말고 redis?
+		certificationDao.createEmailCertification(email, certiCode);
+		mailSendService.sendMail(mailSendService.createMail(certiCode, email));
 		return ResponseEntity.ok(SEND_EMAIL_SUCCESS);
 	}
 
-	@PostMapping("/login")
-	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
-		LoginResDto responseDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	//인증 번호 확인
+	@PostMapping("/certification/comfirms")
+	public ResponseEntity<?> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
+		mailSendService.verifyEmail(reqDto);
+		return ResponseEntity.ok(CERTIFICATION_SUCCESS);
 	}
 
+
+
+	@PostMapping("/login")
+	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
+		LoginInfoDto loginInfoDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Set-Cookie", usersService.generateCookie("accessToken", loginInfoDto.getAccessToken()).toString());
+		responseHeaders.add("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
+		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
+	}
+
+
 	@GetMapping("/re-issue")
-	public ResponseEntity<LoginResDto> reIssue(@RequestParam("email") String email, @RequestParam("refreshToken") String refreshToken) {
-		LoginResDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	public ResponseEntity<String> reIssue(@RequestParam("email") String email, HttpServletRequest request) {
+		String refreshToken = request.getHeader("Authorization").substring(7);
+		LoginInfoDto responseDto = usersService.reIssueAccessToken(email, refreshToken);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Set-Cookie", usersService.generateCookie("accessToken", responseDto.getAccessToken()).toString());
+		responseHeaders.add("Set-Cookie",usersService.generateCookie("refreshToken", responseDto.getRefreshToken()).toString());
+		return new ResponseEntity<String>(REISSUE_TOKEN_SUCCESS, responseHeaders, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/logout")

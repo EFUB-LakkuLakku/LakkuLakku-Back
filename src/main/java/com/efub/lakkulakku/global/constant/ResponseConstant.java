@@ -7,7 +7,9 @@ public class ResponseConstant {
 	public static final String LOGIN_SUCCESS = "성공적으로 로그인되었습니다.";
 
 	//tempPassword
-	public static final String SEND_EMAIL_SUCCESS = "성공적으로 임시 비밀번호를 전송했습니다.";
+	public static final String SEND_EMAIL_SUCCESS = "성공적으로 인증 코드를 전송했습니다.";
+	public static final String CERTIFICATION_SUCCESS = "성공적으로 인증되었습니다.";
+
 
 	// withdraw
 	public static final String WITHDRAW_SUCCESS = "성공적으로 탈퇴되었습니다.";
@@ -28,6 +30,8 @@ public class ResponseConstant {
 
 	public static final String PASSWORDS_NOT_EQUAL = "입력한 새 비밀번호가 서로 일치하지 않습니다.";
 	public static final String BEFORE_PASSWORD_NOT_MATCH = "현재 비밀번호가 일치하지 않습니다.";
+
+	public static final String CERTIFICATION_CODE_NOT_MATCH = "인증 코드가 일치하지 않습니다.";
 
 	/* Friends */
 	public static final String FRIEND_SUCCESS = "성공적으로 친구가 되었습니다.";
@@ -66,4 +70,5 @@ public class ResponseConstant {
 	/* Token */
 	public static final String BAD_TOKEN_REQUEST = "토큰을 확인하세요";
 	public static final String EXPIRED_REFRESHTOKEN = "refresh 토큰이 만료되었습니다.";
+	public static final String REISSUE_TOKEN_SUCCESS = "토큰이 재발급되었습니다.";
 }
