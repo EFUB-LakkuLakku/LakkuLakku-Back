@@ -12,10 +12,10 @@
         <td width="30%" align="center"><a href= "https://github.com/SeojungH">황서정</a></td>
     </tr>
     <tr width="100%">
-        <td width="20%" align="center"><img src = "https://github.com/nitronium102.png"></td>
-        <td width="20%" align="center"><img src = "https://github.com/julia-ing.png"/></td>
-        <td width="20%" align="center"><img src = "https://github.com/june0216.png"/></td>
-        <td width="20%" align="center"><img src = "https://github.com/SeojungH.png"/></td>
+        <td align="center"><img src = "https://github.com/nitronium102.png"></td>
+        <td align="center"><img src = "https://github.com/julia-ing.png"/></td>
+        <td align="center"><img src = "https://github.com/june0216.png"/></td>
+        <td align="center"><img src = "https://github.com/SeojungH.png"/></td>
     </tr>
     <tr width="100%">
         <td width="30%" align="center">
