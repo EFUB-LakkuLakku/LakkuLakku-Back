@@ -179,6 +179,17 @@ public class GlobalExceptionHandler {
 
 	}
 
+	@ExceptionHandler(CertificationCodeMismatchException.class)
+	protected final ResponseEntity<ErrorResponse> handleCertificationCodeMismatchException(CertificationCodeMismatchException e) {
+		final ErrorResponse response = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.code(ErrorCode.CERTIFICATION_CODE_NOT_MATCH)
+				.message(e.getMessage())
+				.build();
+		return ResponseEntity.status(response.getStatus()).body(response);
+
+	}
+
 	// 존재하지 않는 유저
 	@ExceptionHandler(UserNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
