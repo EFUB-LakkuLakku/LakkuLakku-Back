@@ -36,7 +36,7 @@ public class HomeController {
 				.body(usersService.getHome(user, year, month));
 	}
 
-	@GetMapping("/diary/{year}/{month}")
+	@GetMapping({"/diary/{year}/{month}", "/diary"})
 	public List<DiaryHomeResDto> getHomeDiaryByDate(@PathVariable(value = "year", required = false) String year, @PathVariable(value = "month", required = false) String month, @RequestParam String nickname) {
 		//TODO : LocalDateTime의 범위를 넘어가는 경우 에러 발생
 //		if (Integer.parseInt(year) <= 1969 || Integer.parseInt(year) >= 2100)
