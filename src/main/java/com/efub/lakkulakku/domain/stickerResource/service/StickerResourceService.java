@@ -37,6 +37,16 @@ public class StickerResourceService {
 		}
 	}
 
+	public void saveCommentStickerResource() {
+		for (int i = 0; i < 8; i++) {
+			String URL = BASE_URL.concat("comment").concat(Integer.toString(i+1)).concat(".png");
+
+			StickerResource stickerResource = StickerResource.builder()
+					.category("comment").url(URL).build();
+			stickerResourceRepository.save(stickerResource);
+		}
+	}
+
 	public List<StickerResourceResDto> getStickersByLatest() {
 		return stickerResourceRepository.findAll().stream().map(stickerResourceMapper::toStickerResourceResDto).collect(Collectors.toList());
 	}
