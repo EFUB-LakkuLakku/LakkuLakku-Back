@@ -4,42 +4,42 @@
 
 ## 🌕 백엔드 팀원 소개
 
-<table border="1" cellspacing="0" cellpadding="0" width="90%">
+<table border="1" cellspacing="0" cellpadding="0" width="100%">
     <tr width="100%">
-        <td width="30%" align="center"><a href= "https://github.com/nitronium102">강민지</a></td>
-        <td width="30%" align="center"><a href= "https://github.com/julia-ing">최예원</a></td>
-        <td width="30%" align="center"><a href= "https://github.com/june0216">권지윤</a></td>
-        <td width="30%" align="center"><a href= "https://github.com/SeojungH">황서정</a></td>
+        <td width="25%" align="center"><a href= "https://github.com/nitronium102">강민지</a></td>
+        <td width="25%" align="center"><a href= "https://github.com/julia-ing">최예원</a></td>
+        <td width="25%" align="center"><a href= "https://github.com/june0216">권지윤</a></td>
+        <td width="25%" align="center"><a href= "https://github.com/SeojungH">황서정</a></td>
     </tr>
     <tr width="100%">
-        <td width="20%" align="center"><img src = "https://github.com/nitronium102.png"></td>
-        <td width="20%" align="center"><img src = "https://github.com/julia-ing.png"/></td>
-        <td width="20%" align="center"><img src = "https://github.com/june0216.png"/></td>
-        <td width="20%" align="center"><img src = "https://github.com/SeojungH.png"/></td>
+        <td align="center"><img src = "https://github.com/nitronium102.png"></td>
+        <td align="center"><img src = "https://github.com/julia-ing.png"/></td>
+        <td align="center"><img src = "https://github.com/june0216.png"/></td>
+        <td align="center"><img src = "https://github.com/SeojungH.png"/></td>
     </tr>
     <tr width="100%">
-        <td width="30%" align="center">
+        <td width="25%" align="center">
 [다이어리] 다이어리 생성, 수정, 삭제, 편집<br>
 [스티커] 스티커 조회<br>
 [템플릿] 템플릿 조회<br>
 [시큐리티] JWT 토큰 구현<br>
 [기타] 데이터베이스 설계
         </td>
-        <td width="30%" align="center">
+        <td width="25%" align="center">
 [홈] 홈 조회<br>
 [프로필] 유저 프로필 수정<br>
 [이미지] S3 이미지 관련 기능 구현<br>
 [배포] EC2, Docker, Github Action 을 이용한 CI/CD 구축<br>
 [배포] route53, nginx 를 이용한 https 통신 구현<br>
 [기타] 데이터베이스 설계, 아키텍처 설계, AWS(EC2, RDS, S3 등) 세팅</td>
-        <td width="30%" align="center">
+        <td width="25%" align="center">
 [유저] 회원 가입, 이메일과 닉네임 중복 확인 기능, 임시 비밀번호 이메일 발송 기능<br>
 [시큐리티] JWT 토큰 구현, Redis를 통한 Blacklist 구현, 비밀번호 변경 기능<br>
 [친구] 친구 추가, 삭제, 조회, 찾기 기능<br>
 [알림] 좋아요, 댓글, 대댓글, 친구 추가 알림 기능<br>
 [기타] 데이터베이스 설계</td>
-        <td width="30%" align="center">
-[유저] 유저 정보 수정<br>
+        <td width="25%" align="center">
+[유저] 유저 정보 수정, 비밀번호 변경 기능<br>
 [다이어리] 댓글 작성 및 삭제, 좋아요 추가 및 취소<br>
 [기타] 데이터베이스 설계<br>
 </td>

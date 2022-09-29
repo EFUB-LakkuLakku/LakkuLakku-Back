@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.comment.controller;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
@@ -31,7 +32,7 @@ public class CommentController {
 	private final DiaryRepository diaryRepository;
 
 	@PostMapping("/{date}/comments")
-	public ResponseEntity<?> commentAdd(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,@RequestBody CommentReqDto commentReqDto) {
+	public ResponseEntity<?> commentAdd(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentReqDto commentReqDto) {
 
 		if (!diaryRepository.existsByDate(date))
 			throw new DiaryNotFoundException();
@@ -45,21 +46,19 @@ public class CommentController {
 		return ResponseEntity.ok(commentResDto);
 	}
 
-	@DeleteMapping("/{date}/comments/{id}")
-	public ResponseEntity<?> commentRemove(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @PathVariable("id") UUID id) {
+	@DeleteMapping("/{date}/comments")
+	public ResponseEntity<?> commentRemove(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentDeleteReqDto commentDeleteReqDto) {
 
-		if (!commentRepository.findById(id).get().getUsers().getId().equals(user.getId()))
-			throw new UnauthorizedException();
-
-		commentService.removeComment(id);
+		commentService.removeComment(user, date, commentDeleteReqDto);
 
 		return ResponseEntity.ok(COMMENT_DELETE_SUCCESS);
+
 	}
 
-	@PutMapping("/{date}/comments/{id}")
-	public ResponseEntity<?> update(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,@PathVariable("id") UUID id, @RequestBody CommentReqDto commentReqDto) {
+	@PutMapping("/{date}/comments")
+	public ResponseEntity<?> update(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentReqDto commentReqDto) {
 
-		CommentUpdateResDto commentUpdateResDto = commentService.update(user, id, date, commentReqDto);
+		CommentUpdateResDto commentUpdateResDto = commentService.update(user, date, commentReqDto);
 
 		return ResponseEntity.ok(commentUpdateResDto);
 	}

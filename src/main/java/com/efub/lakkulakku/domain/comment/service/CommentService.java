@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.comment.service;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
@@ -52,8 +53,7 @@ public class CommentService {
 		if (commentReqDto.getParentId() != null) {
 			type = "대댓글";
 		}
-		if(!user.getId().equals(diary.getUser().getId()))
-		{
+		if (!user.getId().equals(diary.getUser().getId())) {
 			toCommentNotification(user, diary.getUser(), type, diary.getCreatedOn());
 		}
 
@@ -72,25 +72,28 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void removeComment(UUID id) {
+	public void removeComment(Users user, LocalDate date, CommentDeleteReqDto commentDeleteReqDto) {
 
-		if (!commentRepository.existsById(id))
+		if (!commentRepository.findById(commentDeleteReqDto.getId()).get().getUsers().getId().equals(user.getId()))
+			throw new UnauthorizedException();
+
+		if (!commentRepository.existsById(commentDeleteReqDto.getId()))
 			throw new CommentNotFoundException();
 
-		commentRepository.deleteById(id);
+		commentRepository.deleteById(commentDeleteReqDto.getId());
 
 	}
 
 	@Transactional
-	public CommentUpdateResDto update(Users user, UUID id, LocalDate date, CommentReqDto commentReqDto) {
+	public CommentUpdateResDto update(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
-		if (!commentRepository.findById(id).get().getUsers().getId().equals(user.getId()))
+		if (!commentRepository.findById(commentReqDto.getId()).get().getUsers().getId().equals(user.getId()))
 			throw new UnauthorizedException();
 
-		if (!commentRepository.existsById(id))
+		if (!commentRepository.existsById(commentReqDto.getId()))
 			throw new CommentNotFoundException();
 
-		Comment comment = commentRepository.findById(id).orElseThrow();
+		Comment comment = commentRepository.findById(commentReqDto.getId()).orElseThrow();
 
 		comment.update(commentReqDto.getContent());
 
