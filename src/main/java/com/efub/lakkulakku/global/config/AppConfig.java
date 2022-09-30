@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class AppConfig {
 		configuration.addAllowedOrigin("https://lakku-lakku.netlify.app");
 		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.addAllowedHeader("*");
+		configuration.setExposedHeaders(Arrays.asList("Set-Cookie"));
 		configuration.addAllowedMethod("*");
 		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
