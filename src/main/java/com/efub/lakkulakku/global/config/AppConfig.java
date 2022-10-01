@@ -39,7 +39,7 @@ public class AppConfig {
 		configuration.addAllowedOrigin("https://lakku-lakku.netlify.app");
 		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.addAllowedHeader("*");
-		configuration.setExposedHeaders(Arrays.asList("Set-Cookie"));
+		configuration.addExposedHeader("Set-Cookie");
 		configuration.addAllowedMethod("*");
 		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
