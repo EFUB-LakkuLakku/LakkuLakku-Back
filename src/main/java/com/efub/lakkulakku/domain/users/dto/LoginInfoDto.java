@@ -22,6 +22,7 @@ public class LoginInfoDto {
 	public LoginResDto toLoginResDto() {
 		return LoginResDto.builder()
 				.nickname(this.nickname)
+				.accessToken(this.accessToken)
 				.build();
 	}
 }
