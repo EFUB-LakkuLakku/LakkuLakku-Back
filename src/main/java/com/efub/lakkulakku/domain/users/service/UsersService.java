@@ -13,6 +13,7 @@ import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.dto.*;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.PasswordNotMatchedException;
+import com.efub.lakkulakku.domain.users.exception.PasswordsNotEqualException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.global.config.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -122,6 +123,28 @@ public class UsersService {
 		}
 
 	}
+
+	public LoginInfoDto provideToken(String email)
+	{
+		Users user = usersRepository
+				.findByEmail(email).orElseThrow(UserNotFoundException::new);
+		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
+		return new LoginInfoDto(accessToken, refreshToken, user.getNickname());
+	}
+
+	public void newPassword(Users user, NewPwdReqDto reqDto)
+	{
+		String newPwd = reqDto.getNewPwd();
+		String checkNewPwd = reqDto.getCheckNewPwd();
+		if (checkNewPwd.equals(newPwd)) {
+			user.setPassword(passwordEncoder.encode(newPwd));
+			usersRepository.save(user);
+		} else {
+			throw new PasswordsNotEqualException();
+		}
+	}
+
 
 
 	public void logout(String email, String accessToken) {

@@ -71,7 +71,17 @@ public class LoginController {
 	@PostMapping("/certification/comfirms")
 	public ResponseEntity<?> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
 		mailSendService.verifyEmail(reqDto);
-		return ResponseEntity.ok(CERTIFICATION_SUCCESS);
+		LoginInfoDto loginInfoDto = usersService.provideToken(reqDto.getEmail());
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
+		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/certification/new-password")
+	public ResponseEntity<?> EnterNewPassword(@AuthUsers Users user, @RequestBody NewPwdReqDto reqDto)
+	{
+		usersService.newPassword(user, reqDto);
+		return ResponseEntity.ok(PASSWORD_CHANGE_SUCCESS);
 	}
 
 
