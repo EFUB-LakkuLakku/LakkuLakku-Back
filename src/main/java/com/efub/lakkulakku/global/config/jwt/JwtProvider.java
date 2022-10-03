@@ -107,4 +107,9 @@ public class JwtProvider {
 		redisService.setValues(blackListATPrefix + accessToken, userId, Duration.ofMillis(expiredAccessTokenTime));
 		redisService.deleteValues(userId);
 	}
+
+
+
+
+
 }
