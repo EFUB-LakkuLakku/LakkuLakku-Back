@@ -52,5 +52,4 @@ public class FriendController {
 		return ResponseEntity.ok(DELETE_FRIEND_SUCCESS);
 	}
 
-
 }

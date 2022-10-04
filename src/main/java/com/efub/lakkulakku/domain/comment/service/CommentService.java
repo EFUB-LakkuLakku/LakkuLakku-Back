@@ -1,52 +1,135 @@
 package com.efub.lakkulakku.domain.comment.service;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-
-import java.util.UUID;
-
+import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
+import com.efub.lakkulakku.domain.users.entity.Users;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface CommentService {
+import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
 
-	void addComment(CommentResDto commentResDto);
+@Service
+@RequiredArgsConstructor
+public class CommentService {
 
-	void removeComment(UUID id);
-	void update(UUID id, CommentResDto commentResDto);
-	//void addRecomment(UUID parentId, CommentResDto commentResDto);
-	//void removeRecomment(UUID parentId);
-	//void editRecomment() ;
+	private final CommentRepository commentRepository;
+	private final DiaryRepository diaryRepository;
 
-	//Comment findById(UUID id) throws Exception;
+	private final NotificationRepository notificationRepository;
 
-	default Comment dtoToEntity(CommentResDto commentResDto) {
+	@Transactional
+	public CommentResDto addComment(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
-		//Diary diary = Diary.builder().id(commentResDto.getId()).build();
+		Diary diary = diaryRepository.findById(commentReqDto.getDiaryId()).get();
 
 		Comment comment = Comment.builder()
-				.id(commentResDto.getId())
-				.content(commentResDto.getContent())
-				//.userId(commentResDto.getUserId())
-				.isSecret(commentResDto.getIsSecret())
-				//.diary(diary)
+				.users(user)
+				.content(commentReqDto.getContent())
+				.diary(diary)
+				.parentId(commentReqDto.getParentId())
+				.isSecret(commentReqDto.isSecret())
 				.build();
 
-		return comment;
-	}
+		commentRepository.save(comment);
 
-	default CommentResDto entityToDTO(Comment comment) {
+		String message = COMMENT_ADD_SUCCESS;
 
-		CommentResDto commentResDto = CommentResDto.builder()
+		String type = "댓글";
+		if (commentReqDto.getParentId() != null) {
+			type = "대댓글";
+		}
+		if (!user.getId().equals(diary.getUser().getId())) {
+			toCommentNotification(user, diary.getUser(), type, diary.getCreatedOn());
+		}
+
+		return CommentResDto.builder()
 				.id(comment.getId())
+				.userId(comment.getUsers().getId())
+				.profileImageUrl(checkProfileImageUrl(user))
+				.nickname(user.getNickname())
+				.parentId(comment.getParentId())
 				.content(comment.getContent())
-				//.users(comment.getUsers())
+				.isSecret(comment.getIsSecret())
+				.createdOn(comment.getCreatedOn())
+				.message(message)
 				.build();
 
-		return commentResDto;
 	}
 
-}
+	@Transactional
+	public void removeComment(Users user, LocalDate date, CommentDeleteReqDto commentDeleteReqDto) {
 
+		if (!commentRepository.findById(commentDeleteReqDto.getId()).get().getUsers().getId().equals(user.getId()))
+			throw new UnauthorizedException();
+
+		if (!commentRepository.existsById(commentDeleteReqDto.getId()))
+			throw new CommentNotFoundException();
+
+		commentRepository.deleteById(commentDeleteReqDto.getId());
+
+	}
+
+	@Transactional
+	public CommentUpdateResDto update(Users user, LocalDate date, CommentReqDto commentReqDto) {
+
+		if (!commentRepository.findById(commentReqDto.getId()).get().getUsers().getId().equals(user.getId()))
+			throw new UnauthorizedException();
+
+		if (!commentRepository.existsById(commentReqDto.getId()))
+			throw new CommentNotFoundException();
+
+		Comment comment = commentRepository.findById(commentReqDto.getId()).orElseThrow();
+
+		comment.update(commentReqDto.getContent());
+
+		commentRepository.save(comment);
+
+		return CommentUpdateResDto.builder()
+				.id(comment.getId())
+				.userId(comment.getUsers().getId())
+				.profileImageUrl(checkProfileImageUrl(user))
+				.nickname(user.getNickname())
+				.parentId(comment.getParentId())
+				.content(comment.getContent())
+				.isSecret(comment.getIsSecret())
+				.modifiedOn(comment.getModifiedOn())
+				.build();
+
+	}
+
+	@Transactional
+	public String checkProfileImageUrl(Users user) {
+		if (user.getProfile() == null || user.getProfile().getFile() == null) {
+			return null;
+		} else {
+			return user.getProfile().getFile().getUrl();
+
+		}
+	}
+
+	@Transactional
+	public void toCommentNotification(Users user, Users targetUser, String type, LocalDateTime date) {
+		Notification notification = Notification.builder()
+				.userId(targetUser)
+				.friendId(user)
+				.notiType(type)
+				.build();
+		notification.makeMessage(user, type, date);
+		notificationRepository.save(notification);
+	}
+}

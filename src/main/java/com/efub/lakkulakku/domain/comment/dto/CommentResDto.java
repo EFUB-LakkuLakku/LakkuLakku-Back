@@ -19,10 +19,11 @@ public class CommentResDto {
 	private String content;
 	private Boolean isSecret;
 	private LocalDateTime createdOn;
+	private String message;
 
 	@Builder
 	public CommentResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
-						 Boolean isSecret, LocalDateTime createdOn) {
+						 Boolean isSecret, LocalDateTime createdOn, String message) {
 		this.id = id;
 		this.userId = userId;
 		this.profileImageUrl = profileImageUrl;
@@ -31,6 +32,7 @@ public class CommentResDto {
 		this.content = content;
 		this.isSecret = isSecret;
 		this.createdOn = createdOn;
+		this.message = message;
 	}
 
 }

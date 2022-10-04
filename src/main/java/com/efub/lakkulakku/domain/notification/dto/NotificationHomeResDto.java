@@ -10,7 +10,6 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationHomeResDto {
-
 	private UUID id;
 	private String message;
 

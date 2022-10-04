@@ -6,6 +6,8 @@ import com.efub.lakkulakku.domain.friend.entity.Friend;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.repository.FriendRepository;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.UUID;
 public class FriendService {
 	private final FriendRepository friendRepository;
 	private final UsersRepository usersRepository;
+	private final NotificationRepository notificationRepository;
 
 	@Transactional
 	public void addFriend(FriendReqDto reqDto, Users user) {
@@ -36,11 +39,15 @@ public class FriendService {
 						.targetId(targetUser)
 						.build();
 				friendRepository.save(friends);
+				if(!user.getId().equals(targetUser.getId()))
+				{
+					toFriendNotification(user, targetUser);
+					toFriendNotification(targetUser, user);
+				}
 			}
 		} else {
 			throw new UserNotFoundException();
 		}
-
 
 	}
 
@@ -66,7 +73,6 @@ public class FriendService {
 	@Transactional
 	public FriendResDto buildDto(Users user) {
 		FriendResDto friendResDto = new FriendResDto(user);
-
 		return friendResDto;
 	}
 
@@ -87,8 +93,20 @@ public class FriendService {
 	@Transactional
 	public void deleteFriend(FriendReqDto reqDto, Users user) {
 		Users delFriend = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(() -> new UserNotFoundException());//에러 필요? -> 삭제할 때 없을 수 유저가 있음
+				.orElseThrow(() -> new UserNotFoundException());
 		UUID id = isFriend(user, delFriend);
 		friendRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void toFriendNotification(Users user, Users targetUser)
+	{
+		Notification notification = Notification.builder()
+				.userId(targetUser)
+				.friendId(user)
+				.notiType("친구")
+				.build();
+		notification.makeMessage(user, "친구", null);
+		notificationRepository.save(notification);
 	}
 }

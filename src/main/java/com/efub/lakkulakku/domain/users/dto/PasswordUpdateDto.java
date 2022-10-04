@@ -11,12 +11,10 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class UpdatePasswordDto {
+public class PasswordUpdateDto {
 
     @NotBlank
     @Length(min = 2, max = 16)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!.?,])[A-Za-z\\d!.?,]{2,16}$",
-            message = "16자 이내의 영문자 및 숫자와 ?,!,., , 특수문자로 입력해주세요.")
     private String beforePassword;
 
     @NotBlank
@@ -24,6 +22,13 @@ public class UpdatePasswordDto {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!.?,])[A-Za-z\\d!.?,]{2,16}$",
             message = "16자 이내의 영문자 및 숫자와 ?,!,., , 특수문자로 입력해주세요.")
     private String afterPassword;
+
+
+    @NotBlank
+    @Length(min = 2, max = 16)
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!.?,])[A-Za-z\\d!.?,]{2,16}$",
+            message = "16자 이내의 영문자 및 숫자와 ?,!,., , 특수문자로 입력해주세요.")
+    private String checkAfterPassword;
 
 
 }

@@ -2,6 +2,7 @@ package com.efub.lakkulakku.domain.sticker.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -27,19 +28,23 @@ public class Sticker extends BaseTimeEntity {
 
 	@Column(length = 20)
 	@NotNull
-	private String width;
+	private Integer width;
 
 	@Column(length = 20)
 	@NotNull
-	private String height;
+	private Integer height;
 
 	@Column(length = 20)
 	@NotNull
-	private String xcoord;
+	private Integer x;
 
 	@Column(length = 20)
 	@NotNull
-	private String ycoord;
+	private Integer y;
+
+	@Column(length = 20)
+	@NotNull
+	private Integer rotation;
 
 	@Column(length = 20)
 	@NotNull
@@ -48,4 +53,18 @@ public class Sticker extends BaseTimeEntity {
 	@Column(length = 2084)
 	@NotNull
 	private String url;
+
+	@Builder
+	public Sticker(Diary diary, Integer width, Integer height,
+				   Integer x, Integer y, Integer rotation,
+				   String category, String url) {
+		this.diary = diary;
+		this.width = width;
+		this.height = height;
+		this.x = x;
+		this.y = y;
+		this.rotation = rotation;
+		this.category = category;
+		this.url = url;
+	}
 }

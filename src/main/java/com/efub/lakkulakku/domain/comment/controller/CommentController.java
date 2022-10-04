@@ -1,24 +1,26 @@
 package com.efub.lakkulakku.domain.comment.controller;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
-import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
+import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.comment.service.CommentService;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
-import com.efub.lakkulakku.domain.comment.entity.Comment;
-import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
-import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
+
+import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_DELETE_SUCCESS;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,65 +28,39 @@ import java.util.UUID;
 public class CommentController {
 
 	private final CommentService commentService;
-
 	private final CommentRepository commentRepository;
-	//private final DiaryRepository diaryRepository;
+	private final DiaryRepository diaryRepository;
 
 	@PostMapping("/{date}/comments")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> commentAdd(/*@PathVariable UUID id,*/ @RequestBody CommentResDto commentResDto) {
+	public ResponseEntity<?> commentAdd(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentReqDto commentReqDto) {
 
-		/*Diary diary = diaryRepository.findById(diaryId)
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 다이어리 게시물입니다."));*/
+		if (!diaryRepository.existsByDate(date))
+			throw new DiaryNotFoundException();
+		if (commentReqDto.getParentId() != null) {
+			commentRepository.findById(commentReqDto.getParentId())
+					.orElseThrow(() -> new ParentNotFoundException());
+		}
 
-		//LocalDateTime now = LocalDateTime.now();
-		commentService.addComment(commentResDto);
+		CommentResDto commentResDto = commentService.addComment(user, date, commentReqDto);
 
-		return ResponseEntity.ok("해당 댓글이 작성되었습니다.");
+		return ResponseEntity.ok(commentResDto);
 	}
 
 	@DeleteMapping("/{date}/comments")
-	public ResponseEntity<?> commentRemove(@PathVariable UUID id/*, @RequestBody CommentResDto commentResDto*/) {
+	public ResponseEntity<?> commentRemove(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentDeleteReqDto commentDeleteReqDto) {
 
-		Comment comment = commentRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+		commentService.removeComment(user, date, commentDeleteReqDto);
 
-		commentService.removeComment(id);
+		return ResponseEntity.ok(COMMENT_DELETE_SUCCESS);
 
-		return ResponseEntity.ok("댓글이 삭제되었습니다.");
 	}
 
 	@PutMapping("/{date}/comments")
-	public ResponseEntity<?> commentEdit(@PathVariable UUID id, /*@Valid*/ @RequestBody CommentResDto commentResDto) {
+	public ResponseEntity<?> update(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentReqDto commentReqDto) {
 
- 		/*if (!comment.getUsers().equals(loggedUser)) {
-			throw new IllegalArgumentException("수정할 수 있는 권한이 없습니다.");
-		}*/
-		commentService.update(id, commentResDto);
+		CommentUpdateResDto commentUpdateResDto = commentService.update(user, date, commentReqDto);
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return ResponseEntity.ok(commentUpdateResDto);
 	}
 
-	/*@PostMapping("/{date}/comments")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> recommentAdd(@PathVariable UUID parentId, @RequestBody CommentResDto commentResDto) {
-		Comment comment = commentRepository.findById(parentId)
-				.orElseThrow(() -> new IllegalArgumentException("상위 댓글이 존재하지 않습니다."));
-		commentService.addRecomment(parentId, commentResDto);
-		return ResponseEntity.ok("해당 댓글이 작성되었습니다.");
-	}*/
-
-	/*@DeleteMapping("/{date}/comments")
-	public ResponseEntity<?> recommentRemove(@PathVariable UUID parentId) {
-		commentService.removeRecomment(parentId);
-		return ResponseEntity.ok("댓글이 삭제되었습니다.");
-	}
-
-	/*@PutMapping("/{date}/comments")
-	public ResponseEntity<?> recommentEdit(@PathVariable UUID id, @Valid @RequestBody CommentDto commentDto) {
-		Comment comment = commentRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("수정할 수 있는 권한이 없습니다."));
-		commentService.editRecomment(sessionUser.getUserId(), id, commentDto);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}*/ //대댓글 수정하기
 }

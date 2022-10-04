@@ -2,6 +2,7 @@ package com.efub.lakkulakku.domain.text.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,19 +32,19 @@ public class Text extends BaseTimeEntity {
 
 	@Column(length = 20)
 	@NotNull
-	private String weight;
+	private Integer weight;
 
 	@Column(length = 20)
 	@NotNull
-	private String size;
+	private Integer size;
 
 	@Column(length = 20)
 	@NotNull
-	private String width;
+	private Integer width;
 
 	@Column(length = 20)
 	@NotNull
-	private String height;
+	private Integer height;
 
 	@Column(length = 20)
 	@NotNull
@@ -58,9 +59,31 @@ public class Text extends BaseTimeEntity {
 
 	@Column(length = 20)
 	@NotNull
-	private String xcoord;
+	private Integer x;
 
 	@Column(length = 20)
 	@NotNull
-	private String ycoord;
+	private Integer y;
+
+	@Column(length = 20)
+	@NotNull
+	private Integer rotation;
+
+	@Builder
+	public Text(Diary diary, String style, Integer weight, Integer size,
+				Integer width, Integer height, String align, String color, String content,
+				Integer x, Integer y, Integer rotation) {
+		this.diary = diary;
+		this.style = style;
+		this.weight = weight;
+		this.size = size;
+		this.width = width;
+		this.height = height;
+		this.align = align;
+		this.color = color;
+		this.content = content;
+		this.x = x;
+		this.y = y;
+		this.rotation = rotation;
+	}
 }
