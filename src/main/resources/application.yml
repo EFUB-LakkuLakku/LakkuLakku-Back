@@ -29,6 +29,16 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId:
+            clientSecret:
+            scope:
+              - email
+              - profile
 cloud:
   aws:
     credentials:

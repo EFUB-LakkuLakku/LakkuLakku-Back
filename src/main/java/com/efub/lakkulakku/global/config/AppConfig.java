@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.global.config;
 
+import com.efub.lakkulakku.domain.users.service.CustomOAuth2UserService;
 import com.efub.lakkulakku.global.config.jwt.JwtAuthenticationFilter;
 import com.efub.lakkulakku.global.config.jwt.JwtProvider;
 import com.efub.lakkulakku.global.exception.jwt.CustomAuthenticationEntryPoint;
@@ -27,7 +28,7 @@ public class AppConfig {
 
 	private final JwtProvider jwtProvider;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
+	private final CustomOAuth2UserService customOAuth2UserService;
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -64,6 +65,22 @@ public class AppConfig {
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+
+		http
+				.csrf().disable()
+				.logout()
+				.logoutSuccessUrl("/")
+				.and()
+					.oauth2Login()
+					.userInfoEndpoint()
+					.userService(customOAuth2UserService)
+				.and()
+					.redirectionEndpoint()
+					.baseUri("/*/oauth2/**")
+				.and()
+				.and()
+				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
 }

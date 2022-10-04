@@ -44,6 +44,11 @@ dependencies {
 
     //send mail to get temp password
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //oauth
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+
 }
 
 tasks.named('test') {
