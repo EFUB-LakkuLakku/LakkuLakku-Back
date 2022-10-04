@@ -43,12 +43,14 @@ public class JwtProvider {
 	}
 
 	public String createAccessToken(String userId, String roles) {
-		Long tokenInvalidTime = 1000L * 60 * 120; // 2h
+		//Long tokenInvalidTime = 1000L * 60 * 120; // 2h
+		Long tokenInvalidTime = 1000L * 60 * 3;//프론트 테스트를 위해 잠시 3분으로 변경
 		return this.createToken(userId, roles, tokenInvalidTime);
 	}
 
 	public String createRefreshToken(String userId, String roles) {
-		Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
+		//Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
+		Long tokenInvalidTime = 1000L * 60 * 5; // 프론트 테스트를 위해 잠시 8분으로 변경
 		String refreshToken = this.createToken(userId, roles, tokenInvalidTime);
 		redisService.setValues(userId, refreshToken, Duration.ofMillis(tokenInvalidTime));
 		return refreshToken;
