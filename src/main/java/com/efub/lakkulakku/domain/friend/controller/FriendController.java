@@ -30,7 +30,7 @@ public class FriendController {
 	@PostMapping("/search")
 	public ResponseEntity<?> searchFriend(@RequestBody FriendReqDto reqDto) {
 		Users user = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(() -> new UserNotFoundException());
+				.orElseThrow(UserNotFoundException::new);
 		return ResponseEntity.ok(new FriendResDto(user));
 
 	}
