@@ -9,12 +9,12 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NotificationHomeResDto {
+public class NotificationResDto {
 	private UUID id;
 	private String message;
 
 	@Builder
-	public NotificationHomeResDto(UUID id, String message) {
+	public NotificationResDto(UUID id, String message) {
 		this.id = id;
 		this.message = message;
 	}
