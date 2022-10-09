@@ -1,13 +1,15 @@
 package com.efub.lakkulakku.domain.file.entity;
 
-import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class File extends BaseTimeEntity {
 	@NotNull
 	private String filetype;
 
-	@Column(nullable = true)
+	@NotNull
 	private String url;
 
 	@Builder

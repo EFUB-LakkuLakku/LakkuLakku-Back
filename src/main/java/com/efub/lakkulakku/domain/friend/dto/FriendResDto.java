@@ -27,7 +27,7 @@ public class FriendResDto {
 	@Builder
 	public FriendResDto(Users user) {
 		this.uid = user.getUid();
-		if (user.getProfile() == null || user.getProfile().getFile() == null) {
+		if (user.getProfile() == null && user.getProfile().getFile() == null) {
 			this.profileImageUrl = null;
 		} else {
 			this.profileImageUrl = user.getProfile().getFile().getUrl();

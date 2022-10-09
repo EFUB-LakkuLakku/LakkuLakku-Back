@@ -58,10 +58,7 @@ public class FriendService {
 			if (one.equals(user)) {
 				continue;
 			}
-			else
-			{
-				friendList.add(buildDto(one));
-			}
+			friendList.add(buildDto(one));
 		}
 		return friendList;
 	}
