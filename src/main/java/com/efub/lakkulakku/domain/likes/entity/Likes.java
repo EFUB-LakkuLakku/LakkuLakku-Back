@@ -1,15 +1,16 @@
 package com.efub.lakkulakku.domain.likes.entity;
 
 import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.notification.dto.NotificationReqDto;
+import com.efub.lakkulakku.domain.notification.dto.NotificationMessage;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
-import jdk.jshell.Snippet;
 import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.context.ApplicationEventPublisher;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -51,6 +52,15 @@ public class Likes extends BaseTimeEntity {
 	}
 
 	public void setIsLike(){
-		this.isLike = this.isLike ? false : true;
+		this.isLike = !this.isLike;
+	}
+
+	public void publishEvent(ApplicationEventPublisher eventPublisher, String notiType){
+		eventPublisher.publishEvent(NotificationReqDto.builder()
+				.receiver(diary.getUser())
+				.notiType(notiType)
+				.message(NotificationMessage.makeLikeNotification(users.getNickname(), diary.getCreatedOn()))
+				.build());
+		System.out.println("좋아요 알림 발송");
 	}
 }

@@ -26,17 +26,16 @@ public class FriendController {
 	private final UsersRepository usersRepository;
 
 
-
 	@PostMapping("/search")
 	public ResponseEntity<?> searchFriend(@RequestBody FriendReqDto reqDto) {
 		Users user = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(() -> new UserNotFoundException());
+				.orElseThrow(UserNotFoundException::new);
 		return ResponseEntity.ok(new FriendResDto(user));
 
 	}
 
 	@PostMapping()
-	public ResponseEntity<?> addFriend(@AuthUsers Users user,  @RequestBody FriendReqDto reqDto) {
+	public ResponseEntity<?> addFriend(@AuthUsers Users user, @RequestBody FriendReqDto reqDto) {
 		friendService.addFriend(reqDto, user);
 		return ResponseEntity.ok(FRIEND_SUCCESS);
 	}
