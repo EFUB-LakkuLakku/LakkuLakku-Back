@@ -1,8 +1,10 @@
 package com.efub.lakkulakku.domain.friend.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.CONFLICT_SELF_FRIEND;
+
 public class SelfFriendException extends IllegalArgumentException {
 	public SelfFriendException() {
-		super("자기 자신과 친구를 맺을 수 없습니다.");
+		super(CONFLICT_SELF_FRIEND);
 	}
 
 	@Override
