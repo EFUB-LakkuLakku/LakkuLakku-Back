@@ -1,8 +1,10 @@
 package com.efub.lakkulakku.domain.notification.exception;
 
+import static com.efub.lakkulakku.global.constant.ResponseConstant.SSE_CONNECTION_FAILURE_MSG;
+
 public class SSEConnectionException extends IllegalArgumentException {
 	public SSEConnectionException() {
-		super("알림 연결에 실패했습니다.");
+		super(SSE_CONNECTION_FAILURE_MSG);
 	}
 
 	@Override
