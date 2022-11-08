@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 @RequiredArgsConstructor
 public class DiaryController {
 
-	private final UsersRepository usersRepository;
 	private final DiaryService diaryService;
 	private final DiaryRepository diaryRepository;
+	private final UsersRepository usersRepository;
 
 	@GetMapping("/{date}")
 	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -47,7 +48,7 @@ public class DiaryController {
 			return ResponseEntity.ok()
 					.body(new DiaryLookupResDto(null, null, null, null, null, null));
 
-		Diary diary = diaryRepository.findByDate(date).orElseThrow(DiaryNotFoundException::new);
+		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow(DiaryNotFoundException::new);
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
 	}
@@ -72,15 +73,19 @@ public class DiaryController {
 	public ResponseEntity<DiaryMessageResDto> createDiary(@AuthUsers Users user,
 														  @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		diaryService.checkDiaryIsInDate(date);
-		if (diaryRepository.existsByDate(date))
+
+		if(diaryRepository.existsByDateAndUserId(date, user.getId()))
 			throw new DuplicateDiaryException();
 		diaryService.createDiary(user, date);
 		return ResponseEntity.ok().body(new DiaryMessageResDto(date + DIARY_CREATE_SUCCESS));
 	}
 
 	@DeleteMapping("/{date}")
-	public ResponseEntity<DiaryMessageResDto> deleteDiary(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-		diaryService.deleteDiary(date);
+	public ResponseEntity<DiaryMessageResDto> deleteDiary(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+
+		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId())
+				.orElseThrow(DiaryNotFoundException::new);
+		diaryRepository.delete(diary);
 		return ResponseEntity.ok().body(new DiaryMessageResDto(date + DIARY_DELETE_SUCCESS));
 	}
 

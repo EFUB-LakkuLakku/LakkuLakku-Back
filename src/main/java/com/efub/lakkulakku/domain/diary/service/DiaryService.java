@@ -46,9 +46,9 @@ public class DiaryService {
 
 	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
 		int cntComment = commentRepository.countByDiaryId(diary.getId());
-		int cntLike = likesRepository.countByDiaryId(diary.getId());
+		//int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
-		diary.setCntLike(cntLike);
+		//diary.setCntLike(cntLike);
 		return diary;
 	}
 
@@ -81,13 +81,6 @@ public class DiaryService {
 				.build();
 		diary.setTemplate(template);
 		templateRepository.save(template);
-	}
-
-	@Transactional
-	public void deleteDiary(LocalDate date) {
-		Diary diary = diaryRepository.findByDate(date)
-				.orElseThrow(DiaryNotFoundException::new);
-		diaryRepository.delete(diary);
 	}
 
 	@Transactional

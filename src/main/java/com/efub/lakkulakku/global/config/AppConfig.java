@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -34,12 +36,12 @@ public class AppConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-
+		configuration.addAllowedOrigin("https://lakku-lakku.netlify.app");
 		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.addAllowedHeader("*");
+		configuration.addExposedHeader("Set-Cookie");
 		configuration.addAllowedMethod("*");
 		configuration.setAllowCredentials(true);
-
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
@@ -58,7 +60,7 @@ public class AppConfig {
 				.and()
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue").permitAll()
+					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);

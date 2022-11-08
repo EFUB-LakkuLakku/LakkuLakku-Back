@@ -41,6 +41,9 @@ dependencies {
 
     // security test
     testImplementation 'org.springframework.security:spring-security-test'
+
+    //send mail to get temp password
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

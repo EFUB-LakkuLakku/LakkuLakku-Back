@@ -40,6 +40,7 @@ public class LikesService {
 			likes = likesRepository.findByDiaryAndUsers(diary, user).orElseThrow();
 			likes.setIsLike();
 			likesRepository.save(likes);
+
 		} else {
 			likes = likeMapper.toEntityFromReqDto(user, diary, likeReqDto);
 			likesRepository.save(likes);
@@ -52,6 +53,12 @@ public class LikesService {
 			{
 				toLikeNotification(user, diary.getUser(), diary.getCreatedOn());
 			}
+			diary.setCntLike(diary.getCntLike()+1);
+			diaryRepository.save(diary);
+		}
+		else {
+			diary.setCntLike(diary.getCntLike()-1);
+			diaryRepository.save(diary);
 		}
 
 		return LikeClickResDto.builder()

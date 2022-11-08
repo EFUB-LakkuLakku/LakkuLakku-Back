@@ -18,13 +18,20 @@ public class CommentMapper {
 	private final CommentRepository commentRepository;
 
 	public CommentResDto toCommentResDto(Comment entity) {
-
+		String profileImageUrl;
 		if (entity == null)
 			return null;
+
+		if (entity.getUsers().getProfile() == null || entity.getUsers().getProfile().getFile() == null) {
+			profileImageUrl = null;
+		} else {
+			profileImageUrl = entity.getUsers().getProfile().getFile().getUrl();
+		}
 
 		return CommentResDto.builder()
 				.id(entity.getId())
 				.userId(entity.getUsers().getId())
+				.profileImageUrl(profileImageUrl)
 				.nickname(entity.getUsers().getNickname())
 				.parentId(entity.getParentId())
 				.content(entity.getContent())
