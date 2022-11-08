@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.diary.controller;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryLookupReqDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryLookupResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryMessageResDto;
@@ -10,6 +11,8 @@ import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
 import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
+import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
@@ -29,19 +33,39 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 @RequiredArgsConstructor
 public class DiaryController {
 
+	private final UsersRepository usersRepository;
 	private final DiaryService diaryService;
 	private final DiaryRepository diaryRepository;
 
 	@GetMapping("/{date}")
-	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+															@RequestParam String nickname) {
+		Users user = usersRepository.findByNickname(nickname)
+				.orElseThrow(UserNotFoundException::new);
 		diaryService.checkDiaryIsInDate(date);
 		if (!diaryRepository.existsByDate(date))
 			return ResponseEntity.ok()
-					.body(new DiaryLookupResDto(null, null, null, null, null, null, null));
+					.body(new DiaryLookupResDto(null, null, null, null, null, null));
 
 		Diary diary = diaryRepository.findByDate(date).orElseThrow(DiaryNotFoundException::new);
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
+	}
+
+	@GetMapping("/comments/{date}")
+	public List<CommentResDto> getDiaryCommentsByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+													  @RequestParam String nickname) {
+		Users user = usersRepository.findByNickname(nickname)
+				.orElseThrow(UserNotFoundException::new);
+		diaryService.checkDiaryIsInDate(date);
+
+		if (!diaryRepository.existsByDate(date)) {
+			return new ArrayList<>();
+		}
+
+		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId())
+				.orElseThrow(DiaryNotFoundException::new);
+		return diaryService.getDiaryComments(diary);
 	}
 
 	@PostMapping("/{date}")
