@@ -61,7 +61,7 @@ public class AppConfig {
 				.and()
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**").permitAll()
+					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**", "/authusers").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
@@ -69,17 +69,10 @@ public class AppConfig {
 		http
 				.csrf().disable()
 				.logout()
-				.logoutSuccessUrl("/")
 				.and()
 					.oauth2Login()
 					.userInfoEndpoint()
-					.userService(customOAuth2UserService)
-				.and()
-					.redirectionEndpoint()
-					.baseUri("/*/oauth2/**")
-				.and()
-				.and()
-				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+					.userService(customOAuth2UserService);
 
 		return http.build();
 	}
