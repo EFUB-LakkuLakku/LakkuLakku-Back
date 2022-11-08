@@ -22,18 +22,16 @@ public class DiaryLookupResDto {
 	private List<TextResDto> textList;
 	private List<ImageResDto> imageList;
 	private List<StickerResDto> stickerList;
-	private List<CommentResDto> commentList;
 	private List<LikeResDto> likeList;
 
 	@Builder
 	public DiaryLookupResDto(DiaryResDto diary, TemplateResDto template, List<TextResDto> textList, List<ImageResDto> imageList,
-							 List<StickerResDto> stickerList, List<CommentResDto> commentList, List<LikeResDto> likeList) {
+							 List<StickerResDto> stickerList, List<LikeResDto> likeList) {
 		this.diary = diary;
 		this.template = template;
 		this.textList = textList;
 		this.imageList = imageList;
 		this.stickerList = stickerList;
-		this.commentList = commentList;
 		this.likeList = likeList;
 	}
 

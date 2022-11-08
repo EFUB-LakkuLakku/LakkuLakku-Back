@@ -1,5 +1,7 @@
 package com.efub.lakkulakku.domain.diary.service;
 
+import com.efub.lakkulakku.domain.comment.dto.CommentMapper;
+import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.dto.DiaryLookupResDto;
 import com.efub.lakkulakku.domain.diary.dto.DiaryMapper;
@@ -18,6 +20,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -29,6 +34,7 @@ public class DiaryService {
 	private final CommentRepository commentRepository;
 	private final LikesRepository likesRepository;
 	private final DiaryMapper diaryMapper;
+	private final CommentMapper commentMapper;
 
 	public void checkDiaryIsInDate(LocalDate date) {
 		LocalDate END_DATE = LocalDate.of(2099, 12, 31);
@@ -49,6 +55,10 @@ public class DiaryService {
 	public DiaryLookupResDto getDiaryInfo(Diary diary) {
 		diary = updateDiaryCntCommentAndCntLikes(diary);
 		return diaryMapper.toDiaryLookupResDto(diary);
+	}
+
+	public List<CommentResDto> getDiaryComments(Diary diary) {
+		return diary.getComments().stream().filter(Objects::nonNull).map(commentMapper::toCommentResDto).collect(Collectors.toList());
 	}
 
 	@Transactional
