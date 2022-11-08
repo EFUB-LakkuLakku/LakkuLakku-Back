@@ -21,9 +21,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
@@ -38,7 +44,9 @@ public class DiaryController {
 	private final UsersRepository usersRepository;
 
 	@GetMapping("/{date}")
-	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname) {
+	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname,
+															HttpServletRequest request,
+															HttpServletResponse response) {
 		Users user = usersRepository.findByNickname(nickname)
 				.orElseThrow(() -> new UserNotFoundException());
 		diaryService.checkDiaryIsInDate(date);
@@ -47,6 +55,7 @@ public class DiaryController {
 					.body(new DiaryLookupResDto(null, null, null, null, null, null, null));
 
 		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow(DiaryNotFoundException::new);
+		diaryService.viewCountValidation(diary, request, response);
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
 	}
