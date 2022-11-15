@@ -1,14 +1,15 @@
 package com.efub.lakkulakku.global.config;
 
-import com.efub.lakkulakku.domain.users.service.CustomOAuth2UserService;
 import com.efub.lakkulakku.global.config.jwt.JwtAuthenticationFilter;
 import com.efub.lakkulakku.global.config.jwt.JwtProvider;
 import com.efub.lakkulakku.global.exception.jwt.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,8 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,7 +27,6 @@ public class AppConfig {
 
 	private final JwtProvider jwtProvider;
 	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-	private final CustomOAuth2UserService customOAuth2UserService;
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -61,19 +59,20 @@ public class AppConfig {
 				.and()
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**", "/authusers").permitAll()
+					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**", "/authusers","/**", "/auth/**", "/oauth2/**").permitAll()
 				.anyRequest().authenticated()
+				.and()
+					.oauth2Login()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
-		http
-				.csrf().disable()
-				.logout()
-				.and()
-					.oauth2Login()
-					.userInfoEndpoint()
-					.userService(customOAuth2UserService);
-
 		return http.build();
+	}
+	public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
+		@Override
+		public void configure(HttpSecurity builder){
+			AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+			//builder.addFilter(corsFilter);
+		}
 	}
 }
