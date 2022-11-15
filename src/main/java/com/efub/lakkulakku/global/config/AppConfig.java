@@ -45,21 +45,24 @@ public class AppConfig {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 				.cors().configurationSource(corsConfigurationSource())
 				.and()
-					.httpBasic().disable()
-					.csrf().disable()
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.httpBasic().disable()
+				.csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-					.exceptionHandling()
-					.authenticationEntryPoint(customAuthenticationEntryPoint)
+				.exceptionHandling()
+				.authenticationEntryPoint(customAuthenticationEntryPoint)
 				.and()
+
 					.authorizeRequests()
 					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**", "/authusers","/**", "/auth/**", "/oauth2/**").permitAll()
+					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**","/api/v1/notification/subscribe", "/authusers","/**", "/auth/**", "/oauth2/**").permitAll()
+
 				.anyRequest().authenticated()
 				.and()
 					.oauth2Login()
