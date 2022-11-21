@@ -9,7 +9,6 @@ import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
 import com.efub.lakkulakku.domain.diary.service.DiaryService;
-import com.efub.lakkulakku.domain.users.dto.UserGetReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
@@ -21,15 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
@@ -55,7 +49,6 @@ public class DiaryController {
 					.body(new DiaryLookupResDto(null, null, null, null, null, null, null));
 
 		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow(DiaryNotFoundException::new);
-		diaryService.viewCountValidation(diary, request, response);
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
 	}

@@ -54,6 +54,8 @@ public class DiaryService {
 
 	public DiaryLookupResDto getDiaryInfo(Diary diary) {
 		diary = updateDiaryCntCommentAndCntLikes(diary);
+		diary.addViewCount();
+		diaryRepository.save(diary);
 		return diaryMapper.toDiaryLookupResDto(diary);
 	}
 
@@ -93,43 +95,5 @@ public class DiaryService {
 				.orElseThrow(DiaryNotFoundException::new);
 		Diary updatedDiary = diaryMapper.updateDiary(diary, dto);
 		diaryRepository.save(updatedDiary);
-	}
-
-	@Transactional
-	public void viewCountValidation(Diary diary, HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookies = request.getCookies();
-		Cookie cookie = null;
-		boolean isCookie = false;
-
-		for (int i = 0; cookies != null && i < cookies.length; i++) {
-			if (cookies[i].getName().equals("diaryView")) {  // diaryView 쿠키가 있을 때
-				cookie = cookies[i];
-				// cookie 에서 현재 게시글 번호를 찾음
-				if (!cookie.getValue().contains("|" + diary.getId() + "|")) {
-					System.out.println("viewCnt: " + diary.getCntView());
-					diary.addViewCount();
-					System.out.println("viewCnt: " + diary.getCntView());
-					cookie.setValue(cookie.getValue() + "|" + diary.getId() + "|");
-				}
-				isCookie = true;
-				break;
-			}
-		}
-		// diaryView 쿠키가 없다면 처음 접속한 것이므로 새로 생성
-		if (!isCookie) {
-			System.out.println("viewCnt: " + diary.getCntView());
-			diary.addViewCount();
-			System.out.println("viewCnt: " + diary.getCntView());
-			cookie = new Cookie("diaryView", "|" + diary.getId() + "|");
-		}
-
-		// 쿠키 유지시간을 하루로 설정
-		long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
-		long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-		cookie.setPath("/");
-		cookie.setMaxAge((int) (todayEndSecond - currentSecond));
-		response.addCookie(cookie);
-
-		diaryRepository.save(diary);
 	}
 }
