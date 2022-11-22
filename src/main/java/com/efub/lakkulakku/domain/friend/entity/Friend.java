@@ -31,7 +31,7 @@ public class Friend extends BaseTimeEntity {
 	@JoinColumn(name = "users_id")
 	private Users userId;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "target_id")
 	private Users targetId;
 

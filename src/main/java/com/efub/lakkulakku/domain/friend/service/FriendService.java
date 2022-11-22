@@ -92,5 +92,25 @@ public class FriendService {
 
 	private void notifyInfo(Friend friend, String notiType) {
 		friend.publishEvent(eventPublisher, notiType);
+  }
+
+	@Transactional
+	public void deleteAllFriend(Users users){
+		List<Friend> friendUserList = friendRepository.findAllByUserId(users);
+		List<Friend> friendTargetList = friendRepository.findAllByTargetId(users);
+		friendRepository.deleteAll(friendUserList);
+		friendRepository.deleteAll(friendTargetList);
+	}
+
+	@Transactional
+	public void toFriendNotification(Users user, Users targetUser)
+	{
+		Notification notification = Notification.builder()
+				.userId(targetUser)
+				.friendId(user)
+				.notiType("친구")
+				.build();
+		notification.makeMessage(user, "친구", null);
+		notificationRepository.save(notification);
 	}
 }

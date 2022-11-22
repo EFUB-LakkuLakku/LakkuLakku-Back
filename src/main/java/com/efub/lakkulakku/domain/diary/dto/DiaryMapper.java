@@ -38,7 +38,6 @@ public class DiaryMapper {
 				.textList(entity.getTexts().stream().filter(Objects::nonNull).map(textMapper::toTextResDto).collect(Collectors.toList()))
 				.imageList(entity.getImages().stream().filter(Objects::nonNull).map(imageMapper::toImageResDto).collect(Collectors.toList()))
 				.stickerList(entity.getStickers().stream().filter(Objects::nonNull).map(stickerMapper::toStickerResDto).collect(Collectors.toList()))
-				.commentList(entity.getComments().stream().filter(Objects::nonNull).map(commentMapper::toCommentResDto).collect(Collectors.toList()))
 				.likeList(entity.getLikes().stream().filter(Objects::nonNull).map(likeMapper::toLikeResDto).collect(Collectors.toList()))
 				.build();
 	}
