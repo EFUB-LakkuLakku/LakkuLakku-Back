@@ -2,11 +2,12 @@ package com.efub.lakkulakku.domain.users.controller;
 
 
 import com.efub.lakkulakku.domain.diary.dto.DiaryHomeResDto;
-import com.efub.lakkulakku.domain.notification.dto.NotificationHomeResDto;
+import com.efub.lakkulakku.domain.notification.dto.NotificationResDto;
 import com.efub.lakkulakku.domain.users.dto.ProfileUpdateResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

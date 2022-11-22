@@ -13,6 +13,8 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
-	@Query(value = "SELECT * FROM notification n WHERE n.users_id=:usersId ORDER BY n.created_on desc LIMIT 5", nativeQuery = true)
-	List<Notification> findByUsersId(@Param("usersId") Users usersId);
+	@Query(value = "SELECT * FROM notification n " +
+			"WHERE n.users_id=:usersId " +
+			"ORDER BY n.created_on desc LIMIT 5", nativeQuery = true)
+	List<Notification> findByUsersId(@Param("usersId") UUID usersId);
 }
