@@ -96,9 +96,17 @@ public class FriendService {
 	@Transactional
 	public void deleteFriend(FriendReqDto reqDto, Users user) {
 		Users delFriend = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(() -> new UserNotFoundException());
+				.orElseThrow(UserNotFoundException::new);
 		UUID id = isFriend(user, delFriend);
 		friendRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void deleteAllFriend(Users users){
+		List<Friend> friendUserList = friendRepository.findAllByUserId(users);
+		List<Friend> friendTargetList = friendRepository.findAllByTargetId(users);
+		friendRepository.deleteAll(friendUserList);
+		friendRepository.deleteAll(friendTargetList);
 	}
 
 	@Transactional
