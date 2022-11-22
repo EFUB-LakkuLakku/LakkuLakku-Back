@@ -98,4 +98,10 @@ public class DiaryService {
 		Diary updatedDiary = diaryMapper.updateDiary(diary, dto);
 		diaryRepository.save(updatedDiary);
 	}
+
+	@Transactional
+	public void deleteAllDiary(Users users){
+		List<Diary> diaryList = diaryRepository.findByUser(users);
+		diaryRepository.deleteAll(diaryList);
+	}
 }
