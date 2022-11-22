@@ -41,7 +41,7 @@ public class Users extends BaseTimeEntity {
 	@NotNull
 	private String nickname;
 
-	@OneToOne(mappedBy = "users")
+	@OneToOne(mappedBy = "users", cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "profile_id")
 	private Profile profile;
 

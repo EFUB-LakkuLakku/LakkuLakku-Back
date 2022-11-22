@@ -50,7 +50,7 @@ public class Diary extends BaseTimeEntity {
 	@Column(length = 5)
 	private String titleEmoji;
 
-	@OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "diary", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
