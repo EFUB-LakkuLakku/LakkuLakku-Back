@@ -39,16 +39,21 @@ public class DiaryController {
 
 	@GetMapping("/{date}")
 	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname,
-															HttpServletRequest request,
-															HttpServletResponse response) {
+															@AuthUsers Users loginUser) {
 		Users user = usersRepository.findByNickname(nickname)
 				.orElseThrow(() -> new UserNotFoundException());
+
 		diaryService.checkDiaryIsInDate(date);
 		if (!diaryRepository.existsByDate(date))
 			return ResponseEntity.ok()
 					.body(new DiaryLookupResDto(null, null, null, null, null, null, null));
 
 		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow(DiaryNotFoundException::new);
+
+		// 로그인한 유저와 다이어리 작성한 유저가 같은 경우에만 조회수 증가
+		if (!loginUser.getNickname().equals(nickname))
+			diaryService.updateViewCount(diary);
+
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
 	}
