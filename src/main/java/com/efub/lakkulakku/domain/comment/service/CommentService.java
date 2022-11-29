@@ -10,13 +10,16 @@ import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
 
@@ -27,7 +30,7 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final DiaryRepository diaryRepository;
 
-	private final ApplicationEventPublisher eventPublisher;
+	private final NotificationRepository notificationRepository;
 
 	@Transactional
 	public CommentResDto addComment(Users user, LocalDate date, CommentReqDto commentReqDto) {
@@ -44,13 +47,14 @@ public class CommentService {
 
 		commentRepository.save(comment);
 
+		String message = COMMENT_ADD_SUCCESS;
+
 		String type = "댓글";
 		if (commentReqDto.getParentId() != null) {
 			type = "대댓글";
 		}
-
 		if (!user.getId().equals(diary.getUser().getId())) {
-			notifyInfo(comment, type);
+			toCommentNotification(user, diary.getUser(), type, diary.getCreatedOn());
 		}
 
 		return CommentResDto.builder()
@@ -62,7 +66,7 @@ public class CommentService {
 				.content(comment.getContent())
 				.isSecret(comment.getIsSecret())
 				.createdOn(comment.getCreatedOn())
-				.message(COMMENT_ADD_SUCCESS)
+				.message(message)
 				.build();
 
 	}
@@ -118,8 +122,14 @@ public class CommentService {
 		}
 	}
 
-	private void notifyInfo(Comment comment, String notiType) {
-		comment.publishEvent(eventPublisher, notiType);
+	@Transactional
+	public void toCommentNotification(Users user, Users targetUser, String type, LocalDateTime date) {
+		Notification notification = Notification.builder()
+				.userId(targetUser)
+				.friendId(user)
+				.notiType(type)
+				.build();
+		notification.makeMessage(user, type, date);
+		notificationRepository.save(notification);
 	}
-
 }

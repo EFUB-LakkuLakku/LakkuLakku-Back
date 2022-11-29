@@ -20,12 +20,11 @@ public class DiaryResDto {
 	private UUID templateId;
 	private Integer cntComment;
 	private Integer cntLike;
-	private Integer cntView;
 
 	@Builder
 	public DiaryResDto(UUID id, UUID userId, LocalDate date,
 					   String title, String titleEmoji, UUID templateId,
-					   Integer cntComment, Integer cntLike, Integer cntView) {
+					   Integer cntComment, Integer cntLike) {
 		this.id = id;
 		this.userId = userId;
 		this.date = date;
@@ -34,6 +33,5 @@ public class DiaryResDto {
 		this.templateId = templateId;
 		this.cntComment = cntComment;
 		this.cntLike = cntLike;
-		this.cntView = cntView;
 	}
 }

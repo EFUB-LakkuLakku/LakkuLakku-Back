@@ -36,7 +36,6 @@ public class ResponseConstant {
 	/* Friends */
 	public static final String FRIEND_SUCCESS = "성공적으로 친구가 되었습니다.";
 	public static final String DELETE_FRIEND_SUCCESS = "성공적으로 친구 끊기가 완료되었습니다.";
-	public static final String CONFLICT_SELF_FRIEND = "자기 자신과 친구를 맺을 수 없습니다.";
 
 	/* Diary */
 	public static final String DIARY_CREATE_SUCCESS = " 날짜의 다이어리가 생성되었습니다.";
@@ -72,7 +71,4 @@ public class ResponseConstant {
 	public static final String BAD_TOKEN_REQUEST = "토큰을 확인하세요";
 	public static final String EXPIRED_REFRESHTOKEN = "refresh 토큰이 만료되었습니다.";
 	public static final String REISSUE_TOKEN_SUCCESS = "토큰이 재발급되었습니다.";
-
-	/* SSE Exception */
-	public static final String SSE_CONNECTION_FAILURE_MSG = "실시간 알림 연결에 실패했습니다.";
 }

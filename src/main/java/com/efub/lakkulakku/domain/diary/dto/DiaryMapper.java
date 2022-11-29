@@ -53,7 +53,6 @@ public class DiaryMapper {
 				.templateId(entity.getTemplate().getId())
 				.cntComment(entity.getCntComment())
 				.cntLike(entity.getCntLike())
-				.cntView(entity.getCntView())
 				.build();
 	}
 

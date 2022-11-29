@@ -75,9 +75,6 @@ public class Diary extends BaseTimeEntity {
 	@Column(length = 10, columnDefinition = "bigint(10) default 0")//
 	private Integer cntLike;
 
-	@Column(columnDefinition = "bigint(10) default 0")
-	private Integer cntView;
-
 	@PrePersist
 	public void prePersist() {
 		this.title = "";
@@ -133,9 +130,5 @@ public class Diary extends BaseTimeEntity {
 
 		this.cntComment = dto.getCntComment();
 		this.cntLike = dto.getCntLike();
-	}
-
-	public void addViewCount() {
-		this.cntView++;
 	}
 }

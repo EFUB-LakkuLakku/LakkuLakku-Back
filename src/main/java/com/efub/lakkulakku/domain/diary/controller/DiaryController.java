@@ -21,8 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,22 +39,16 @@ public class DiaryController {
 	private final UsersRepository usersRepository;
 
 	@GetMapping("/{date}")
-	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname,
-															@AuthUsers Users loginUser) {
+	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+															@RequestParam String nickname) {
 		Users user = usersRepository.findByNickname(nickname)
-				.orElseThrow(() -> new UserNotFoundException());
-
+				.orElseThrow(UserNotFoundException::new);
 		diaryService.checkDiaryIsInDate(date);
 		if (!diaryRepository.existsByDate(date))
 			return ResponseEntity.ok()
 					.body(new DiaryLookupResDto(null, null, null, null, null, null));
 
 		Diary diary = diaryRepository.findByDateAndUserId(date, user.getId()).orElseThrow(DiaryNotFoundException::new);
-
-		// 로그인한 유저와 다이어리 작성한 유저가 같은 경우에만 조회수 증가
-		if (!loginUser.getNickname().equals(nickname))
-			diaryService.updateViewCount(diary);
-
 		return ResponseEntity.ok()
 				.body(diaryService.getDiaryInfo(diary));
 	}

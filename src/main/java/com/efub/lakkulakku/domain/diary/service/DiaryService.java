@@ -14,7 +14,6 @@ import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.template.repository.TemplateRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
-import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +50,6 @@ public class DiaryService {
 		diary.setCntComment(cntComment);
 		//diary.setCntLike(cntLike);
 		return diary;
-	}
-
-	public void updateViewCount(Diary diary) {
-		diary.addViewCount();
-		diaryRepository.save(diary);
 	}
 
 	public DiaryLookupResDto getDiaryInfo(Diary diary) {
