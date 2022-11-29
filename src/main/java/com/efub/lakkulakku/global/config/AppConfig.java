@@ -18,8 +18,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -46,21 +44,22 @@ public class AppConfig {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 				.cors().configurationSource(corsConfigurationSource())
 				.and()
-					.httpBasic().disable()
-					.csrf().disable()
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.httpBasic().disable()
+				.csrf().disable()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-					.exceptionHandling()
-					.authenticationEntryPoint(customAuthenticationEntryPoint)
+				.exceptionHandling()
+				.authenticationEntryPoint(customAuthenticationEntryPoint)
 				.and()
-					.authorizeRequests()
-					.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-					.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**").permitAll()
+				.authorizeRequests()
+				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+				.antMatchers("/api/v1/users/signup/**", "/api/v1/users/login", "/api/v1/users/re-issue", "/api/v1/settings", "/api/v1/users/certification/**", "/api/v1/notification/subscribe").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
