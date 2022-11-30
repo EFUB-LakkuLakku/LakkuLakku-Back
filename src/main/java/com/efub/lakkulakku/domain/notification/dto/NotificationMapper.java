@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class NotificationHomeMapper {
+public class NotificationMapper {
 
-	public NotificationHomeResDto toNotificationHomeResDto(Notification entity) {
+	public static NotificationResDto toNotificationResDto(Notification entity) {
 		if (entity == null)
 			return null;
 
-		return NotificationHomeResDto.builder()
+		return NotificationResDto.builder()
 				.id(entity.getId())
 				.message(entity.getMessage())
 				.build();

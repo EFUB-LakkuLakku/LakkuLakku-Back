@@ -4,8 +4,9 @@ import com.efub.lakkulakku.domain.diary.dto.DiaryHomeMapper;
 import com.efub.lakkulakku.domain.diary.dto.DiaryHomeResDto;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
-import com.efub.lakkulakku.domain.notification.dto.NotificationHomeMapper;
-import com.efub.lakkulakku.domain.notification.dto.NotificationHomeResDto;
+import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
+import com.efub.lakkulakku.domain.notification.dto.NotificationResDto;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.profile.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
@@ -35,7 +36,6 @@ public class UsersService {
 	private final UsersRepository usersRepository;
 	private final ProfileRepository profileRepository;
 	private final NotificationRepository notificationRepository;
-	private final NotificationHomeMapper notificationHomeMapper;
 	private final DiaryRepository diaryRepository;
 	private final DiaryHomeMapper diaryHomeMapper;
 	private final HomeMapper homeMapper;
@@ -67,19 +67,17 @@ public class UsersService {
 				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 				'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
-		String tempString = "";
+		StringBuilder tempString = new StringBuilder();
 
 		/* 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 조합 */
 		int idx = 0;
 		for(int i = 0; i < 10; i++){
 			idx = (int) (charSet.length * Math.random());
-			tempString += charSet[idx];
+			tempString.append(charSet[idx]);
 		}
 
-		return tempString;
+		return tempString.toString();
 	}
-
-
 
 	public void updatePassword(String tempPwd, Users user) {
 		String encryptPassword = passwordEncoder.encode(tempPwd);
@@ -145,8 +143,6 @@ public class UsersService {
 		}
 	}
 
-
-
 	public void logout(String email, String accessToken) {
 		jwtProvider.logout(email, accessToken);
 	}
@@ -171,10 +167,6 @@ public class UsersService {
 		}
 	}
 
-	public List<NotificationHomeResDto> getHomeAlarm(Users user) {
-		return notificationRepository.findByUsersId(user).stream().map(notificationHomeMapper::toNotificationHomeResDto).collect(Collectors.toList());
-	}
-
 	public List<DiaryHomeResDto> getHomeDiary(Users user, String year, String month) {
 		if (year == null) {
 			Date date = new Date();
@@ -187,5 +179,11 @@ public class UsersService {
 			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
 		}
 	}
-
+	@Transactional
+	public List<NotificationResDto> findAllNotifications(Users user) {
+		List<Notification> notificationList = notificationRepository.findByUsersId(user.getId());
+		return notificationList.stream()
+				.map(NotificationMapper::toNotificationResDto)
+				.collect(Collectors.toList());
+	}
 }

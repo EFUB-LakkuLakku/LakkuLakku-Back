@@ -27,22 +27,17 @@ public class Notification extends BaseTimeEntity {
 
 	@OneToOne
 	@JoinColumn(name = "users_id") //알람을 받는 유저
-	private Users usersId;
-
-	@OneToOne
-	@JoinColumn(name = "friend_id") //알람을 발생시킨 유저
-	private Users friendId;
+	private Users receiver;
 
 	private String notiType; //(comment, likes, follow)
 
-	// TODO : 알림 내용 column 필요
 	private String message;
 
 	@Builder
-	public Notification(Users userId, Users friendId, String notiType) {
-		this.usersId = userId; //알림 받음
-		this.friendId = friendId; //알림 보냄
+	public Notification(Users receiver, String notiType, String message) {
+		this.receiver = receiver;
 		this.notiType = notiType;
+		this.message = message;
 	}
 
 	public void makeMessage(Users friendId, String notiType, LocalDateTime date) {

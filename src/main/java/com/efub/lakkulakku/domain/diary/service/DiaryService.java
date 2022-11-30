@@ -57,6 +57,11 @@ public class DiaryService {
 		return diaryMapper.toDiaryLookupResDto(diary);
 	}
 
+	public void updateViewCount(Diary diary) {
+		diary.addViewCount();
+		diaryRepository.save(diary);
+	}
+
 	public List<CommentResDto> getDiaryComments(Diary diary) {
 		return diary.getComments().stream().filter(Objects::nonNull).map(commentMapper::toCommentResDto).collect(Collectors.toList());
 	}

@@ -7,16 +7,14 @@ import com.efub.lakkulakku.domain.likes.dto.LikeMapper;
 import com.efub.lakkulakku.domain.likes.dto.LikeReqDto;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
-import com.efub.lakkulakku.domain.notification.entity.Notification;
-import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.LIKES_ADD_SUCCESS;
 import static com.efub.lakkulakku.global.constant.ResponseConstant.LIKES_DELETE_SUCCESS;
@@ -28,7 +26,7 @@ public class LikesService {
 	private final LikesRepository likesRepository;
 	private final LikeMapper likeMapper;
 	private final DiaryRepository diaryRepository;
-	private final NotificationRepository notificationRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Transactional
 	public LikeClickResDto clickLike(Users user, LocalDate date, LikeReqDto likeReqDto) {
@@ -48,16 +46,15 @@ public class LikesService {
 
 		String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
 
-		if (message == LIKES_ADD_SUCCESS) {
-			if(!user.getId().equals(diary.getUser().getId()))
-			{
-				toLikeNotification(user, diary.getUser(), diary.getCreatedOn());
+		if (message.equals(LIKES_ADD_SUCCESS)) {
+			if (!user.getId().equals(diary.getUser().getId())) {
+				notifyInfo(likes, "좋아요");
 			}
-			diary.setCntLike(diary.getCntLike()+1);
+			diary.setCntLike(diary.getCntLike() + 1);
 			diaryRepository.save(diary);
 		}
 		else {
-			diary.setCntLike(diary.getCntLike()-1);
+			diary.setCntLike(diary.getCntLike() - 1);
 			diaryRepository.save(diary);
 		}
 
@@ -70,16 +67,7 @@ public class LikesService {
 				.build();
 	}
 
-	@Transactional
-	public void toLikeNotification(Users user, Users targetUser, LocalDateTime date)
-	{
-		Notification notification = Notification.builder()
-				.userId(targetUser)
-				.friendId(user)
-				.notiType("좋아요")
-				.build();
-		notification.makeMessage(user, "좋아요", date);
-		notificationRepository.save(notification);
-
+	private void notifyInfo(Likes likes, String notiType) {
+		likes.publishEvent(eventPublisher, notiType);
 	}
 }

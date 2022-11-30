@@ -8,8 +8,10 @@ import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
+import com.efub.lakkulakku.domain.friend.exception.SelfFriendException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
+import com.efub.lakkulakku.domain.notification.exception.SSEConnectionException;
 import com.efub.lakkulakku.domain.users.exception.*;
 import com.efub.lakkulakku.domain.image.exception.ImageFileMissingException;
 import com.efub.lakkulakku.domain.image.exception.ImageNotFoundException;
@@ -54,7 +56,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
 
-	//vaild 오류
+	// vaild 오류
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex){
 		Map<String, String> errors = new HashMap<>();
@@ -66,227 +68,128 @@ public class GlobalExceptionHandler {
 	/*================== Diary Exception ==================*/
 	@ExceptionHandler(DuplicateDiaryException.class)
 	protected final ResponseEntity<ErrorResponse> handleDuplicateDiaryException(DuplicateDiaryException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.CONFLICT)
-				.code(ErrorCode.DUPLICATE_DIARY_DATE)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.DUPLICATE_DIARY_DATE, e.getMessage());
 	}
 
 	@ExceptionHandler(DiaryNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleDiaryNotFoundException(DiaryNotFoundException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.NOT_FOUND)
-				.code(ErrorCode.DIARY_NOT_FOUND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.DIARY_NOT_FOUND, e.getMessage());
 	}
 
 	@ExceptionHandler(BadDateRequestException.class)
 	protected final ResponseEntity<ErrorResponse> handleBadDateRequestException(BadDateRequestException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.BAD_DATE_REQUEST)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.BAD_DATE_REQUEST, e.getMessage());
 	}
 
 	/*================== Image Exception ==================*/
 	@ExceptionHandler(ImageFileMissingException.class)
 	protected final ResponseEntity<ErrorResponse> handleImageFileMissingException(ImageFileMissingException e){
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.IMAGE_MISSING)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.IMAGE_MISSING, e.getMessage());
 	}
 
 	@ExceptionHandler(ImageNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleImageNotFoundException(ImageNotFoundException e){
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.NOT_FOUND)
-				.code(ErrorCode.IMAGE_NOT_FOUND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.IMAGE_NOT_FOUND, e.getMessage());
 	}
 
 	@ExceptionHandler(ImageSizeCheckFailureException.class)
 	protected final ResponseEntity<ErrorResponse> handleImageSizeCheckFailureException (ImageSizeCheckFailureException e){
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.code(ErrorCode.IMAGE_SIZE_CHECK_FAILURE)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.IMAGE_SIZE_CHECK_FAILURE, e.getMessage());
 	}
 
 	/*================== User Exception ==================*/
 	@ExceptionHandler(DuplicateEmailException.class)
 	protected final ResponseEntity<ErrorResponse> handleDuplicateEmailException(DuplicateEmailException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.DUPLICATE_EMAIL)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.DUPLICATE_EMAIL, e.getMessage());
 	}
 
 	@ExceptionHandler(DuplicateNicknameException.class)
 	protected final ResponseEntity<ErrorResponse> handleDuplicateNicknameException(DuplicateNicknameException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.DUPLICATE_NICKNAME)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.DUPLICATE_NICKNAME, e.getMessage());
 	}
 
 	@ExceptionHandler(PasswordNotMatchedException.class)
 	protected final ResponseEntity<ErrorResponse> handlePasswordNotMatchedException(PasswordNotMatchedException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.PASSWORD_NOT_MATCH)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.PASSWORD_NOT_MATCH, e.getMessage());
 
 	}
 
 	@ExceptionHandler(PasswordsNotEqualException.class)
 	protected final ResponseEntity<ErrorResponse> handlePasswordsNotEqualException(PasswordsNotEqualException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.PASSWORDS_NOT_EQUAL)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
-
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.PASSWORDS_NOT_EQUAL, e.getMessage());
 	}
 
 	@ExceptionHandler(BeforePasswordNotMatchException.class)
 	protected final ResponseEntity<ErrorResponse> handleBeforePasswordNotMatchException(BeforePasswordNotMatchException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.BEFORE_PASSWORD_NOT_MATCH)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
-
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.BEFORE_PASSWORD_NOT_MATCH, e.getMessage());
 	}
 
 	@ExceptionHandler(CertificationCodeMismatchException.class)
 	protected final ResponseEntity<ErrorResponse> handleCertificationCodeMismatchException(CertificationCodeMismatchException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.CERTIFICATION_CODE_NOT_MATCH)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
-
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.CERTIFICATION_CODE_NOT_MATCH, e.getMessage());
 	}
 
 	// 존재하지 않는 유저
 	@ExceptionHandler(UserNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.NOT_FOUND)
-				.code(ErrorCode.USER_NOT_FOUND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.USER_NOT_FOUND, e.getMessage());
 	}
 
 	/*================== Friend Exception ==================*/
 	@ExceptionHandler(DuplicateFriendException.class)
 	protected final ResponseEntity<ErrorResponse> handleDuplicateFriendException(DuplicateFriendException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.DUPLICATE_FRIEND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.DUPLICATE_FRIEND, e.getMessage());
+	}
+
+	@ExceptionHandler(SelfFriendException.class)
+	protected final ResponseEntity<ErrorResponse> handleSelfFriendException(SelfFriendException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.SELF_FRIEND, e.getMessage());
 	}
 
 	/*================== File Exception ==================*/
 	// io 예외
 	@ExceptionHandler(S3IOException.class)
 	protected final ResponseEntity<ErrorResponse> handleS3IOException(S3IOException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.code(ErrorCode.S3_UPLOAD_FAILURE)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.S3_UPLOAD_FAILURE, e.getMessage());
 	}
 
 	// 파일 형식 잘못된 경우
 	@ExceptionHandler(FileExtenstionException.class)
 	protected final ResponseEntity<ErrorResponse> handleFileExtenstionException(FileExtenstionException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.FILE_UPLOAD_FAILURE)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.FILE_UPLOAD_FAILURE, e.getMessage());
 	}
 
-	/*================== Security Exception ==================*/
+	/*================== Token Exception ==================*/
 	@ExceptionHandler(BadTokenRequestException.class)
 	protected final ResponseEntity<ErrorResponse> handleBadTokenRequestException(BadTokenRequestException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.TOKEN_VALIDATE_FAILURE)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
 	}
 
 
 	@ExceptionHandler(RefreshTokenExpiredException.class)
 	protected final ResponseEntity<ErrorResponse> handleAccessTokenExpiredException(RefreshTokenExpiredException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.BAD_REQUEST)
-				.code(ErrorCode.REFRESHTOKEN_EXPIRED)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_EXPIRED, e.getMessage());
 	}
-
-
 
 	/*================== Comment Exception ==================*/
 	@ExceptionHandler(CommentNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.NOT_FOUND)
-				.code(ErrorCode.COMMENT_NOT_FOUND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.COMMENT_NOT_FOUND, e.getMessage());
 	}
 
 	@ExceptionHandler(ParentNotFoundException.class)
 	protected final ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.NOT_FOUND)
-				.code(ErrorCode.PARENT_NOT_FOUND)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.PARENT_NOT_FOUND, e.getMessage());
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
 	protected final ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
-		final ErrorResponse response = ErrorResponse.builder()
-				.status(HttpStatus.UNAUTHORIZED)
-				.code(ErrorCode.UNAUTHORIZED_USER)
-				.message(e.getMessage())
-				.build();
-		return ResponseEntity.status(response.getStatus()).body(response);
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.UNAUTHORIZED_USER, e.getMessage());
+	}
+
+	/*================== SSE Exception ==================*/
+	@ExceptionHandler(SSEConnectionException.class)
+	protected final ResponseEntity<ErrorResponse> handleSSEConnectionException(SSEConnectionException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.SSE_CONNECTION_FAILURE, e.getMessage());
 	}
 }

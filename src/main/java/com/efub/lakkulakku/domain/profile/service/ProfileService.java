@@ -105,7 +105,7 @@ public class ProfileService {
 	}
 
 	public void updateImage(String category, Users user, MultipartFile multipartFile) throws FileExtenstionException {
-		if (multipartFile.isEmpty()) {
+		if (multipartFile == null) {
 			user.getProfile().updateFile(null);
 		}
 		else {
