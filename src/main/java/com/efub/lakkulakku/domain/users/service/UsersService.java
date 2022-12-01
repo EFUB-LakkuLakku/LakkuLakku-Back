@@ -43,7 +43,6 @@ public class UsersService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
-	/* 회원가입 */
 	@Transactional
 	public Users signup(SignupReqDto reqDto) {
 		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
@@ -76,6 +75,7 @@ public class UsersService {
 			idx = (int) (charSet.length * Math.random());
 			tempString.append(charSet[idx]);
 		}
+
 		return tempString.toString();
 	}
 
@@ -179,7 +179,6 @@ public class UsersService {
 			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
 		}
 	}
-
 	@Transactional
 	public List<NotificationResDto> findAllNotifications(Users user) {
 		List<Notification> notificationList = notificationRepository.findByUsersId(user.getId());

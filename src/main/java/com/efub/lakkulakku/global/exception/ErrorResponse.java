@@ -34,5 +34,4 @@ public class ErrorResponse {
 
 		return ResponseEntity.status(response.getStatus()).body(response);
 	}
-
 }

@@ -5,10 +5,12 @@ import com.efub.lakkulakku.domain.notification.dto.NotificationReqDto;
 import com.efub.lakkulakku.domain.notification.dto.NotificationMessage;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
+import jdk.jshell.Snippet;
 import lombok.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.context.ApplicationEventPublisher;
 

@@ -21,8 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,11 +39,10 @@ public class DiaryController {
 	private final UsersRepository usersRepository;
 
 	@GetMapping("/{date}")
-	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date , @RequestParam String nickname,
-															@AuthUsers Users loginUser) {
+	public ResponseEntity<DiaryLookupResDto> getDiaryByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+															@RequestParam String nickname, @AuthUsers Users loginUser) {
 		Users user = usersRepository.findByNickname(nickname)
-				.orElseThrow(() -> new UserNotFoundException());
-
+				.orElseThrow(UserNotFoundException::new);
 		diaryService.checkDiaryIsInDate(date);
 		if (!diaryRepository.existsByDate(date))
 			return ResponseEntity.ok()

@@ -16,7 +16,7 @@ public class ProfileUpdateController {
 
 	@PutMapping
 	public ProfileUpdateResDto updateProfile(@RequestParam(value = "nickname") String nickname,
-											 @RequestParam("image") MultipartFile image,
+											 @RequestParam(value = "image", required = false) MultipartFile image,
 											 @RequestParam(value = "bio") String bio) throws Exception {
 		return profileService.updateUserProfile(nickname, image, bio);
 

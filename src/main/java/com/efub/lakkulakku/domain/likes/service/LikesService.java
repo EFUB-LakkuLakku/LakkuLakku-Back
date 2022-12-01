@@ -52,7 +52,8 @@ public class LikesService {
 			}
 			diary.setCntLike(diary.getCntLike() + 1);
 			diaryRepository.save(diary);
-		} else {
+		}
+		else {
 			diary.setCntLike(diary.getCntLike() - 1);
 			diaryRepository.save(diary);
 		}

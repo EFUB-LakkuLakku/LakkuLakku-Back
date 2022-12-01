@@ -48,7 +48,6 @@ public class CommentService {
 		if (commentReqDto.getParentId() != null) {
 			type = "대댓글";
 		}
-
 		if (!user.getId().equals(diary.getUser().getId())) {
 			notifyInfo(comment, type);
 		}
@@ -121,5 +120,4 @@ public class CommentService {
 	private void notifyInfo(Comment comment, String notiType) {
 		comment.publishEvent(eventPublisher, notiType);
 	}
-
 }

@@ -1,11 +1,12 @@
 package com.efub.lakkulakku.domain.notification.dto;
 
 import com.efub.lakkulakku.domain.notification.entity.Notification;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationMapper {
 
 	public static NotificationResDto toNotificationResDto(Notification entity) {
