@@ -14,13 +14,13 @@ public class StickerResourceController {
 	private final StickerResourceService stickerResourceService;
 
 //	@GetMapping("/sticker")
-//	public ResponseEntity<String> saveDB() {
+//	public ResponseEntity<String> saveStickerDB() {
 //		stickerResourceService.saveStickerResource();
 //		return ResponseEntity.ok("기본 스티커 저장 성공");
 //	}
-
-//	@GetMapping("/sticker")
-//	public ResponseEntity<String> saveDB() {
+//
+//	@GetMapping("/sticker/comment")
+//	public ResponseEntity<String> saveCommentStickerDB() {
 //		stickerResourceService.saveCommentStickerResource();
 //		return ResponseEntity.ok("댓글 스티커 저장 성공");
 //	}
