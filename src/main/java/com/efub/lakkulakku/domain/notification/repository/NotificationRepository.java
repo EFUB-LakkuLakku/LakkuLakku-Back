@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.notification.repository;
 
+import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;

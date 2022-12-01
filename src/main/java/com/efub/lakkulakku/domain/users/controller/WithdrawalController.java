@@ -3,6 +3,7 @@ package com.efub.lakkulakku.domain.users.controller;
 import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.service.FriendService;
+import com.efub.lakkulakku.domain.notification.service.NotificationService;
 import com.efub.lakkulakku.domain.users.dto.WithdrawReqDto;
 import com.efub.lakkulakku.domain.users.dto.WithdrawResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
@@ -25,6 +26,7 @@ public class WithdrawalController {
 	private final UsersService usersService;
 	private final DiaryService diaryService;
 	private final FriendService friendService;
+    private final NotificationService notificationService;
 
 	@DeleteMapping("/withdrawal")
 	public ResponseEntity<WithdrawResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
@@ -33,6 +35,7 @@ public class WithdrawalController {
 
 		diaryService.deleteAllDiary(users);
 		friendService.deleteAllFriend(users);
+        notificationService.deleteAllNotification(users);
 		usersRepository.delete(users);
 
 		WithdrawResDto dto = WithdrawResDto.builder()

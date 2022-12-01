@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.notification.service;
 
+import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
 import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.notification.exception.SSEConnectionException;
@@ -8,9 +9,11 @@ import com.efub.lakkulakku.domain.notification.repository.NotificationRepository
 import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -92,4 +95,12 @@ public class NotificationService {
 				.message(message)
 				.build();
 	}
+
+	@Transactional
+	public void deleteAllNotification(Users users)
+	{
+		List<Notification> notificationList = notificationRepository.findByUsersId(users.getId());
+		notificationRepository.deleteAll(notificationList);
+	}
+
 }

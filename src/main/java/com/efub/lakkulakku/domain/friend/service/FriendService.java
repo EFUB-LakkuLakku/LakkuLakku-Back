@@ -99,6 +99,7 @@ public class FriendService {
 	public void deleteAllFriend(Users users){
 		List<Friend> friendUserList = friendRepository.findAllByUserId(users);
 		List<Friend> friendTargetList = friendRepository.findAllByTargetId(users);
+
 		friendRepository.deleteAll(friendUserList);
 		friendRepository.deleteAll(friendTargetList);
 	}

@@ -26,12 +26,12 @@ public class Friend extends BaseTimeEntity {
 	@Column(length = 16)
 	private UUID id;
 
-	@ManyToOne
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne()
+	//@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "users_id")
 	private Users userId;
 
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne()
 	@JoinColumn(name = "target_id")
 	private Users targetId;
 
