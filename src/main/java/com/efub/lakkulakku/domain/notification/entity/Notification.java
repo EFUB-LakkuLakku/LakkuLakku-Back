@@ -25,7 +25,7 @@ public class Notification extends BaseTimeEntity {
 	@Column(length = 16)
 	private UUID id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "users_id") //알람을 받는 유저
 	private Users receiver;
 

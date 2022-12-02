@@ -179,6 +179,7 @@ public class UsersService {
 			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
 		}
 	}
+
 	@Transactional
 	public List<NotificationResDto> findAllNotifications(Users user) {
 		List<Notification> notificationList = notificationRepository.findByUsersId(user.getId());
