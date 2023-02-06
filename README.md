@@ -79,7 +79,7 @@
 ![Untitled (5)](https://user-images.githubusercontent.com/68282057/182026455-482f03dc-966b-481c-8e58-6a1e9ed21a94.png)
 
 ## 🌕 데이터베이스 설계도(E-R diagram)
-### ![erd](https://user-images.githubusercontent.com/68282057/206890276-538d83a5-bfab-4cad-8c3a-c4daefeb58e0.PNG)
+### ![라꾸라꾸_ERD](https://user-images.githubusercontent.com/68282057/216929370-f057e3bd-54f0-42b5-ba8c-8b3e582daf27.png)
 
 ## 🌕 API 명세서
 ### [🔗 Link](https://efub.notion.site/API-0dccb2bd9eb849d893c874c34771a427)
