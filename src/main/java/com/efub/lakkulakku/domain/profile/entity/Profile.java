@@ -50,4 +50,5 @@ public class Profile extends BaseTimeEntity {
 	public void updateFile(File file) {
 		this.file = file;
 	}
+
 }

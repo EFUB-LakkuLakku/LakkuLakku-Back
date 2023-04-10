@@ -59,4 +59,7 @@ public class Users extends BaseTimeEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	//TODO : profile 연관관계 편의 메소드
+
 }
