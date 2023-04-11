@@ -58,7 +58,7 @@ class SignUpServiceTest {
 				.users(users)
 				.bio(bio)
 				.build();
-		users.setProfile(profile);
+		//users.setProfile(profile);
 
 		given(usersRepository.save(any(Users.class))).willReturn(users);
 		given(usersRepository.findById(id)).willReturn(Optional.of(users));

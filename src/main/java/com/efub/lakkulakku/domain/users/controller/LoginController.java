@@ -36,7 +36,7 @@ public class LoginController {
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
-		return ResponseEntity.ok(SIGNUP_SUCCESS);
+		return ResponseEntity.status(HttpStatus.CREATED).body(SIGNUP_SUCCESS);
 	}
 
 	@PostMapping("/signup/email")

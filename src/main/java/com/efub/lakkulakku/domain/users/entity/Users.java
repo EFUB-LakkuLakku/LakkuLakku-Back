@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 
-@Setter
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -58,6 +58,9 @@ public class Users extends BaseTimeEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public void setId(UUID uuid){
+		this.id = uuid;
 	}
 
 	//TODO : profile 연관관계 편의 메소드
