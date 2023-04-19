@@ -21,22 +21,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.annotation.PostConstruct;
 
+import static org.apache.tomcat.util.http.FastHttpDateFormat.formatDate;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -99,18 +106,20 @@ public class UsersControllerTest {
 	@TestUsers
 	@DisplayName("로그인_성공")
 	void login() throws Exception {
+		//given
 		String email = "test1234@gmail.com";
 		String password = "test1234!!";
+		String nickname = "test12";
 		String accessToken = "test_access_token";
 		String refreshToken = "test_refresh_token";
 		String type = "refreshToken";
 
-		LoginReqDto loginReqDto = LoginReqDto
-				.builder()
+		LoginReqDto loginReqDto = LoginReqDto.builder()
 				.email(email)
 				.password(password)
 				.build();
 		LoginInfoDto loginInfoDto = LoginInfoDto.builder()
+				.nickname(nickname)
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
 				.build();
@@ -123,25 +132,31 @@ public class UsersControllerTest {
 				.httpOnly(true)
 				.build();
 
-
 		given(usersService.login(email, password)).willReturn(loginInfoDto);
 		given(usersService.generateCookie(type, refreshToken)).willReturn(responseCookie);
 
+		// when
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")//MvcResult는 ResultActions가 수행한 요청에 대한 정보를 제공하는 객체
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(new ObjectMapper().writeValueAsString(loginReqDto))
+						.with(csrf()))
+				.andReturn();
 
-		ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(loginReqDto))
-				.with(csrf()));
+		// then
+		mvcResult.getResponse()
+				.setCharacterEncoding("UTF-8");
 
-			perform
-					.andExpect(status().isOk());
-				//.andExpect(jsonPath("$.accessToken").value(loginResDto.getAccessToken()));
-			//.andExpect(jsonPath("$.tokenType").value(loginResDto.getTokenType()))
-			//.andExpect(jsonPath("$.expiresIn").value(loginResDto.getExpiresIn()))
-			//.andExpect(header().string("Set-Cookie", "refreshToken=" + refreshToken));
+		assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+		assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo(new ObjectMapper().writeValueAsString(loginResDto));
 
-		verify(usersService).login(email, password);
-		verify(usersService).generateCookie("refreshToken", refreshToken);
+		String expectedCookieValue = "refreshToken=" + refreshToken +
+				"; Path=/; Max-Age=" + 7 * 24 * 60 * 60 +
+				"; Expires=" + formatDate(System.currentTimeMillis() + responseCookie.getMaxAge().toMillis())+ //ResponseCookie 클래스의 maxAge 메서드는 매개변수로 초를 받기 때문에, 만료 시간을 초 단위로 계산해서 전달
+				"; Secure; HttpOnly; SameSite=None";
+
+		assertThat(mvcResult.getResponse().getHeader(HttpHeaders.SET_COOKIE)).isEqualTo(expectedCookieValue);
 
 	}
+
+
 }
