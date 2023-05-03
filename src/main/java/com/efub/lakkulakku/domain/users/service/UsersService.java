@@ -49,7 +49,6 @@ public class UsersService {
 		Users user = usersRepository.save(reqDto.toEntity());
 		Profile profile = Profile.builder()
 				.file(null)
-				.users(user)
 				.bio("반갑습니다 :)")
 				.build();
 		profileRepository.save(profile);
