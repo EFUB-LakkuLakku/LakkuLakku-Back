@@ -68,8 +68,6 @@ public class UsersControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-
-
 	@Test
 	@WithMockUser
 	@DisplayName("회원가입_성공")
@@ -155,7 +153,6 @@ public class UsersControllerTest {
 				"; Secure; HttpOnly; SameSite=None";
 
 		assertThat(mvcResult.getResponse().getHeader(HttpHeaders.SET_COOKIE)).isEqualTo(expectedCookieValue);
-
 	}
 
 
