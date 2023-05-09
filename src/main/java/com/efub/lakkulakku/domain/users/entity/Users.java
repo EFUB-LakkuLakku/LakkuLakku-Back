@@ -62,6 +62,9 @@ public class Users extends BaseTimeEntity {
 	public void setId(UUID uuid){
 		this.id = uuid;
 	}
+	public void setProfile(Profile profile){
+		this.profile = profile;
+	}
 
 	//TODO : profile 연관관계 편의 메소드
 
