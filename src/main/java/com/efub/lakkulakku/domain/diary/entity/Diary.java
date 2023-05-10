@@ -96,6 +96,7 @@ public class Diary extends BaseTimeEntity {
 		this.likes = likes;
 		this.texts = texts;
 		this.stickers = stickers;
+
 	}
 
 	public void setTemplate(Template template) {
