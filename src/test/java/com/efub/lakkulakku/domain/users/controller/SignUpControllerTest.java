@@ -51,7 +51,7 @@ class SignUpControllerTest {//단위 테스트
 
 		// then
 		verify(usersService).signup(reqDto);//usersService.signup() 메소드가 호출되었는지 확인
-		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals("성공적으로 가입되었습니다.", response.getBody());
 
 	}

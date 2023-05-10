@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 public class WithUserDetailsSecurityContextFactory implements WithSecurityContextFactory<TestUsers> {
@@ -23,6 +22,7 @@ public class WithUserDetailsSecurityContextFactory implements WithSecurityContex
 						.password(password)
 						.nickname(nickname)
 						.build();
+
 		UserDetails userAccount = new AuthUsers(users);
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userAccount, "", userAccount.getAuthorities());
 		SecurityContext context = SecurityContextHolder.createEmptyContext();
