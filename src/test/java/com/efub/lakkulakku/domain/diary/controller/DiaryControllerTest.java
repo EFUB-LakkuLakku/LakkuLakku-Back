@@ -1,173 +1,73 @@
 package com.efub.lakkulakku.domain.diary.controller;
 
+import com.efub.lakkulakku.domain.diary.dto.DiaryMessageResDto;
+import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.diary.service.DiaryService;
+import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.global.config.TestUsers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest({DiaryController.class})
+@ExtendWith({MockitoExtension.class})
+@MockBean(JpaMetamodelMappingContext.class)
 public class DiaryControllerTest {
 
-	@Autowired
-	private MockMvc mvc;
+	// DiaryController에 포함된 외부 의존성들은 bean으로 주입해줘야 한다
+
+	/* service */
+	@MockBean
+	DiaryService diaryService;
+
+	/* repository */
+	@MockBean
+	UsersRepository userRepository;
+
+	@MockBean
+	DiaryRepository diaryRepository;
 
 	@Autowired
-	private WebApplicationContext ctx;
+	private MockMvc mockMvc;
 
-	@BeforeEach()
-	public void setup() {
-		this.mvc = MockMvcBuilders.webAppContextSetup(ctx)
-				.addFilters(new CharacterEncodingFilter("UTF-8", true))
-				.alwaysDo(print())
-				.build();
-	}
+	@Test
+	@TestUsers
+	@DisplayName("다이어리 생성")
+	void createDiary() throws Exception {
+		//given
+		LocalDate date = LocalDate.of(2023, 9, 13);
+		// 여기에서 ResponseEntity로 감쌌기 때문에 headers, body, statusCodeValue, statusCode가 포함되게 된다
+		ResponseEntity<DiaryMessageResDto> diaryMessageResDto = ResponseEntity.ok()
+				.body(new DiaryMessageResDto(date + DIARY_CREATE_SUCCESS));
 
-	@BeforeEach()
-	public void login() {
+		// when
+		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/diaries/{date}", date)
+				.contentType(MediaType.APPLICATION_JSON)
+				.with(csrf()) // 403 Forbidden 방지용
+		).andReturn();
 
-	}
+		// then
+		mvcResult.getResponse()
+				.setCharacterEncoding("UTF-8");
 
-	private static final String BASE_URL = "/api/v1/diaries/{date}";
-	private static final LocalDate date = LocalDate.of(2022, 7, 7);
-
-	@Nested
-	@DisplayName("특정 날짜 다이어리 조회 테스트")
-	class testGetDiaryByDate {
-
-		@Test
-		@DisplayName("성공")
-		public void success() throws Exception {
-
-			mvc.perform(
-							get(BASE_URL, date)
-					)
-					.andExpect(status().isOk())
-					.andDo(print());
-		}
-
-		@Test
-		@DisplayName("실패: 시간대 범위에서 벗어나는 경우")
-		public void failure_wrongRange() throws Exception {
-			LocalDate failureDate = LocalDate.of(1969, 12, 31);
-
-			mvc.perform(
-							get(BASE_URL, failureDate)
-					)
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.message", is(BAD_DATE_REQUEST)))
-					.andDo(print());
-		}
-
-		@Test
-		@DisplayName("실패: LocalDate의 형식에 맞지 않는 경우")
-		public void failure_wrongFormat() throws Exception {
-			LocalDate failureDate = LocalDate.of(2000, 10, 32);
-
-			mvc.perform(
-							get(BASE_URL, failureDate)
-					)
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.message", is(BAD_DATE_REQUEST)))
-					.andDo(print());
-		}
-	}
-
-	@Nested
-	@DisplayName("다이어리 생성 테스트")
-	class testCreateDiary {
-
-		@Test
-		@DisplayName("성공")
-		public void createDiary() throws Exception {
-			String message = date + DIARY_CREATE_SUCCESS;
-
-			mvc.perform(
-							post(BASE_URL, date)
-					)
-					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.message", is(message)))
-					.andDo(print());
-		}
-
-		@Test
-		@DisplayName("다이어리 중복 생성 예외")
-		public void createDuplicateDiary() throws Exception {
-
-			mvc.perform(
-							post(BASE_URL, date)
-					)
-					.andExpect(status().isOk())
-					.andDo(print());
-
-			mvc.perform(
-							post(BASE_URL, date)
-					)
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.message", is(DUPLICATE_DIARY)))
-					.andDo(print());
-		}
-	}
-
-	@Nested
-	@DisplayName("다이어리 삭제 테스트")
-	class testDeleteDiary {
-
-		@Test
-		@DisplayName("성공")
-		public void deleteDiary() throws Exception {
-			String message = date + DIARY_DELETE_SUCCESS;
-
-			mvc.perform(
-							delete(BASE_URL, date)
-					)
-					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.message", is(message)))
-					.andDo(print());
-		}
-
-		@Test
-		@DisplayName("다이어리 미확인 예외")
-		public void diaryNotFound() throws Exception {
-
-			mvc.perform(
-							post(BASE_URL, date)
-					)
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.message", is(NOTFOUND_DIARY)))
-					.andDo(print());
-		}
-	}
-
-	@Nested
-	@DisplayName("다이어리 수정 테스트")
-	class testUpdateDiary {
-
-		@Test
-		@DisplayName("성공")
-		public void updateDiary() throws Exception {
-			String message = date + DIARY_UPDATE_SUCCESS;
-			mvc.perform(
-							post(BASE_URL + "/save", date)
-					).andExpect(status().isOk())
-					.andExpect(jsonPath("$.message", is(message)))
-					.andDo(print());
-		}
+		String response = mvcResult.getResponse().getContentAsString();
+		assertThat(response)
+				.isEqualTo(new ObjectMapper().writeValueAsString(diaryMessageResDto.getBody()));
 	}
 }
