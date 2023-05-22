@@ -10,6 +10,7 @@ import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.comment.service.CommentService;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,12 @@ public class CommentController {
 
 	private final CommentService commentService;
 	private final CommentRepository commentRepository;
-	private final DiaryRepository diaryRepository;
+	private final DiaryService diaryService;
 
 	@PostMapping("/{date}/comments")
 	public ResponseEntity<?> commentAdd(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody CommentReqDto commentReqDto) {
 
-		if (!diaryRepository.existsByDate(date))
-			throw new DiaryNotFoundException();
+
 		if (commentReqDto.getParentId() != null) {
 			commentRepository.findById(commentReqDto.getParentId())
 					.orElseThrow(() -> new ParentNotFoundException());
