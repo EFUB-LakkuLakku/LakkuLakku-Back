@@ -49,7 +49,7 @@ public class DiaryService {
 	}
 
 	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
-		int cntComment = commentRepository.countByDiaryId(diary.getId());
+		int cntComment = commentRepository.countByDiaryId(diary.getDiaryId());
 		//int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
 		//diary.setCntLike(cntLike);

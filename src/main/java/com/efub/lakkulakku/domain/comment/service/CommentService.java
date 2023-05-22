@@ -6,6 +6,7 @@ import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
 import com.efub.lakkulakku.domain.comment.exception.CommentNotFoundException;
+import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
 import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
 
 	private final CommentRepository commentRepository;
@@ -29,7 +32,6 @@ public class CommentService {
 
 	private final ApplicationEventPublisher eventPublisher;
 
-	@Transactional
 	public CommentResDto addComment(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
 		Diary diary = diaryRepository.findById(commentReqDto.getDiaryId()).get();
@@ -66,7 +68,7 @@ public class CommentService {
 
 	}
 
-	@Transactional
+
 	public void removeComment(Users user, LocalDate date, CommentDeleteReqDto commentDeleteReqDto) {
 
 		if (!commentRepository.findById(commentDeleteReqDto.getId()).get().getUsers().getId().equals(user.getId()))
@@ -79,7 +81,7 @@ public class CommentService {
 
 	}
 
-	@Transactional
+
 	public CommentUpdateResDto update(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
 		if (!commentRepository.findById(commentReqDto.getId()).get().getUsers().getId().equals(user.getId()))
@@ -107,7 +109,7 @@ public class CommentService {
 
 	}
 
-	@Transactional
+
 	public String checkProfileImageUrl(Users user) {
 		if (user.getProfile() == null || user.getProfile().getFile() == null) {
 			return null;
@@ -119,5 +121,10 @@ public class CommentService {
 
 	private void notifyInfo(Comment comment, String notiType) {
 		comment.publishEvent(eventPublisher, notiType);
+	}
+
+	public Comment findById(UUID commentId){
+		return commentRepository.findById(commentId)
+				.orElseThrow(() -> new ParentNotFoundException());
 	}
 }

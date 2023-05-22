@@ -49,7 +49,7 @@ class LikesServiceTest {
 				.build();
 		diary.setCntLike(1);
 
-		when(likeReqDto.getDiaryId()).thenReturn(diary.getId());
+		when(likeReqDto.getDiaryId()).thenReturn(diary.getDiaryId());
 		when(diaryService.findById(likeReqDto.getDiaryId())).thenReturn(diary);
 		when(likesRepository.existsByDiaryAndUsers(diary, user)).thenReturn(false);
 		when(likeMapper.toEntityFromReqDto(user, diary, likeReqDto)).thenReturn(likes);

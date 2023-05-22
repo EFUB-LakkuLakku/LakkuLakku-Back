@@ -64,7 +64,7 @@ class LikesControllerTest {
 		Users user = createUsers();
 		Diary diary = createDiary(user);
 		LocalDate date = LocalDate.of(2023, 5, 9);
-		LikeReqDto likeReqDto = new LikeReqDto(diary.getId());
+		LikeReqDto likeReqDto = new LikeReqDto(diary.getDiaryId());
 		Likes likes = Likes.builder()
 				.diary(diary)
 				.users(user)
@@ -72,7 +72,7 @@ class LikesControllerTest {
 				.build();
 		LikeClickResDto likeClickResDto = LikeClickResDto.builder()
 				.id(likes.getId())
-				.diaryId(diary.getId())
+				.diaryId(diary.getDiaryId())
 				.message(LIKES_ADD_SUCCESS)
 				.isLike(isLike)
 				.build();

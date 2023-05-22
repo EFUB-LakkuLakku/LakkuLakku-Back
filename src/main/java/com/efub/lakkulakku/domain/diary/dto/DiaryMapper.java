@@ -45,7 +45,7 @@ public class DiaryMapper {
 	public DiaryResDto toDiaryResDto(Diary entity) {
 
 		return DiaryResDto.builder()
-				.id(entity.getId())
+				.id(entity.getDiaryId())
 				.userId(entity.getUser().getId())
 				.date(entity.getDate())
 				.title(entity.getTitle())

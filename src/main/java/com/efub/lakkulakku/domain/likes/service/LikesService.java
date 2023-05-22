@@ -65,7 +65,7 @@ public class LikesService {
 
 		return LikeClickResDto.builder()
 				.id(likes.getId())
-				.diaryId(likes.getDiary().getId())
+				.diaryId(likes.getDiary().getDiaryId())
 				.createdOn(likes.getCreatedOn())
 				.message(message)
 				.isLike(likes.getIsLike())

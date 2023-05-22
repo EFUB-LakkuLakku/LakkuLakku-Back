@@ -9,8 +9,8 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class CommentReqDto {
-
 	private UUID id;
+
 	private UUID diaryId;
 	private String content;
 	private boolean isSecret;
@@ -18,7 +18,6 @@ public class CommentReqDto {
 
 	@Builder
 	public CommentReqDto(UUID id, UUID diaryId, String content, boolean isSecret, UUID parentId) {
-
 		this.id = id;
 		this.diaryId = diaryId;
 		this.content = content;
