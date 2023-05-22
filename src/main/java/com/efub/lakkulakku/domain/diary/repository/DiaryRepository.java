@@ -26,4 +26,5 @@ public interface DiaryRepository extends JpaRepository<Diary, UUID> {
 	Optional<Diary> findByDate(LocalDate date);
 	Optional<Diary> findByDateAndUserId(LocalDate date, UUID userId);
 	List<Diary> findByUser(Users users);
+
 }

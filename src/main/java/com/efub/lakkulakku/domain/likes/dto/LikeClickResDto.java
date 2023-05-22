@@ -14,14 +14,15 @@ public class LikeClickResDto {
 	private LocalDateTime createdOn;
 	private UUID diaryId;
 	private String message;
-	private boolean isLike;
+	private Boolean isLike;
 
 	@Builder
-	public LikeClickResDto(UUID id, UUID diaryId, LocalDateTime createdOn, String message, boolean isLike) {
+	public LikeClickResDto(UUID id, UUID diaryId, LocalDateTime createdOn, String message, Boolean isLike) {
 		this.id = id;
 		this.diaryId = diaryId;
 		this.createdOn = createdOn;
 		this.message = message;
 		this.isLike = isLike;
 	}
+
 }
