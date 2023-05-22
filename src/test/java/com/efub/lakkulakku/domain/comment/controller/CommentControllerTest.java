@@ -41,6 +41,7 @@ import java.util.UUID;
 import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
@@ -100,8 +101,8 @@ class CommentControllerTest {
 				.message(COMMENT_ADD_SUCCESS)
 				.build();
 
-		when(diaryService.existsByDate(date)).thenReturn(true);
-		when(commentService.addComment(any(), any(), any())).thenReturn(testCommentResDto);
+		given(diaryService.existsByDate(date)).willReturn(true);
+		given(commentService.addComment(any(), any(), any())).willReturn(testCommentResDto);
 
 		// Perform request
 		mvc.perform(
@@ -153,8 +154,7 @@ class CommentControllerTest {
 				.modifiedOn(comment.getModifiedOn())
 				.build();
 
-		when(commentService.update(any(), any(), any())).thenReturn(testCommentUpdateResDto);
-		//TODO : create시에는 any안해도 되지만 update시는 any를 함,, 왜?
+		given(commentService.update(any(), any(), any())).willReturn(testCommentUpdateResDto);
 
 		// Perform request
 		mvc.perform(
