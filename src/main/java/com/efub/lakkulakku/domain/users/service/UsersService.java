@@ -21,16 +21,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UsersService {
 
 	private final UsersRepository usersRepository;
@@ -43,7 +45,6 @@ public class UsersService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
-	@Transactional
 	public Users signup(SignupReqDto reqDto) {
 		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
 		Users user = usersRepository.save(reqDto.toEntity());
@@ -55,7 +56,6 @@ public class UsersService {
 		return user;
 	}
 
-	@Transactional
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
 		return usersRepository.findByEmail(loginReqDto.getEmail())
 				.orElseThrow(UserNotFoundException::new);
@@ -146,7 +146,6 @@ public class UsersService {
 		jwtProvider.logout(email, accessToken);
 	}
 
-	@Transactional
 	public void deleteUser(WithdrawReqDto withdrawReqDto) {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
 				.orElseThrow(UserNotFoundException::new);
@@ -186,4 +185,11 @@ public class UsersService {
 				.map(NotificationMapper::toNotificationResDto)
 				.collect(Collectors.toList());
 	}
+	@Transactional(readOnly = true)
+	public Users findByNickname(String nickname){
+		return usersRepository.findByNickname(nickname)
+				.orElseThrow(UserNotFoundException::new);
+	}
+
+
 }

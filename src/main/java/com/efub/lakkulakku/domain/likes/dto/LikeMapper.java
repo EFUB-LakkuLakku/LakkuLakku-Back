@@ -24,7 +24,7 @@ public class LikeMapper {
 		return LikeClickResDto.builder()
 				.id(entity.getId())
 				.createdOn(entity.getCreatedOn())
-				.diaryId(entity.getDiary().getId())
+				.diaryId(entity.getDiary().getDiaryId())
 				.isLike(entity.getIsLike())
 				.build();
 	}
