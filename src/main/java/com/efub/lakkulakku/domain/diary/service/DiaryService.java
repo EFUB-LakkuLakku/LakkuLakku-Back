@@ -49,7 +49,7 @@ public class DiaryService {
 	}
 
 	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
-		int cntComment = commentRepository.countByDiaryId(diary.getDiaryId());
+		int cntComment = commentRepository.countByDiary(diary);
 		//int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
 		//diary.setCntLike(cntLike);
@@ -127,13 +127,13 @@ public class DiaryService {
 
 	@Transactional(readOnly = true)
 	public Diary findByDateAndUser(LocalDate date, Users users){
-		return diaryRepository.findByDateAndUserId(date, users.getId())
+		return diaryRepository.findByDateAndUser(date, users)
 				.orElseThrow((DiaryNotFoundException::new));
 	}
 
 	@Transactional(readOnly = true)
 	public boolean existsByDateAndUserId(LocalDate diaryDate, Users user){
-		return diaryRepository.existsByDateAndUserId(diaryDate, user.getId());
+		return diaryRepository.existsByDateAndUser(diaryDate, user);
 	}
 
 	@Transactional(readOnly = true)

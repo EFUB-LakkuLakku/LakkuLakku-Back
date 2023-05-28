@@ -71,7 +71,7 @@ class LikesControllerTest {
 				.isLike(isLike)
 				.build();
 		LikeClickResDto likeClickResDto = LikeClickResDto.builder()
-				.id(likes.getId())
+				.id(likes.getLikeId())
 				.diaryId(diary.getDiaryId())
 				.message(LIKES_ADD_SUCCESS)
 				.isLike(isLike)

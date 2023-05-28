@@ -46,11 +46,11 @@ public class DiaryMapper {
 
 		return DiaryResDto.builder()
 				.id(entity.getDiaryId())
-				.userId(entity.getUser().getId())
+				.userId(entity.getUser().getUserId())
 				.date(entity.getDate())
 				.title(entity.getTitle())
 				.titleEmoji(entity.getTitleEmoji())
-				.templateId(entity.getTemplate().getId())
+				.templateId(entity.getTemplate().getTemplateId())
 				.cntComment(entity.getCntComment())
 				.cntLike(entity.getCntLike())
 				.cntView(entity.getCntView())

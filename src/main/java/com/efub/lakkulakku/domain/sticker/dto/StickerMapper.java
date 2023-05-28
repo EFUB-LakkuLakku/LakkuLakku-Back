@@ -18,7 +18,7 @@ public class StickerMapper {
 			return null;
 
 		return StickerResDto.builder()
-				.id(entity.getId())
+				.id(entity.getStickerId())
 				.width(entity.getWidth())
 				.height(entity.getHeight())
 				.x(entity.getX())

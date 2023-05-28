@@ -21,10 +21,10 @@ public interface DiaryRepository extends JpaRepository<Diary, UUID> {
 	List<Diary> findUsersDiaryByYearAndMonth(@Param("userId") UUID userId, @Param("year") String year, @Param("month") String month);
 
 
-	boolean existsByDateAndUserId(LocalDate date, UUID userId);
+	boolean existsByDateAndUser(LocalDate date, Users user);
 
 	Optional<Diary> findByDate(LocalDate date);
-	Optional<Diary> findByDateAndUserId(LocalDate date, UUID userId);
+	Optional<Diary> findByDateAndUser(LocalDate date, Users user);
 	List<Diary> findByUser(Users users);
 
 }

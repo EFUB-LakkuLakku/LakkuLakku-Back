@@ -24,7 +24,6 @@ public class FriendService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final FriendRepository friendRepository;
 	private final UsersRepository usersRepository;
-	private final NotificationRepository notificationRepository;
 
 	@Transactional
 	public void addFriend(FriendReqDto reqDto, Users user) {
@@ -76,10 +75,10 @@ public class FriendService {
 	public UUID isFriend(Users user, Users target) {
 		Optional<Friend> friend = friendRepository.findByUserIdAndTargetId(user, target);
 		if (friend.isPresent()) {
-			return friend.get().getId();
+			return friend.get().getFriendId();
 		} else {
 			friend = friendRepository.findByUserIdAndTargetId(target, user);
-			return friend.map(Friend::getId).orElse(null);
+			return friend.map(Friend::getFriendId).orElse(null);
 		}
 	}
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CommentResDto {
 
-	private UUID id;
+	private UUID commentId;
 	private UUID userId;
 	private String profileImageUrl;
 	private String nickname;
@@ -24,7 +24,7 @@ public class CommentResDto {
 	@Builder
 	public CommentResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
 						 Boolean isSecret, LocalDateTime createdOn, String message) {
-		this.id = id;
+		this.commentId = commentId;
 		this.userId = userId;
 		this.profileImageUrl = profileImageUrl;
 		this.nickname = nickname;

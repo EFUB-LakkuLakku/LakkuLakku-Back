@@ -23,7 +23,7 @@ public class Notification extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID notificationId;
 
 	@ManyToOne
 	@JoinColumn(name = "users_id") //알람을 받는 유저

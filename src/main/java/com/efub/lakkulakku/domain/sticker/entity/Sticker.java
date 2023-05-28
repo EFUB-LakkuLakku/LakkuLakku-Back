@@ -20,7 +20,7 @@ public class Sticker extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID stickerId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "diary_id")

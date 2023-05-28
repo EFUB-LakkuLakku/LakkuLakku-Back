@@ -43,15 +43,16 @@ class SignUpServiceTest {
 		String password = "test1234!!";
 		String nickname = "test";
 		String bio = "반갑습니다 :)";
+		UUID id = UUID.randomUUID();
+
 		final SignupReqDto signupReqDto = SignupReqDto.builder()
 				.email(email)
 				.password(password)
 				.nickname(nickname)
 				.build();
 		Users users = signupReqDto.toEntity();
+		users.setUserIdForTest(id);
 		users.setPassword(encodePassword(signupReqDto.getPassword()));
-		UUID id = UUID.randomUUID();
-		users.setId(id);
 
 		Profile profile = Profile.builder()
 				.file(null)
@@ -68,7 +69,7 @@ class SignUpServiceTest {
 		Users users1 = usersService.signup(signupReqDto);
 
 		// then
-		Users findUsers = usersRepository.findById(users1.getId()).get();
+		Users findUsers = usersRepository.findById(users1.getUserId()).get();
 		assertEquals(users.getEmail(), findUsers.getEmail());
 		assertEquals(users.getNickname(), findUsers.getNickname());
 		assertEquals(users.getPassword(), findUsers.getPassword());

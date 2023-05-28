@@ -24,7 +24,7 @@ public class Comment extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID commentId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id")

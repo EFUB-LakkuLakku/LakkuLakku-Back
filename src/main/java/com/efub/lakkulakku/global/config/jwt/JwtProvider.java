@@ -27,7 +27,7 @@ public class JwtProvider {
 
 	private final CustomUsersDetailsService customUsersDetailsService;
 	@Value("${spring.jwt.secret-key}")
-	private String SECRET_KEY;
+	private String SECRET_KEY; //static 필드는 공유되는 상태를 나타내며, 다중 스레드 환경에서 안전하지 않을 수 있습니다. 그래서 인스턴스 변수를 사용하도록 변경
 
 
 	private static final Long TOKEN_VALID_TIME = 1000L * 60 * 120; // 2h
@@ -44,12 +44,12 @@ public class JwtProvider {
 
 	public String createAccessToken(String userId, String roles) {
 		Long tokenInvalidTime = 1000L * 60 * 120; // 2h
-		return this.createToken(userId, roles, tokenInvalidTime);
+		return createToken(userId, roles, tokenInvalidTime);
 	}
 
 	public String createRefreshToken(String userId, String roles) {
 		Long tokenInvalidTime = 1000L * 60 * 60 * 24; // 1d
-		String refreshToken = this.createToken(userId, roles, tokenInvalidTime);
+		String refreshToken = createToken(userId, roles, tokenInvalidTime);
 		redisService.setValues(userId, refreshToken, Duration.ofMillis(tokenInvalidTime));
 		return refreshToken;
 	}
