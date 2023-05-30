@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.comment.controller;
 
+
 import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
@@ -52,6 +53,7 @@ class CommentControllerTest {
 
 	@Autowired
 	private MockMvc mvc;
+
 	@MockBean
 	private CommentService commentService;
 

@@ -10,13 +10,15 @@ import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
 import com.efub.lakkulakku.domain.comment.exception.UnauthorizedException;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -28,13 +30,13 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_S
 public class CommentService {
 
 	private final CommentRepository commentRepository;
-	private final DiaryRepository diaryRepository;
+	private final DiaryService diaryService;
 
 	private final ApplicationEventPublisher eventPublisher;
 
 	public CommentResDto addComment(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
-		Diary diary = diaryRepository.findById(commentReqDto.getDiaryId()).get();
+		Diary diary = diaryService.findById(commentReqDto.getDiaryId());
 
 		Comment comment = Comment.builder()
 				.users(user)
@@ -117,6 +119,16 @@ public class CommentService {
 			return user.getProfile().getFile().getUrl();
 
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public Comment findByDiaryAndUsers(Diary diary, Users user){
+		return commentRepository.findByDiaryAndUsers(diary, user).orElseThrow((DiaryNotFoundException::new));
+	}
+
+	@Transactional(readOnly = true)
+	public boolean existsByDiaryAndUsers(Diary diary, Users user){
+		return commentRepository.existsByDiaryAndUsers(diary, user);
 	}
 
 	private void notifyInfo(Comment comment, String notiType) {
