@@ -121,16 +121,6 @@ public class CommentService {
 		}
 	}
 
-	@Transactional(readOnly = true)
-	public Comment findByDiaryAndUsers(Diary diary, Users user){
-		return commentRepository.findByDiaryAndUsers(diary, user).orElseThrow((DiaryNotFoundException::new));
-	}
-
-	@Transactional(readOnly = true)
-	public boolean existsByDiaryAndUsers(Diary diary, Users user){
-		return commentRepository.existsByDiaryAndUsers(diary, user);
-	}
-
 	private void notifyInfo(Comment comment, String notiType) {
 		comment.publishEvent(eventPublisher, notiType);
 	}
