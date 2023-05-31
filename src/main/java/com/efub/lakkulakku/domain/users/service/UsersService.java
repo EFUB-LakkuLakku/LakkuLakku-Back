@@ -190,6 +190,10 @@ public class UsersService {
 		return usersRepository.findByNickname(nickname)
 				.orElseThrow(UserNotFoundException::new);
 	}
+	@Transactional(readOnly = true)
+	public Users findByUid(Long uid){
+		return usersRepository.findByUid(uid).orElseThrow(UserNotFoundException::new);
+	}
 
 
 }
