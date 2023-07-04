@@ -50,13 +50,13 @@ public class CommentService {
 		if (commentReqDto.getParentId() != null) {
 			type = "대댓글";
 		}
-		if (!user.getId().equals(diary.getUser().getId())) {
+		if (!user.getUserId().equals(diary.getUser().getUserId())) {
 			notifyInfo(comment, type);
 		}
 
 		return CommentResDto.builder()
-				.id(comment.getId())
-				.userId(comment.getUsers().getId())
+				.id(comment.getCommentId())
+				.userId(comment.getUsers().getUserId())
 				.profileImageUrl(checkProfileImageUrl(user))
 				.nickname(user.getNickname())
 				.parentId(comment.getParentId())
@@ -71,7 +71,7 @@ public class CommentService {
 
 	public void removeComment(Users user, LocalDate date, CommentDeleteReqDto commentDeleteReqDto) {
 
-		if (!commentRepository.findById(commentDeleteReqDto.getId()).get().getUsers().getId().equals(user.getId()))
+		if (!commentRepository.findById(commentDeleteReqDto.getId()).get().getUsers().getUserId().equals(user.getUserId()))
 			throw new UnauthorizedException();
 
 		if (!commentRepository.existsById(commentDeleteReqDto.getId()))
@@ -84,21 +84,21 @@ public class CommentService {
 
 	public CommentUpdateResDto update(Users user, LocalDate date, CommentReqDto commentReqDto) {
 
-		if (!commentRepository.findById(commentReqDto.getId()).get().getUsers().getId().equals(user.getId()))
+		if (!commentRepository.findById(commentReqDto.getCommentId()).get().getUsers().getUserId().equals(user.getUserId()))
 			throw new UnauthorizedException();
 
-		if (!commentRepository.existsById(commentReqDto.getId()))
+		if (!commentRepository.existsById(commentReqDto.getCommentId()))
 			throw new CommentNotFoundException();
 
-		Comment comment = commentRepository.findById(commentReqDto.getId()).orElseThrow();
+		Comment comment = commentRepository.findById(commentReqDto.getCommentId()).orElseThrow();
 
 		comment.update(commentReqDto.getContent());
 
 		commentRepository.save(comment);
 
 		return CommentUpdateResDto.builder()
-				.id(comment.getId())
-				.userId(comment.getUsers().getId())
+				.id(comment.getCommentId())
+				.userId(comment.getUsers().getUserId())
 				.profileImageUrl(checkProfileImageUrl(user))
 				.nickname(user.getNickname())
 				.parentId(comment.getParentId())

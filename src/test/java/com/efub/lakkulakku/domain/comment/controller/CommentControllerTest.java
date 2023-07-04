@@ -4,49 +4,44 @@ import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
 import com.efub.lakkulakku.domain.comment.entity.Comment;
-import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
+
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.comment.service.CommentService;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
-import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+
 import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
-import com.efub.lakkulakku.domain.users.controller.LoginController;
+
 import com.efub.lakkulakku.domain.users.entity.Users;
-import com.efub.lakkulakku.domain.users.service.AuthUsers;
+
 import com.efub.lakkulakku.global.config.TestUsers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
-import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.post;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,6 +57,7 @@ class CommentControllerTest {
 
 	@MockBean
 	private CommentRepository commentRepository;
+
 
 	@MockBean
 	private DiaryService diaryService;
@@ -82,7 +78,7 @@ class CommentControllerTest {
 		Comment comment = Comment.builder()
 				.content(testContent)
 				.diary(diary)
-				.id(commentId)
+				.commentId(commentId)
 				.users(testUser)
 				.isSecret(isSecret)
 				.build();
@@ -92,7 +88,7 @@ class CommentControllerTest {
 				.isSecret(isSecret)
 				.build();
 		CommentResDto testCommentResDto = CommentResDto.builder()
-				.id(comment.getId())
+				.id(comment.getCommentId())
 				.createdOn(comment.getCreatedOn())
 				.parentId(comment.getParentId())
 				.content(comment.getContent())
@@ -134,19 +130,19 @@ class CommentControllerTest {
 		Comment comment = Comment.builder()
 				.content(testContent)
 				.diary(diary)
-				.id(commentId)
+				.commentId(commentId)
 				.isSecret(isSecret)
 				.users(testUser)
 				.build();
 		CommentReqDto testCommentReqDto = CommentReqDto.builder()
-				.id(comment.getId())
+				.commentId(comment.getCommentId())
 				.content(updateContent)
 				.diaryId(diary.getDiaryId())
 				.isSecret(isSecret)
 				.build();
 		comment.update(updateContent);
 		CommentUpdateResDto testCommentUpdateResDto = CommentUpdateResDto.builder()
-				.id(comment.getId())
+				.id(comment.getCommentId())
 				.parentId(comment.getParentId())
 				.content(comment.getContent())
 				.isSecret(comment.getIsSecret())

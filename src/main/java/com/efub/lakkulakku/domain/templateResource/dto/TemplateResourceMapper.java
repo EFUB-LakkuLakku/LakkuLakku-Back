@@ -11,7 +11,7 @@ public class TemplateResourceMapper {
 			return null;
 
 		return TemplateResourceDto.builder()
-				.id(entity.getId())
+				.id(entity.getTemplateResourceId())
 				.url(entity.getUrl())
 				.category(entity.getCategory())
 				.build();

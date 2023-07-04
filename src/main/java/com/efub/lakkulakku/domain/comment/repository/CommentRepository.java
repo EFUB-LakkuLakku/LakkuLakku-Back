@@ -1,5 +1,9 @@
 package com.efub.lakkulakku.domain.comment.repository;
 
+import com.efub.lakkulakku.domain.comment.entity.Comment;
+import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.users.entity.Users;
+
 import java.util.Optional;
 import java.util.UUID;
 

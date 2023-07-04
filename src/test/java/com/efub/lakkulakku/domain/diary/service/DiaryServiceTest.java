@@ -47,11 +47,11 @@ class DiaryServiceTest {
 	public void createDiaryTest() {
 		LocalDate diaryDate = LocalDate.now();
 		Users user = mock(Users.class);
-		when(diaryRepository.existsByDateAndUserId(diaryDate, user.getId())).thenReturn(false);
+		when(diaryRepository.existsByDateAndUser(diaryDate, user)).thenReturn(false);
 
 		diaryService.createDiary(user, diaryDate);
 
-		verify(diaryRepository, times(1)).existsByDateAndUserId(diaryDate, user.getId());
+		verify(diaryRepository, times(1)).existsByDateAndUser(diaryDate, user);
 		verify(diaryRepository, times(1)).save(any(Diary.class));
 		verify(templateRepository, times(1)).save(any(Template.class));
 	}
@@ -64,12 +64,12 @@ class DiaryServiceTest {
 		Diary diary = mock(Diary.class);
 		Diary savedDiary = mock(Diary.class);
 
-		when(diaryRepository.findByDateAndUserId(date, user.getId())).thenReturn(java.util.Optional.of(diary));
+		when(diaryRepository.findByDateAndUser(date, user)).thenReturn(java.util.Optional.of(diary));
 		when(diaryMapper.saveDiary(diary, dto)).thenReturn(savedDiary);
 
 		diaryService.saveDiary(date, user, dto);
 
-		verify(diaryRepository, times(1)).findByDateAndUserId(date, user.getId());
+		verify(diaryRepository, times(1)).findByDateAndUser(date, user);
 		verify(diaryMapper, times(1)).saveDiary(diary, dto);
 		verify(diaryRepository, times(1)).save(savedDiary);
 	}

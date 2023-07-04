@@ -175,13 +175,13 @@ public class UsersService {
 			int nowYear = localDate.getYear();
 			int nowMonth = localDate.getMonthValue();
 
-			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), Integer.toString(nowYear),
+			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), Integer.toString(nowYear),
 					Integer.toString(nowMonth))
 				.stream()
 				.map(diaryHomeMapper::toDiaryHomeResDto)
 				.collect(Collectors.toList());
 		} else {
-			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), year, month)
+			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), year, month)
 				.stream()
 				.map(diaryHomeMapper::toDiaryHomeResDto)
 				.collect(Collectors.toList());
@@ -190,7 +190,7 @@ public class UsersService {
 
 	@Transactional
 	public List<NotificationResDto> findAllNotifications(Users user) {
-		List<Notification> notificationList = notificationRepository.findByUsersId(user.getId());
+		List<Notification> notificationList = notificationRepository.findByUsersId(user.getUserId());
 		return notificationList.stream()
 			.map(NotificationMapper::toNotificationResDto)
 			.collect(Collectors.toList());

@@ -52,7 +52,7 @@ public class LikesService {
 		String message = likes.getIsLike() ? LIKES_ADD_SUCCESS : LIKES_DELETE_SUCCESS;
 
 		if (message.equals(LIKES_ADD_SUCCESS)) {
-			if (!user.getId().equals(diary.getUser().getId())) {
+			if (!user.getUserId().equals(diary.getUser().getUserId())) {
 				notifyInfo(likes, "좋아요");
 			}
 			diary.setCntLike(diary.getCntLike() + 1);
@@ -64,7 +64,7 @@ public class LikesService {
 		}
 
 		return LikeClickResDto.builder()
-				.id(likes.getId())
+				.id(likes.getLikeId())
 				.diaryId(likes.getDiary().getDiaryId())
 				.createdOn(likes.getCreatedOn())
 				.message(message)

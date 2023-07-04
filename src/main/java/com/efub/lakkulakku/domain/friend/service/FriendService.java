@@ -54,7 +54,8 @@ public class FriendService {
 		List<FriendResDto> friendList = new ArrayList<>();
 
 		for (Friend temp : friends) {
-			Users friendUser = temp.getSender().getId().equals(user.getId()) ? temp.getTarget() : temp.getSender();
+			Users friendUser =
+				temp.getSender().getUserId().equals(user.getUserId()) ? temp.getTarget() : temp.getSender();
 			friendList.add(buildDto(friendUser));
 		}
 
@@ -96,7 +97,7 @@ public class FriendService {
 	@Transactional(readOnly = true)
 	public UUID findFriendBySenderAndTarget(Users sender, Users target) {
 		Optional<Friend> friend = friendRepository.findBySenderAndTarget(sender, target);
-		return friend.map(Friend::getId).orElse(null);
+		return friend.map(Friend::getFriendId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)

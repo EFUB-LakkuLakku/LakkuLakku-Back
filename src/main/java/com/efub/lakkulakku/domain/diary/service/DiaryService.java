@@ -131,14 +131,15 @@ public class DiaryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Diary findByDateAndUser(LocalDate date, Users users) {
-		return diaryRepository.findByDateAndUserId(date, users.getId())
-			.orElseThrow((DiaryNotFoundException::new));
+	public Diary findByDateAndUser(LocalDate date, Users users){
+		return diaryRepository.findByDateAndUser(date, users)
+				.orElseThrow((DiaryNotFoundException::new));
 	}
 
 	@Transactional(readOnly = true)
-	public boolean existsByDateAndUserId(LocalDate diaryDate, Users user) {
-		return diaryRepository.existsByDateAndUserId(diaryDate, user.getId());
+	public boolean existsByDateAndUserId(LocalDate diaryDate, Users user){
+		return diaryRepository.existsByDateAndUser(diaryDate, user);
+
 	}
 
 	@Transactional(readOnly = true)
