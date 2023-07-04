@@ -22,9 +22,9 @@ public class LikeMapper {
 			return null;
 
 		return LikeClickResDto.builder()
-				.id(entity.getId())
+				.id(entity.getLikeId())
 				.createdOn(entity.getCreatedOn())
-				.diaryId(entity.getDiary().getId())
+				.diaryId(entity.getDiary().getDiaryId())
 				.isLike(entity.getIsLike())
 				.build();
 	}
@@ -37,8 +37,8 @@ public class LikeMapper {
 			profileImageUrl = null;
 		}
 		return LikeResDto.builder()
-				.id(entity.getId())
-				.userId(entity.getUsers().getId())
+				.id(entity.getLikeId())
+				.userId(entity.getUsers().getUserId())
 				.nickname(entity.getUsers().getNickname())
 				.profileImageUrl(entity.getUsers().getProfile().getFile().getUrl())
 				.createdOn(entity.getCreatedOn())

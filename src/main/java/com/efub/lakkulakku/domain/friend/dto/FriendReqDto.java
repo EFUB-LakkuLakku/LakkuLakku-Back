@@ -2,6 +2,7 @@ package com.efub.lakkulakku.domain.friend.dto;
 
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,4 +16,8 @@ public class FriendReqDto {
 	@NotBlank
 	private Long uid;
 
+	@Builder
+	public FriendReqDto(Long uid) {
+		this.uid = uid;
+	}
 }

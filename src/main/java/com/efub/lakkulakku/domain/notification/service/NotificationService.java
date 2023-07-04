@@ -51,7 +51,7 @@ public class NotificationService {
 	public void send(Users receiver, String notificationType, String message) {
 		Notification notification = notificationRepository.save(createNotification(receiver, notificationType, message));
 
-		String receiverId = String.valueOf(receiver.getId());
+		String receiverId = String.valueOf(receiver.getUserId());
 		String eventId = receiverId + "_" + System.currentTimeMillis();
 		Map<String, SseEmitter> emitters = emitterRepository.findAllStartWithById(receiverId);
 		emitters.forEach(
@@ -99,7 +99,7 @@ public class NotificationService {
 	@Transactional
 	public void deleteAllNotification(Users users)
 	{
-		List<Notification> notificationList = notificationRepository.findByUsersId(users.getId());
+		List<Notification> notificationList = notificationRepository.findByUsersId(users.getUserId());
 		notificationRepository.deleteAll(notificationList);
 	}
 

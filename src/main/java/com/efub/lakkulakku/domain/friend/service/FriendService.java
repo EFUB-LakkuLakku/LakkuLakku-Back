@@ -11,28 +11,30 @@ import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FriendService {
 	private final ApplicationEventPublisher eventPublisher;
 	private final FriendRepository friendRepository;
-	private final UsersRepository usersRepository;
-	private final NotificationRepository notificationRepository;
+	private final UsersService usersService;
 
-	@Transactional
+
 	public void addFriend(FriendReqDto reqDto, Users user) {
 		if (Objects.equals(reqDto.getUid(), user.getUid())) {
 			throw new SelfFriendException();
 		}
 
-		Users targetUser = usersRepository.findByUid(reqDto.getUid()).orElseThrow(UserNotFoundException::new);
+		Users targetUser = usersService.findByUid(reqDto.getUid());
 		if (isFriend(user, targetUser) != null) {
 			throw new DuplicateFriendException();
 		} else {
@@ -45,10 +47,9 @@ public class FriendService {
 		}
 	}
 
-	@Transactional
 	public List<FriendResDto> getFriends(Users user) {
-		List<Friend> friends1 = friendRepository.findAllByUserId(user);
-		List<Friend> friends2 = friendRepository.findAllByTargetId(user);
+		List<Friend> friends1 = findAllByUserId(user);
+		List<Friend> friends2 = findAllByTargetId(user);
 		List<FriendResDto> friendList = new ArrayList<>();
 		for (Friend temp : friends1) {
 			Users one = temp.getTargetId();
@@ -67,26 +68,24 @@ public class FriendService {
 		return friendList;
 	}
 
-	@Transactional
 	public FriendResDto buildDto(Users user) {
 		return new FriendResDto(user);
 	}
 
-	@Transactional
+
 	public UUID isFriend(Users user, Users target) {
 		Optional<Friend> friend = friendRepository.findByUserIdAndTargetId(user, target);
 		if (friend.isPresent()) {
-			return friend.get().getId();
+			return friend.get().getFriendId();
 		} else {
 			friend = friendRepository.findByUserIdAndTargetId(target, user);
-			return friend.map(Friend::getId).orElse(null);
+			return friend.map(Friend::getFriendId).orElse(null);
 		}
 	}
 
-	@Transactional
+
 	public void deleteFriend(FriendReqDto reqDto, Users user) {
-		Users delFriend = usersRepository.findByUid(reqDto.getUid())
-				.orElseThrow(UserNotFoundException::new);
+		Users delFriend = usersService.findByUid(reqDto.getUid());
 		UUID id = isFriend(user, delFriend);
 		friendRepository.deleteById(id);
 	}
@@ -95,12 +94,23 @@ public class FriendService {
 		friend.publishEvent(eventPublisher, notiType);
 	}
 
-	@Transactional
+
 	public void deleteAllFriend(Users users){
-		List<Friend> friendUserList = friendRepository.findAllByUserId(users);
-		List<Friend> friendTargetList = friendRepository.findAllByTargetId(users);
+		List<Friend> friendUserList = findAllByUserId(users);
+		List<Friend> friendTargetList = findAllByTargetId(users);
 
 		friendRepository.deleteAll(friendUserList);
 		friendRepository.deleteAll(friendTargetList);
 	}
+
+	@Transactional(readOnly = true)
+	public List<Friend> findAllByTargetId(Users targetUser){
+		return friendRepository.findAllByTargetId(targetUser);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Friend> findAllByUserId(Users user){
+		return friendRepository.findAllByUserId(user);
+	}
+
 }

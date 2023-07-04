@@ -30,7 +30,7 @@ public class ImageMapper {
 			return null;
 
 		return ImageResDto.builder()
-				.id(entity.getId())
+				.id(entity.getImageId())
 				.width(entity.getWidth())
 				.height(entity.getHeight())
 				.x(entity.getX())

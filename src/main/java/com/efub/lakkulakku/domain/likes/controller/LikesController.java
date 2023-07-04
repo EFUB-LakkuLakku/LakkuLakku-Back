@@ -27,8 +27,6 @@ public class LikesController {
 	@PostMapping("/{date}/like")
 	public ResponseEntity<LikeClickResDto> likeClick(@AuthUsers Users user, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, @RequestBody LikeReqDto likeReqDto) {
 
-		if (!diaryRepository.existsByDate(date))
-			throw new DiaryNotFoundException();
 		LikeClickResDto likeClickResDto = likesService.clickLike(user, date, likeReqDto);
 		return new ResponseEntity<>(likeClickResDto, HttpStatus.OK);
 	}

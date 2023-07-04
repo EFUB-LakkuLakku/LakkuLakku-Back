@@ -29,8 +29,8 @@ public class CommentMapper {
 		}
 
 		return CommentResDto.builder()
-				.id(entity.getId())
-				.userId(entity.getUsers().getId())
+				.id(entity.getCommentId())
+				.userId(entity.getUsers().getUserId())
 				.profileImageUrl(profileImageUrl)
 				.nickname(entity.getUsers().getNickname())
 				.parentId(entity.getParentId())
@@ -43,10 +43,10 @@ public class CommentMapper {
 	public Comment checkIsEntity(Diary diary, CommentResDto dto) {
 		Comment comment;
 
-		if (dto.getId() == null)
+		if (dto.getCommentId() == null)
 			comment = toEntity(diary, dto);
 		else
-			comment = commentRepository.findById(dto.getId()).orElseThrow(CommentNotFoundException::new);
+			comment = commentRepository.findById(dto.getCommentId()).orElseThrow(CommentNotFoundException::new);
 
 		return comment;
 	}
@@ -55,7 +55,7 @@ public class CommentMapper {
 		if (diary == null || dto == null)
 			return null;
 
-		Users users = usersRepository.findById(dto.getId()).orElseThrow(UserNotFoundException::new);
+		Users users = usersRepository.findById(dto.getUserId()).orElseThrow(UserNotFoundException::new);
 
 		return Comment.builder()
 				.diary(diary)

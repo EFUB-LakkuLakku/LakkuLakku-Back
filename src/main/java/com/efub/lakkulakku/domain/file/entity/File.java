@@ -20,7 +20,7 @@ public class File extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID fileId;
 
 	@NotNull
 	private String filename;
