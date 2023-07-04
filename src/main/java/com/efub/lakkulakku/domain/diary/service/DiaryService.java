@@ -1,5 +1,15 @@
 package com.efub.lakkulakku.domain.diary.service;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.efub.lakkulakku.domain.comment.dto.CommentMapper;
 import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
 import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
@@ -15,18 +25,8 @@ import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.template.repository.TemplateRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 
 @Service
 @RequiredArgsConstructor
@@ -67,28 +67,33 @@ public class DiaryService {
 	}
 
 	public List<CommentResDto> getDiaryComments(Diary diary) {
-		return diary.getComments().stream().filter(Objects::nonNull).map(commentMapper::toCommentResDto).collect(Collectors.toList());
+		return diary.getComments()
+			.stream()
+			.filter(Objects::nonNull)
+			.map(commentMapper::toCommentResDto)
+			.collect(Collectors.toList());
 	}
 
 	public void createDiary(Users user, LocalDate diaryDate) {
-		if(existsByDateAndUserId(diaryDate, user))
+		if (existsByDateAndUserId(diaryDate, user))
 			throw new DuplicateDiaryException();
 		Diary diary = Diary.builder()
-				.user(user)
-				.date(diaryDate)
-				.comments(null)
-				.images(null)
-				.likes(null)
-				.texts(null)
-				.stickers(null)
-				.build();
+			.user(user)
+			.date(diaryDate)
+			.comments(null)
+			.images(null)
+			.likes(null)
+			.texts(null)
+			.stickers(null)
+			.build();
 		diaryRepository.save(diary);
 
 		Template template = Template.builder()
-				.diary(diary)
-				.url("https://s3.ap-northeast-2.amazonaws.com/lakku-lakku.com/template/basic/%E1%84%86%E1%85%A9%E1%84%83%E1%85%A5%E1%86%AB_1.jpg")
-				.category("basic")
-				.build();
+			.diary(diary)
+			.url(
+				"https://s3.ap-northeast-2.amazonaws.com/lakku-lakku.com/template/basic/%E1%84%86%E1%85%A9%E1%84%83%E1%85%A5%E1%86%AB_1.jpg")
+			.category("basic")
+			.build();
 		diary.setTemplate(template);
 		templateRepository.save(template);
 	}
@@ -99,7 +104,7 @@ public class DiaryService {
 		save(savedDiary);
 	}
 
-	public void save(Diary diary){
+	public void save(Diary diary) {
 		diaryRepository.save(diary);
 	}
 
@@ -109,20 +114,20 @@ public class DiaryService {
 		diaryRepository.save(updatedDiary);
 	}
 
-	public void deleteAllDiary(Users users){
+	public void deleteAllDiary(Users users) {
 		List<Diary> diaryList = diaryRepository.findByUser(users);
 		diaryRepository.deleteAll(diaryList);
 	}
 
-	public void delete(LocalDate date, Users users){
+	public void delete(LocalDate date, Users users) {
 		Diary diary = findByDateAndUser(date, users);
 		diaryRepository.delete(diary);
 	}
 
 	@Transactional(readOnly = true)
-	public Diary findById(UUID postId){
+	public Diary findById(UUID postId) {
 		return diaryRepository.findById(postId)
-				.orElseThrow((DiaryNotFoundException::new));
+			.orElseThrow((DiaryNotFoundException::new));
 	}
 
 	@Transactional(readOnly = true)
@@ -134,10 +139,11 @@ public class DiaryService {
 	@Transactional(readOnly = true)
 	public boolean existsByDateAndUserId(LocalDate diaryDate, Users user){
 		return diaryRepository.existsByDateAndUser(diaryDate, user);
+
 	}
 
 	@Transactional(readOnly = true)
-	public boolean existsByDate(LocalDate date){
+	public boolean existsByDate(LocalDate date) {
 		return diaryRepository.existsByDate(date);
 	}
 
