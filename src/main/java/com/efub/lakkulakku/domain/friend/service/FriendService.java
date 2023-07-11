@@ -2,7 +2,6 @@ package com.efub.lakkulakku.domain.friend.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,8 +30,8 @@ public class FriendService {
 	private final FriendRepository friendRepository;
 	private final UsersService usersService;
 
-	public void addFriend(FriendReqDto reqDto, Users user) {
-		if (Objects.equals(reqDto.getUid(), user.getUid())) {
+	public Friend addFriend(FriendReqDto reqDto, Users user) {
+		if (reqDto.getUid().equals(user.getUid())) {
 			throw new SelfFriendException();
 		}
 
@@ -45,7 +44,7 @@ public class FriendService {
 				.target(targetUser)
 				.build();
 			notifyInfo(friend, "FRIEND");
-			friendRepository.save(friend);
+			return friendRepository.save(friend);
 		}
 	}
 
