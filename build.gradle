@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "org.sonarqube" version "4.2.1.3168"
 }
 
 group = 'com.efub'
