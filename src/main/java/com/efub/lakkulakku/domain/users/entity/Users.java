@@ -6,15 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
-
-
 
 @Getter
 @NoArgsConstructor
@@ -59,11 +55,12 @@ public class Users extends BaseTimeEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public void setProfile(Profile profile){
+
+	public void setProfile(Profile profile) {
 		this.profile = profile;
 	}
 
-	public void setUserIdForTest(UUID userId){
+	public void setUserIdForTest(UUID userId) {
 		this.userId = userId;
 	}
 

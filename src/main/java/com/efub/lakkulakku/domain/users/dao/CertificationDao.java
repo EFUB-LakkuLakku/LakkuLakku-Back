@@ -9,8 +9,8 @@ import java.time.Duration;
 @RequiredArgsConstructor
 @Repository
 public class CertificationDao {
-	private final String PREFIX = "email:";
-	private final int LIMIT_TIME = 20 * 60;
+	private static final String PREFIX = "email:";
+	private static final int LIMIT_TIME = 20 * 60;
 
 	private final StringRedisTemplate stringRedisTemplate;
 
@@ -28,7 +28,7 @@ public class CertificationDao {
 	}
 
 	public boolean hasKey(String email) {
-		return stringRedisTemplate.hasKey(PREFIX + email);
+		return Boolean.TRUE.equals(stringRedisTemplate.hasKey(PREFIX + email));
 	}
 
 }

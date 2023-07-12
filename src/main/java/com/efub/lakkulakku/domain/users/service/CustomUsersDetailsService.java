@@ -20,7 +20,6 @@ public class CustomUsersDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Users users = usersRepository.findByEmail(email)
 				.orElseThrow(BadTokenRequestException::new);
-		System.out.println(users.getEmail());
 		return new AuthUsers(users);
 	}
 }

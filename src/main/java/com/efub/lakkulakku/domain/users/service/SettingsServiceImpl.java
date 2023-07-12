@@ -35,6 +35,4 @@ public class SettingsServiceImpl implements SettingsService {
 			throw new BeforePasswordNotMatchException();
 		}
 	}
-
-
 }

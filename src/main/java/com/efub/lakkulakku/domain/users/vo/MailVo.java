@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MailVo {
+
 	String toAddress;
 	String title;
 	String message;
 	String fromAddress;
-
 
 	@Builder
 	public MailVo(String toAddress, String title, String message, String fromAddress)

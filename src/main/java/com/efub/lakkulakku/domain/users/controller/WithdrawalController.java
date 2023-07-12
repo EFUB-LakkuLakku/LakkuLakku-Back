@@ -23,10 +23,9 @@ import static com.efub.lakkulakku.global.constant.ResponseConstant.WITHDRAW_SUCC
 public class WithdrawalController {
 
 	private final UsersRepository usersRepository;
-	private final UsersService usersService;
 	private final DiaryService diaryService;
 	private final FriendService friendService;
-    private final NotificationService notificationService;
+	private final NotificationService notificationService;
 
 	@DeleteMapping("/withdrawal")
 	public ResponseEntity<WithdrawResDto> withdrawal(@Valid @RequestBody WithdrawReqDto withdrawReqDto) {
@@ -35,7 +34,7 @@ public class WithdrawalController {
 
 		diaryService.deleteAllDiary(users);
 		friendService.deleteAllFriend(users);
-        notificationService.deleteAllNotification(users);
+		notificationService.deleteAllNotification(users);
 		usersRepository.delete(users);
 
 		WithdrawResDto dto = WithdrawResDto.builder()

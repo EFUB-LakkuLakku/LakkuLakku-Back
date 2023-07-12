@@ -1,6 +1,5 @@
 package com.efub.lakkulakku.domain.users.controller;
 
-
 import com.efub.lakkulakku.domain.diary.dto.DiaryHomeResDto;
 import com.efub.lakkulakku.domain.notification.dto.NotificationResDto;
 import com.efub.lakkulakku.domain.users.dto.ProfileUpdateResDto;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/v1/home")

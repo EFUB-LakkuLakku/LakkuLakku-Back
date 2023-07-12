@@ -13,6 +13,8 @@ import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.exception.ErrorCode;
 import com.efub.lakkulakku.global.exception.jwt.BasicResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,11 @@ public class LoginController {
 	private final MailSendService mailSendService;
 	private final CertificationDao certificationDao;
 
+	private static final String SET_COOKIE = "Set-Cookie";
+	private static final String REFRESH_TOKEN = "refreshToken";
+
+	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
@@ -40,7 +47,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/signup/email")
-	public ResponseEntity<?> checkEmailDuplicate(@Valid @RequestBody String email) {
+	public ResponseEntity<String> checkEmailDuplicate(@Valid @RequestBody String email) {
 		if (usersRepository.existsByEmail(email)) {
 			throw new DuplicateEmailException();
 		} else {
@@ -50,7 +57,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/signup/nickname")
-	public ResponseEntity<?> checkNicknameDuplicate(@Valid @RequestBody UserGetReqDto reqDto) {
+	public ResponseEntity<String> checkNicknameDuplicate(@Valid @RequestBody UserGetReqDto reqDto) {
 		if (usersRepository.existsByNickname(reqDto.getNickname())) {
 			throw new DuplicateNicknameException();
 		} else {
@@ -59,9 +66,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/certification/sends")
-	public ResponseEntity<?> sendEmail(@Valid @RequestBody EmailGetReqDto reqDto){
-		Users user = usersRepository.findByEmail(reqDto.getEmail()).orElseThrow(()
-				-> new UserNotFoundException());
+	public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailGetReqDto reqDto) {
 		String certiCode = usersService.getTempString();
 		certificationDao.createEmailCertification(reqDto.getEmail(), certiCode);
 		mailSendService.sendMail(mailSendService.createMail(certiCode, reqDto.getEmail()));
@@ -69,43 +74,39 @@ public class LoginController {
 	}
 
 	@PostMapping("/certification/comfirms")
-	public ResponseEntity<?> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto){
+	public ResponseEntity<LoginResDto> confirmTempString(@Valid @RequestBody CertificationReqDto reqDto) {
 		mailSendService.verifyEmail(reqDto);
 		LoginInfoDto loginInfoDto = usersService.provideToken(reqDto.getEmail());
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
-		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
+		responseHeaders.set(SET_COOKIE, usersService.generateCookie(REFRESH_TOKEN, loginInfoDto.getRefreshToken()).toString());
+		return new ResponseEntity<>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/certification/new-password")
-	public ResponseEntity<?> EnterNewPassword(@AuthUsers Users user, @RequestBody NewPwdReqDto reqDto)
-	{
+	public ResponseEntity<String> enterNewPassword(@AuthUsers Users user, @RequestBody NewPwdReqDto reqDto) {
 		usersService.newPassword(user, reqDto);
 		return ResponseEntity.ok(PASSWORD_CHANGE_SUCCESS);
 	}
-
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginDto) {
 		LoginInfoDto loginInfoDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
-		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
+		responseHeaders.set(SET_COOKIE, usersService.generateCookie(REFRESH_TOKEN, loginInfoDto.getRefreshToken()).toString());
+		return new ResponseEntity<>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
 	}
-
 
 	@PostMapping("/re-issue")
 	public ResponseEntity<LoginResDto> reIssue(@RequestBody EmailGetReqDto reqDto, HttpServletRequest request, @CookieValue(value = "refreshToken", required = false) Cookie rCookie) {
 		String refreshToken = rCookie.getValue();
-		System.out.println("refreshToken = " + refreshToken);
-		if(refreshToken == null)
-		{
+		log.debug("refreshToken = {}", refreshToken);
+		if (refreshToken == null) {
 			throw new UserNotFoundException();//나중에 커스텀
 		}
 		LoginInfoDto responseDto = usersService.reIssueAccessToken(reqDto.getEmail(), refreshToken);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", responseDto.getRefreshToken()).toString());
-		return new ResponseEntity<LoginResDto>(responseDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
+		responseHeaders.set(SET_COOKIE, usersService.generateCookie(REFRESH_TOKEN, responseDto.getRefreshToken()).toString());
+		return new ResponseEntity<>(responseDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
 	}
 
 	@GetMapping("/logout")
@@ -114,7 +115,6 @@ public class LoginController {
 		usersService.logout(user.getEmail(), accessToken);
 		BasicResponse response = new BasicResponse(HttpStatus.OK, ErrorCode.LOGOUT_SUCCESS, "LOGOUT_SUCCESS");
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 
 }

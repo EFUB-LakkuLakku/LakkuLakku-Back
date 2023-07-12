@@ -5,8 +5,6 @@ import com.efub.lakkulakku.domain.users.entity.Users;
 
 public interface SettingsService {
 
-
-    void updatePassword(Users user, PasswordUpdateDto updatePwDto) throws Exception;
-
+    void updatePassword(Users user, PasswordUpdateDto updatePwDto);
 
 }
