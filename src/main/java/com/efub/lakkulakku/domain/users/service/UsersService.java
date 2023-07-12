@@ -1,10 +1,10 @@
 package com.efub.lakkulakku.domain.users.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseCookie;
@@ -20,7 +20,7 @@ import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
 import com.efub.lakkulakku.domain.notification.dto.NotificationResDto;
 import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
-import com.efub.lakkulakku.domain.profile.ProfileRepository;
+import com.efub.lakkulakku.domain.profile.repository.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.users.dto.HomeMapper;
 import com.efub.lakkulakku.domain.users.dto.HomeResDto;
@@ -53,7 +53,7 @@ public class UsersService {
 	private final JwtProvider jwtProvider;
 
 	private static final Long COOKIE_MAX_AGE = 7 * 24 * 60 * 60L;
-	private static final Random RANDOM = new Random();
+	private static final SecureRandom RANDOM = new SecureRandom();
 
 	public Users signup(SignupReqDto reqDto) {
 		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
