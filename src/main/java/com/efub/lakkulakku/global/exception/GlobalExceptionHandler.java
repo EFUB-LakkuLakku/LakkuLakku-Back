@@ -117,13 +117,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(PasswordsNotEqualException.class)
 	protected final ResponseEntity<ErrorResponse> handlePasswordsNotEqualException(PasswordsNotEqualException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.PASSWORDS_NOT_EQUAL, e.getMessage());
-
 	}
 
 	@ExceptionHandler(BeforePasswordNotMatchException.class)
 	protected final ResponseEntity<ErrorResponse> handleBeforePasswordNotMatchException(BeforePasswordNotMatchException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.BEFORE_PASSWORD_NOT_MATCH, e.getMessage());
-
 	}
 
 	@ExceptionHandler(CertificationCodeMismatchException.class)
@@ -148,22 +146,6 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.SELF_FRIEND, e.getMessage());
 	}
 
-	/*================== Comment Exception ==================*/
-	@ExceptionHandler(CommentNotFoundException.class)
-	protected final ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
-		return ErrorResponse.toErrorResponseEntity(ErrorCode.COMMENT_NOT_FOUND, e.getMessage());
-	}
-
-	@ExceptionHandler(ParentNotFoundException.class)
-	protected final ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException e) {
-		return ErrorResponse.toErrorResponseEntity(ErrorCode.PARENT_NOT_FOUND, e.getMessage());
-	}
-
-	@ExceptionHandler(UnauthorizedException.class)
-	protected final ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
-		return ErrorResponse.toErrorResponseEntity(ErrorCode.UNAUTHORIZED_USER, e.getMessage());
-	}
-
 	/*================== File Exception ==================*/
 	// io 예외
 	@ExceptionHandler(S3IOException.class)
@@ -183,9 +165,26 @@ public class GlobalExceptionHandler {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.TOKEN_VALIDATE_FAILURE, e.getMessage());
 	}
 
+
 	@ExceptionHandler(RefreshTokenExpiredException.class)
 	protected final ResponseEntity<ErrorResponse> handleAccessTokenExpiredException(RefreshTokenExpiredException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.REFRESHTOKEN_EXPIRED, e.getMessage());
+	}
+
+	/*================== Comment Exception ==================*/
+	@ExceptionHandler(CommentNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.COMMENT_NOT_FOUND, e.getMessage());
+	}
+
+	@ExceptionHandler(ParentNotFoundException.class)
+	protected final ResponseEntity<ErrorResponse> handleParentNotFoundException(ParentNotFoundException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.PARENT_NOT_FOUND, e.getMessage());
+	}
+
+	@ExceptionHandler(UnauthorizedException.class)
+	protected final ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
+		return ErrorResponse.toErrorResponseEntity(ErrorCode.UNAUTHORIZED_USER, e.getMessage());
 	}
 
 	/*================== SSE Exception ==================*/
@@ -193,5 +192,4 @@ public class GlobalExceptionHandler {
 	protected final ResponseEntity<ErrorResponse> handleSSEConnectionException(SSEConnectionException e) {
 		return ErrorResponse.toErrorResponseEntity(ErrorCode.SSE_CONNECTION_FAILURE, e.getMessage());
 	}
-
 }

@@ -9,25 +9,28 @@ import com.efub.lakkulakku.domain.diary.dto.DiarySaveReqDto;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.exception.BadDateRequestException;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
+import com.efub.lakkulakku.domain.diary.exception.DuplicateDiaryException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
 import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
 import com.efub.lakkulakku.domain.template.entity.Template;
 import com.efub.lakkulakku.domain.template.repository.TemplateRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
-import com.efub.lakkulakku.domain.users.service.AuthUsers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DiaryService {
 
 	private final DiaryRepository diaryRepository;
@@ -46,16 +49,11 @@ public class DiaryService {
 	}
 
 	public Diary updateDiaryCntCommentAndCntLikes(Diary diary) {
-		int cntComment = commentRepository.countByDiaryId(diary.getId());
+		int cntComment = commentRepository.countByDiary(diary);
 		//int cntLike = likesRepository.countByDiaryId(diary.getId());
 		diary.setCntComment(cntComment);
 		//diary.setCntLike(cntLike);
 		return diary;
-	}
-
-	public void updateViewCount(Diary diary) {
-		diary.addViewCount();
-		diaryRepository.save(diary);
 	}
 
 	public DiaryLookupResDto getDiaryInfo(Diary diary) {
@@ -63,12 +61,18 @@ public class DiaryService {
 		return diaryMapper.toDiaryLookupResDto(diary);
 	}
 
+	public void updateViewCount(Diary diary) {
+		diary.addViewCount();
+		diaryRepository.save(diary);
+	}
+
 	public List<CommentResDto> getDiaryComments(Diary diary) {
 		return diary.getComments().stream().filter(Objects::nonNull).map(commentMapper::toCommentResDto).collect(Collectors.toList());
 	}
 
-	@Transactional
 	public void createDiary(Users user, LocalDate diaryDate) {
+		if(existsByDateAndUserId(diaryDate, user))
+			throw new DuplicateDiaryException();
 		Diary diary = Diary.builder()
 				.user(user)
 				.date(diaryDate)
@@ -89,25 +93,52 @@ public class DiaryService {
 		templateRepository.save(template);
 	}
 
-	@Transactional
-	public void saveDiary(LocalDate date, DiarySaveReqDto dto) throws IOException {
-		Diary diary = diaryRepository.findByDate(date)
-				.orElseThrow(DiaryNotFoundException::new);
+	public void saveDiary(LocalDate date, Users user, DiarySaveReqDto dto) throws IOException {
+		Diary diary = findByDateAndUser(date, user);
 		Diary savedDiary = diaryMapper.saveDiary(diary, dto);
-		diaryRepository.save(savedDiary);
+		save(savedDiary);
 	}
 
-	@Transactional
-	public void updateDiary(LocalDate date, DiarySaveReqDto dto) throws IOException {
-		Diary diary = diaryRepository.findByDate(date)
-				.orElseThrow(DiaryNotFoundException::new);
+	public void save(Diary diary){
+		diaryRepository.save(diary);
+	}
+
+	public void updateDiary(LocalDate date, Users user, DiarySaveReqDto dto) throws IOException {
+		Diary diary = findByDateAndUser(date, user);
 		Diary updatedDiary = diaryMapper.updateDiary(diary, dto);
 		diaryRepository.save(updatedDiary);
 	}
 
-	@Transactional
 	public void deleteAllDiary(Users users){
 		List<Diary> diaryList = diaryRepository.findByUser(users);
 		diaryRepository.deleteAll(diaryList);
 	}
+
+	public void delete(LocalDate date, Users users){
+		Diary diary = findByDateAndUser(date, users);
+		diaryRepository.delete(diary);
+	}
+
+	@Transactional(readOnly = true)
+	public Diary findById(UUID postId){
+		return diaryRepository.findById(postId)
+				.orElseThrow((DiaryNotFoundException::new));
+	}
+
+	@Transactional(readOnly = true)
+	public Diary findByDateAndUser(LocalDate date, Users users){
+		return diaryRepository.findByDateAndUser(date, users)
+				.orElseThrow((DiaryNotFoundException::new));
+	}
+
+	@Transactional(readOnly = true)
+	public boolean existsByDateAndUserId(LocalDate diaryDate, Users user){
+		return diaryRepository.existsByDateAndUser(diaryDate, user);
+	}
+
+	@Transactional(readOnly = true)
+	public boolean existsByDate(LocalDate date){
+		return diaryRepository.existsByDate(date);
+	}
+
 }

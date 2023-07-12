@@ -21,16 +21,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UsersService {
 
 	private final UsersRepository usersRepository;
@@ -43,21 +45,17 @@ public class UsersService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
-	/* 회원가입 */
-	@Transactional
 	public Users signup(SignupReqDto reqDto) {
 		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
 		Users user = usersRepository.save(reqDto.toEntity());
 		Profile profile = Profile.builder()
 				.file(null)
-				.users(user)
 				.bio("반갑습니다 :)")
 				.build();
 		profileRepository.save(profile);
 		return user;
 	}
 
-	@Transactional
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
 		return usersRepository.findByEmail(loginReqDto.getEmail())
 				.orElseThrow(UserNotFoundException::new);
@@ -76,6 +74,7 @@ public class UsersService {
 			idx = (int) (charSet.length * Math.random());
 			tempString.append(charSet[idx]);
 		}
+
 		return tempString.toString();
 	}
 
@@ -147,7 +146,6 @@ public class UsersService {
 		jwtProvider.logout(email, accessToken);
 	}
 
-	@Transactional
 	public void deleteUser(WithdrawReqDto withdrawReqDto) {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
 				.orElseThrow(UserNotFoundException::new);
@@ -174,17 +172,24 @@ public class UsersService {
 			int nowYear = localDate.getYear();
 			int nowMonth = localDate.getMonthValue();
 
-			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), Integer.toString(nowYear), Integer.toString(nowMonth)).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
+			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), Integer.toString(nowYear), Integer.toString(nowMonth)).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
 		} else {
-			return diaryRepository.findUsersDiaryByYearAndMonth(user.getId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
+			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList());
 		}
 	}
 
 	@Transactional
 	public List<NotificationResDto> findAllNotifications(Users user) {
-		List<Notification> notificationList = notificationRepository.findByUsersId(user.getId());
+		List<Notification> notificationList = notificationRepository.findByUsersId(user.getUserId());
 		return notificationList.stream()
 				.map(NotificationMapper::toNotificationResDto)
 				.collect(Collectors.toList());
 	}
+	@Transactional(readOnly = true)
+	public Users findByNickname(String nickname){
+		return usersRepository.findByNickname(nickname)
+				.orElseThrow(UserNotFoundException::new);
+	}
+
+
 }

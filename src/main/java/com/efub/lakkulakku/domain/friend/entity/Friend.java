@@ -24,14 +24,14 @@ public class Friend extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID friendId;
 
-	@ManyToOne
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne()
+	//@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "users_id")
 	private Users userId;
 
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne()
 	@JoinColumn(name = "target_id")
 	private Users targetId;
 

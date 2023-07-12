@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 
-@Setter
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -25,7 +25,7 @@ public class Users extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID userId;
 
 
 	@Column(unique = true, length = 12)
@@ -59,4 +59,14 @@ public class Users extends BaseTimeEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public void setProfile(Profile profile){
+		this.profile = profile;
+	}
+
+	public void setUserIdForTest(UUID userId){
+		this.userId = userId;
+	}
+
+	//TODO : profile 연관관계 편의 메소드
+
 }

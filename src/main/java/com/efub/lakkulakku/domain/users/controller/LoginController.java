@@ -36,7 +36,7 @@ public class LoginController {
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReqDto reqDto) {
 		usersService.signup(reqDto);
-		return ResponseEntity.ok(SIGNUP_SUCCESS);
+		return ResponseEntity.status(HttpStatus.CREATED).body(SIGNUP_SUCCESS);
 	}
 
 	@PostMapping("/signup/email")
@@ -90,7 +90,7 @@ public class LoginController {
 		LoginInfoDto loginInfoDto = usersService.login(loginDto.getEmail(), loginDto.getPassword());
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", loginInfoDto.getRefreshToken()).toString());
-		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<LoginResDto>(loginInfoDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
 	}
 
 
@@ -105,7 +105,7 @@ public class LoginController {
 		LoginInfoDto responseDto = usersService.reIssueAccessToken(reqDto.getEmail(), refreshToken);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("Set-Cookie",usersService.generateCookie("refreshToken", responseDto.getRefreshToken()).toString());
-		return new ResponseEntity<LoginResDto>(responseDto.toLoginResDto(), responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<LoginResDto>(responseDto.toLoginResDto(), responseHeaders, HttpStatus.OK);
 	}
 
 	@GetMapping("/logout")

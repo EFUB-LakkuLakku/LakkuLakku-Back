@@ -24,7 +24,7 @@ public class Profile extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID profileId;
 
 
 	@OneToOne(cascade = CascadeType.REMOVE)
@@ -50,4 +50,5 @@ public class Profile extends BaseTimeEntity {
 	public void updateFile(File file) {
 		this.file = file;
 	}
+
 }

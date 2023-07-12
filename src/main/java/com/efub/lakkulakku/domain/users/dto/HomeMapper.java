@@ -25,9 +25,8 @@ public class HomeMapper {
 
 		return HomeResDto.builder()
 				.user(new ProfileUpdateResDto(entity))
-				.diary(diaryRepository.findUsersDiaryByYearAndMonth(entity.getId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList()))
-				.alarm(notificationRepository.findByUsersId(entity.getId()).stream().map(NotificationMapper::toNotificationResDto).collect(Collectors.toList()))
+				.diary(diaryRepository.findUsersDiaryByYearAndMonth(entity.getUserId(), year, month).stream().map(diaryHomeMapper::toDiaryHomeResDto).collect(Collectors.toList()))
+				.alarm(notificationRepository.findByUsersIdLimit(entity.getUserId()).stream().map(NotificationMapper::toNotificationResDto).collect(Collectors.toList()))
 				.build();
-
 	}
 }

@@ -7,6 +7,8 @@ import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.friend.exception.SelfFriendException;
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.friend.repository.FriendRepository;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,12 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class FriendService {
-
 	private final ApplicationEventPublisher eventPublisher;
 	private final FriendRepository friendRepository;
 	private final UsersRepository usersRepository;
 
 	@Transactional
 	public void addFriend(FriendReqDto reqDto, Users user) {
-
 		if (Objects.equals(reqDto.getUid(), user.getUid())) {
 			throw new SelfFriendException();
 		}
@@ -75,10 +75,10 @@ public class FriendService {
 	public UUID isFriend(Users user, Users target) {
 		Optional<Friend> friend = friendRepository.findByUserIdAndTargetId(user, target);
 		if (friend.isPresent()) {
-			return friend.get().getId();
+			return friend.get().getFriendId();
 		} else {
 			friend = friendRepository.findByUserIdAndTargetId(target, user);
-			return friend.map(Friend::getId).orElse(null);
+			return friend.map(Friend::getFriendId).orElse(null);
 		}
 	}
 
@@ -92,25 +92,14 @@ public class FriendService {
 
 	private void notifyInfo(Friend friend, String notiType) {
 		friend.publishEvent(eventPublisher, notiType);
-  }
+	}
 
 	@Transactional
 	public void deleteAllFriend(Users users){
 		List<Friend> friendUserList = friendRepository.findAllByUserId(users);
 		List<Friend> friendTargetList = friendRepository.findAllByTargetId(users);
+
 		friendRepository.deleteAll(friendUserList);
 		friendRepository.deleteAll(friendTargetList);
-	}
-
-	@Transactional
-	public void toFriendNotification(Users user, Users targetUser)
-	{
-		Notification notification = Notification.builder()
-				.userId(targetUser)
-				.friendId(user)
-				.notiType("친구")
-				.build();
-		notification.makeMessage(user, "친구", null);
-		notificationRepository.save(notification);
 	}
 }

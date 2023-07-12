@@ -19,6 +19,13 @@
     </tr>
     <tr width="100%">
         <td width="25%" align="center">
+        [유저] 회원 탈퇴<br>
+[다이어리] 다이어리 생성, 수정, 삭제, 편집 기능<br>
+[스티커] 스티커 조회 기능<br>
+[템플릿] 템플릿 조회 기능<br>
+[시큐리티] JWT 및 Redis를 통한 토큰 구현<br>
+[알림] SSE 기반 실시간 알림 리팩토링<br>
+[기타] 프로젝트 기본 구조 및 데이터베이스 설계
 [다이어리] 다이어리 생성, 수정, 삭제, 편집<br>
 [스티커] 스티커 조회<br>
 [템플릿] 템플릿 조회<br>
@@ -76,6 +83,12 @@
 11. spring cloud aws
 12. mysql driver
 ![Untitled (5)](https://user-images.githubusercontent.com/68282057/182026455-482f03dc-966b-481c-8e58-6a1e9ed21a94.png)
+
+## 🌕 데이터베이스 설계도(E-R diagram)
+### ![라꾸라꾸_ERD](https://user-images.githubusercontent.com/68282057/216929370-f057e3bd-54f0-42b5-ba8c-8b3e582daf27.png)
+
+## 🌕 API 명세서
+### [🔗 Link](https://efub.notion.site/API-0dccb2bd9eb849d893c874c34771a427)
 
 
 ## 🌕 프로젝트 구조
@@ -302,11 +315,4 @@
         ├── 📑 application.yml
 </code>
 </pre>
-
-
-## 🌕 데이터베이스 설계도(E-R diagram)
-### [🔗 Link](https://drive.google.com/file/d/1Fr5pzP-hzw_P2NPybslrYPWZtEUBHl0a/view?usp=sharing)
-
-## 🌕 API 명세서
-### [🔗 Link](https://efub.notion.site/API-0dccb2bd9eb849d893c874c34771a427)
 

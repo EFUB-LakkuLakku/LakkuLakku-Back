@@ -45,12 +45,12 @@ public class DiaryMapper {
 	public DiaryResDto toDiaryResDto(Diary entity) {
 
 		return DiaryResDto.builder()
-				.id(entity.getId())
-				.userId(entity.getUser().getId())
+				.id(entity.getDiaryId())
+				.userId(entity.getUser().getUserId())
 				.date(entity.getDate())
 				.title(entity.getTitle())
 				.titleEmoji(entity.getTitleEmoji())
-				.templateId(entity.getTemplate().getId())
+				.templateId(entity.getTemplate().getTemplateId())
 				.cntComment(entity.getCntComment())
 				.cntLike(entity.getCntLike())
 				.cntView(entity.getCntView())

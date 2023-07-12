@@ -52,10 +52,13 @@ public class LoginControllerTest {
 
 
 			// given
+			String email = "signuptest@gmail.com";
+			String nickname = "회원가입테스트";
+			String password = "1234";
 			SignupReqDto signupReqDto = SignupReqDto.builder()
-					.email("signuptest@gmail.com")
-					.nickname("회원가입테스트")
-					.password(passwordEncoder.encode("1234"))
+					.email(email)
+					.nickname(nickname)
+					.password(passwordEncoder.encode(password))
 					.build();
 
 			HttpEntity<SignupReqDto> requestEntity = new HttpEntity<>(signupReqDto);

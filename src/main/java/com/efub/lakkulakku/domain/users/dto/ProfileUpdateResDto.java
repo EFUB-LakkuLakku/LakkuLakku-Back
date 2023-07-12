@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.users.dto;
 
+import com.efub.lakkulakku.domain.file.entity.File;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProfileUpdateResDto {
 	private Long id;
-	private String profileImageUrl;
+	private File profileImage;
 	private String nickname;
 	private String bio;
 
@@ -20,12 +21,12 @@ public class ProfileUpdateResDto {
 		this.bio = user.getProfile().getBio();
 
 		if (user.getProfile() == null) {
-			this.profileImageUrl = null;
+			this.profileImage = null;
 			this.bio = null;
 		} else if (user.getProfile().getFile() == null) {
-			this.profileImageUrl = null;
+			this.profileImage = null;
 		} else {
-			this.profileImageUrl = user.getProfile().getFile().getUrl();
+			this.profileImage = user.getProfile().getFile();
 		}
 	}
 }
