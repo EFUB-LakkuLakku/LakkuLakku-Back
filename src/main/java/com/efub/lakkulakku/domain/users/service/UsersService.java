@@ -1,5 +1,6 @@
 package com.efub.lakkulakku.domain.users.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,7 +20,7 @@ import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
 import com.efub.lakkulakku.domain.notification.dto.NotificationResDto;
 import com.efub.lakkulakku.domain.notification.entity.Notification;
 import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
-import com.efub.lakkulakku.domain.profile.ProfileRepository;
+import com.efub.lakkulakku.domain.profile.repository.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.users.dto.HomeMapper;
 import com.efub.lakkulakku.domain.users.dto.HomeResDto;
@@ -51,33 +52,36 @@ public class UsersService {
 	private final PasswordEncoder passwordEncoder;
 	private final JwtProvider jwtProvider;
 
+	private static final Long COOKIE_MAX_AGE = 7 * 24 * 60 * 60L;
+	private static final SecureRandom RANDOM = new SecureRandom();
+
 	public Users signup(SignupReqDto reqDto) {
 		reqDto.setPassword(passwordEncoder.encode(reqDto.getPassword()));
 		Users user = usersRepository.save(reqDto.toEntity());
 		Profile profile = Profile.builder()
-			.file(null)
-			.bio("반갑습니다 :)")
-			.build();
+				.file(null)
+				.bio("반갑습니다 :)")
+				.build();
 		profileRepository.save(profile);
 		return user;
 	}
 
 	public Users findUsersByEmail(LoginReqDto loginReqDto) {
 		return usersRepository.findByEmail(loginReqDto.getEmail())
-			.orElseThrow(UserNotFoundException::new);
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 	public String getTempString() {
-		char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-			'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+		char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+				'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+				'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
 		StringBuilder tempString = new StringBuilder();
 
 		/* 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 조합 */
 		int idx = 0;
 		for (int i = 0; i < 10; i++) {
-			idx = (int)(charSet.length * Math.random());
+			idx = charSet.length * RANDOM.nextInt();
 			tempString.append(charSet[idx]);
 		}
 
@@ -92,7 +96,7 @@ public class UsersService {
 
 	public LoginInfoDto login(String email, String password) {
 		Users user = usersRepository
-			.findByEmail(email).orElseThrow(UserNotFoundException::new);
+				.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		checkPassword(password, user.getPassword());
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
@@ -107,14 +111,13 @@ public class UsersService {
 	}
 
 	public ResponseCookie generateCookie(String type, String token) {
-		ResponseCookie cookie = ResponseCookie.from(type, token)
-			.maxAge(7 * 24 * 60 * 60)
-			.path("/")
-			.secure(true)
-			.sameSite("None")
-			.httpOnly(true)
-			.build();
-		return cookie;
+		return ResponseCookie.from(type, token)
+				.maxAge(COOKIE_MAX_AGE)
+				.path("/")
+				.secure(true)
+				.sameSite("None")
+				.httpOnly(true)
+				.build();
 
 	}
 
@@ -128,7 +131,7 @@ public class UsersService {
 
 	public LoginInfoDto provideToken(String email) {
 		Users user = usersRepository
-			.findByEmail(email).orElseThrow(UserNotFoundException::new);
+				.findByEmail(email).orElseThrow(UserNotFoundException::new);
 		String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
 		String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
 		return new LoginInfoDto(accessToken, refreshToken, user.getNickname());
@@ -151,7 +154,7 @@ public class UsersService {
 
 	public void deleteUser(WithdrawReqDto withdrawReqDto) {
 		Users users = usersRepository.findByNickname(withdrawReqDto.getNickname())
-			.orElseThrow(UserNotFoundException::new);
+				.orElseThrow(UserNotFoundException::new);
 		usersRepository.delete(users);
 	}
 
@@ -176,15 +179,15 @@ public class UsersService {
 			int nowMonth = localDate.getMonthValue();
 
 			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), Integer.toString(nowYear),
-					Integer.toString(nowMonth))
-				.stream()
-				.map(diaryHomeMapper::toDiaryHomeResDto)
-				.collect(Collectors.toList());
+							Integer.toString(nowMonth))
+					.stream()
+					.map(diaryHomeMapper::toDiaryHomeResDto)
+					.collect(Collectors.toList());
 		} else {
 			return diaryRepository.findUsersDiaryByYearAndMonth(user.getUserId(), year, month)
-				.stream()
-				.map(diaryHomeMapper::toDiaryHomeResDto)
-				.collect(Collectors.toList());
+					.stream()
+					.map(diaryHomeMapper::toDiaryHomeResDto)
+					.collect(Collectors.toList());
 		}
 	}
 
@@ -192,20 +195,20 @@ public class UsersService {
 	public List<NotificationResDto> findAllNotifications(Users user) {
 		List<Notification> notificationList = notificationRepository.findByUsersId(user.getUserId());
 		return notificationList.stream()
-			.map(NotificationMapper::toNotificationResDto)
-			.collect(Collectors.toList());
+				.map(NotificationMapper::toNotificationResDto)
+				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	public Users findByNickname(String nickname) {
 		return usersRepository.findByNickname(nickname)
-			.orElseThrow(UserNotFoundException::new);
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 	@Transactional(readOnly = true)
 	public Users findUserByUid(Long userId) {
 		return usersRepository.findByUid(userId)
-			.orElseThrow(UserNotFoundException::new);
+				.orElseThrow(UserNotFoundException::new);
 	}
 
 }

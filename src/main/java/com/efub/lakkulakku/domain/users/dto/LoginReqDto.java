@@ -22,5 +22,4 @@ public class LoginReqDto {
 		this.password = password;
 	}
 
-
 }

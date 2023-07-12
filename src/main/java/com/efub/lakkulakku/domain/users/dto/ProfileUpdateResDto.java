@@ -5,8 +5,6 @@ import com.efub.lakkulakku.domain.users.entity.Users;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
 @NoArgsConstructor
 public class ProfileUpdateResDto {

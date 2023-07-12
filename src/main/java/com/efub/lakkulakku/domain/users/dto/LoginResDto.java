@@ -12,8 +12,7 @@ public class LoginResDto {
 	private String accessToken;
 
 	@Builder
-	public LoginResDto(String nickname, String accessToken)
-	{
+	public LoginResDto(String nickname, String accessToken) {
 		this.nickname = nickname;
 		this.accessToken = accessToken;
 	}

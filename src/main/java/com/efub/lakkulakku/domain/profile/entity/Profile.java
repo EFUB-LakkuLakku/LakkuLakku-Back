@@ -3,8 +3,6 @@ package com.efub.lakkulakku.domain.profile.entity;
 import com.efub.lakkulakku.domain.file.entity.File;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +10,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.UUID;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -25,7 +21,6 @@ public class Profile extends BaseTimeEntity {
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
 	private UUID profileId;
-
 
 	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "profile_image_id")

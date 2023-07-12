@@ -12,38 +12,41 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MailSendService{
+public class MailSendService {
 	private final JavaMailSender mailSender;
 	private final CertificationDao certificationDao;
 
-	private static final String title = "라꾸라꾸 인증 코드 안내 이메일입니다.";
-	private static final String message = "라꾸라꾸 인증 코드 안내 메일입니다. " +"\n"
-			+"\n" + "안녕하세요. 웹 기반 공유 다이어리 서비스, 라꾸라꾸입니다. :) "+"\n"
-			+"\n" + "회원님의 임시 인증 번호는 아래와 같습니다. 인증 코드로 인증 후 반드시 비밀번호를 변경해주세요."+"\n \n";
-	private static final String fromAddress = "noreply.lakkulakku@gmail.com";
+	private static final String TITLE = "라꾸라꾸 인증 코드 안내 이메일입니다.";
+	private static final String MESSAGE = "라꾸라꾸 인증 코드 안내 메일입니다. " + "\n"
+			+ "\n" + "안녕하세요. 웹 기반 공유 다이어리 서비스, 라꾸라꾸입니다. :) " + "\n"
+			+ "\n" + "회원님의 임시 인증 번호는 아래와 같습니다. 인증 코드로 인증 후 반드시 비밀번호를 변경해주세요." + "\n \n";
+	private static final String FROM_ADDRESS = "noreply.lakkulakku@gmail.com";
 
-	/** 이메일 생성 **/
+	/**
+	 * 이메일 생성
+	 **/
 
 
 	public MailVo createMail(String tempPwd, String email) {
 
 		MailVo mailVo = MailVo.builder()
 				.toAddress(email)
-				.title(title)
-				.message(message + tempPwd)
-				.fromAddress(fromAddress)
+				.title(TITLE)
+				.message(MESSAGE + tempPwd)
+				.fromAddress(FROM_ADDRESS)
 				.build();
 
 		log.info("메일 생성 완료");
 		return mailVo;
 	}
 
-	/** 이메일 전송 **/
+	/**
+	 * 이메일 전송
+	 **/
 
 	public void sendMail(MailVo mailVo) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -71,7 +74,5 @@ public class MailSendService{
 				certificationDao.getEmailCertification(reqDto.getEmail())
 						.equals(reqDto.getCertiCode()));
 	}
-
-
 
 }
