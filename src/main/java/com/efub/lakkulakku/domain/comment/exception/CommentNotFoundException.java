@@ -1,8 +1,8 @@
 package com.efub.lakkulakku.domain.comment.exception;
 
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
 
-import static com.efub.lakkulakku.global.constant.ResponseConstant.NOTFOUND_COMMENT;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 public class CommentNotFoundException extends ResourceNotFoundException {
 

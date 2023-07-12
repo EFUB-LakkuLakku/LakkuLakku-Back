@@ -1,11 +1,11 @@
 package com.efub.lakkulakku.domain.likes.dto;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -18,9 +18,9 @@ public class LikeResDto {
 	private LocalDateTime createdOn;
 	private boolean isLike;
 
-
 	@Builder
-	public LikeResDto(UUID id, UUID userId, String nickname, String profileImageUrl, LocalDateTime createdOn, boolean isLike) {
+	public LikeResDto(UUID id, UUID userId, String nickname, String profileImageUrl, LocalDateTime createdOn,
+		boolean isLike) {
 		this.id = id;
 		this.userId = userId;
 		this.nickname = nickname;

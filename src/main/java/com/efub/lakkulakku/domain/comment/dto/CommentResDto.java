@@ -1,11 +1,11 @@
 package com.efub.lakkulakku.domain.comment.dto;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -22,8 +22,10 @@ public class CommentResDto {
 	private String message;
 
 	@Builder
-	public CommentResDto(UUID id, UUID userId, String profileImageUrl, String nickname, UUID parentId, String content,
-						 Boolean isSecret, LocalDateTime createdOn, String message) {
+	public CommentResDto(UUID commentId, UUID userId, String profileImageUrl, String nickname, UUID parentId,
+		String content,
+		Boolean isSecret, LocalDateTime createdOn, String message) {
+
 		this.commentId = commentId;
 		this.userId = userId;
 		this.profileImageUrl = profileImageUrl;
@@ -34,5 +36,4 @@ public class CommentResDto {
 		this.createdOn = createdOn;
 		this.message = message;
 	}
-
 }
