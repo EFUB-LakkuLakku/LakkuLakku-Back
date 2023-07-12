@@ -1,4 +1,4 @@
-package com.efub.lakkulakku.domain.profile;
+package com.efub.lakkulakku.domain.profile.repository;
 
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.users.entity.Users;

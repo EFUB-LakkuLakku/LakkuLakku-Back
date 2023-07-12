@@ -1,11 +1,8 @@
 package com.efub.lakkulakku.domain.users.service;
 
 import com.efub.lakkulakku.domain.friend.exception.UserNotFoundException;
-import com.efub.lakkulakku.domain.profile.ProfileRepository;
-import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.users.dto.LoginInfoDto;
 import com.efub.lakkulakku.domain.users.dto.LoginReqDto;
-import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.PasswordNotMatchedException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
@@ -15,14 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

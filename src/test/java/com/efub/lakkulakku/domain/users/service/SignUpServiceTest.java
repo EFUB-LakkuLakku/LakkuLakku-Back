@@ -1,6 +1,6 @@
 package com.efub.lakkulakku.domain.users.service;
 
-import com.efub.lakkulakku.domain.profile.ProfileRepository;
+import com.efub.lakkulakku.domain.profile.repository.ProfileRepository;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
 import com.efub.lakkulakku.domain.users.dto.SignupReqDto;
 import com.efub.lakkulakku.domain.users.entity.Users;

@@ -1,9 +1,6 @@
 package com.efub.lakkulakku.domain.profile.service;
 
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -13,25 +10,23 @@ import com.efub.lakkulakku.domain.file.entity.File;
 import com.efub.lakkulakku.domain.file.exception.FileExtenstionException;
 import com.efub.lakkulakku.domain.file.exception.S3IOException;
 import com.efub.lakkulakku.domain.file.repository.FileRepository;
-import com.efub.lakkulakku.domain.profile.ProfileRepository;
-import com.efub.lakkulakku.domain.profile.entity.Profile;
+import com.efub.lakkulakku.domain.profile.repository.ProfileRepository;
 import com.efub.lakkulakku.domain.users.dto.ProfileUpdateResDto;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.exception.UserNotFoundException;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
-import com.fasterxml.jackson.databind.SequenceWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -47,21 +42,20 @@ public class ProfileService {
 	private final AmazonS3 amazonS3;
 
 	private static final String FILE_EXTENSION_SEPARATOR = ".";
-	private TransactionStatus entityManager;
+	private static final String FILE_SEPERATOR = "/";
+	private static final String FILE_UNDERBAR = "_";
 
-	public static ArrayList<String> buildFileName(String category, String nickname, String originalFileName) {
+	public static List<String> buildFileName(String category, String nickname, String originalFileName) {
 		int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
 		String fileExtension = originalFileName.substring(fileExtensionIndex);
 		String fileName = originalFileName.substring(0, fileExtensionIndex);
 
-		String fullFileName = category + "/" + fileName + "_" + nickname + fileExtension;
-		ArrayList<String> array = new ArrayList<String>(Arrays.asList(fileName, fileExtension, fullFileName));
-
-		return array;
+		String fullFileName = category + FILE_SEPERATOR + fileName + FILE_UNDERBAR + nickname + fileExtension;
+		return new ArrayList<>(Arrays.asList(fileName, fileExtension, fullFileName));
 	}
 
 	public File uploadImage(String category, String nickname, MultipartFile multipartFile) throws S3IOException, FileExtenstionException {
-		ArrayList<String> fileInfo = buildFileName(category, nickname, multipartFile.getOriginalFilename());
+		List<String> fileInfo = buildFileName(category, nickname, Objects.requireNonNull(multipartFile.getOriginalFilename()));
 		String fullFileName = fileInfo.get(2);
 		String fileExtension = fileInfo.get(1);
 
@@ -107,8 +101,7 @@ public class ProfileService {
 	public void updateImage(String category, Users user, MultipartFile multipartFile) throws FileExtenstionException {
 		if (multipartFile == null) {
 			user.getProfile().updateFile(null);
-		}
-		else {
+		} else {
 			File newFile = uploadImage(category, user.getNickname(), multipartFile);
 			user.getProfile().updateFile(newFile);
 		}
@@ -126,6 +119,5 @@ public class ProfileService {
 
 		return new ProfileUpdateResDto(entity);
 	}
-
 
 }
