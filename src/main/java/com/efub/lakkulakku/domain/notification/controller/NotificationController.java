@@ -25,7 +25,7 @@ public class NotificationController {
 	@ResponseStatus(HttpStatus.OK)
 	public SseEmitter subscribe(@AuthUsers Users user,
 								@RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-		return notificationService.subscribe(user.getId(), lastEventId);
+		return notificationService.subscribe(user.getUserId(), lastEventId);
 	}
 
 	@GetMapping("/")

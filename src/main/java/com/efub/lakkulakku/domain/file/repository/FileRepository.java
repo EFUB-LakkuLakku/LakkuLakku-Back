@@ -18,6 +18,6 @@ public interface FileRepository extends JpaRepository<File, UUID> {
 
     @Transactional
     @Modifying
-    @Query(value = "DELETE f FROM file f LEFT OUTER JOIN profile p ON f.id=p.profile_image_id WHERE p.users_id IS NULL AND f.url LIKE \"https://s3.ap-northeast-2.amazonaws.com/lakku-lakku.com/profile%\";", nativeQuery = true)
+    @Query(value = "DELETE f FROM file f LEFT OUTER JOIN profile p ON f.file_id=p.profile_image_id WHERE p.users_id IS NULL AND f.url LIKE \"https://s3.ap-northeast-2.amazonaws.com/lakku-lakku.com/profile%\";", nativeQuery = true)
     void deleteUnusedFiles();
 }

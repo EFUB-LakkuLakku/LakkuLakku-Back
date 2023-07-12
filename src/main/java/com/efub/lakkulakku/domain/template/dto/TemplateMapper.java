@@ -17,7 +17,7 @@ public class TemplateMapper {
 			return null;
 
 		return com.efub.lakkulakku.domain.template.dto.TemplateResDto.builder()
-				.id(entity.getId())
+				.id(entity.getTemplateId())
 				.url(entity.getUrl())
 				.category(entity.getCategory())
 				.build();

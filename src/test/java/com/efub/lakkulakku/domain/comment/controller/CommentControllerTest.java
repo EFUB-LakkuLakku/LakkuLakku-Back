@@ -1,69 +1,46 @@
 package com.efub.lakkulakku.domain.comment.controller;
 
-import com.efub.lakkulakku.domain.comment.dto.CommentDeleteReqDto;
-import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
-import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
-import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
-import com.efub.lakkulakku.domain.comment.entity.Comment;
-import com.efub.lakkulakku.domain.comment.exception.ParentNotFoundException;
-import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
-import com.efub.lakkulakku.domain.comment.service.CommentService;
-import com.efub.lakkulakku.domain.diary.controller.DiaryController;
-import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
-import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
-import com.efub.lakkulakku.domain.diary.service.DiaryService;
-import com.efub.lakkulakku.domain.profile.entity.Profile;
-import com.efub.lakkulakku.domain.users.entity.Users;
-import com.efub.lakkulakku.global.config.TestUsers;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static com.efub.lakkulakku.global.constant.ResponseConstant.COMMENT_ADD_SUCCESS;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.efub.lakkulakku.domain.comment.dto.CommentReqDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentResDto;
+import com.efub.lakkulakku.domain.comment.dto.CommentUpdateResDto;
+import com.efub.lakkulakku.domain.comment.entity.Comment;
+import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
+import com.efub.lakkulakku.domain.comment.service.CommentService;
+import com.efub.lakkulakku.domain.diary.entity.Diary;
+import com.efub.lakkulakku.domain.diary.service.DiaryService;
+import com.efub.lakkulakku.domain.profile.entity.Profile;
+import com.efub.lakkulakku.domain.users.entity.Users;
+import com.efub.lakkulakku.global.config.TestUsers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest({CommentController.class})//웹 계층 테스트를 위한 어노테이션
 @ExtendWith(MockitoExtension.class)
 @MockBean(JpaMetamodelMappingContext.class)
 class CommentControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
 
-	@InjectMocks
-	CommentController commentController;
+	@Autowired
+	private MockMvc mvc;
 
 	@MockBean
 	private CommentService commentService;
@@ -72,119 +49,137 @@ class CommentControllerTest {
 	private CommentRepository commentRepository;
 
 	@MockBean
-	private DiaryRepository diaryRepository;
-
-	@MockBean
 	private DiaryService diaryService;
 
+	private static final LocalDate date = LocalDate.of(2022, 7, 7);
+	private static final String BASE_URL = "/api/v1/diaries/";
 
-	private Users createUsers(){
-		final String email = "test@gmail";
-		final String nickname = "테스트계정";
-		final String encodedPassword = "encodedPassword";
-		final String bio = "안녕";
+	@Test
+	@TestUsers
+	@DisplayName("댓글_생성_성공")
+	void createComment() throws Exception {
+		Users testUser = createUsers();
+		Diary diary = createDiary(testUser);
+		String testContent = "test댓글";
+		boolean isSecret = true;
+		UUID commentId = UUID.randomUUID();
+		Comment comment = Comment.builder()
+			.content(testContent)
+			.diary(diary)
+			.commentId(commentId)
+			.users(testUser)
+			.isSecret(isSecret)
+			.build();
+		CommentReqDto testCommentReqDto = CommentReqDto.builder()
+			.content(testContent)
+			.diaryId(diary.getDiaryId())
+			.isSecret(isSecret)
+			.build();
+		CommentResDto testCommentResDto = CommentResDto.builder()
+			.commentId(comment.getCommentId())
+			.createdOn(comment.getCreatedOn())
+			.parentId(comment.getParentId())
+			.content(comment.getContent())
+			.nickname(comment.getUsers().getNickname())
+			.isSecret(comment.getIsSecret())
+			.message(COMMENT_ADD_SUCCESS)
+			.build();
 
-		Users user = Users.builder()
-				.email(email)
-				.nickname(nickname)
-				.password(encodedPassword)
-				.build();
-		Profile profile = Profile.builder()
-				.file(null)
-				.bio(bio)
-				.users(user)
-				.build();
-		user.setProfile(profile);
-		return user;
-	}
+		given(diaryService.existsByDate(date)).willReturn(true);
+		given(commentService.addComment(any(), any(), any())).willReturn(testCommentResDto);
 
-	private Diary createDiary(Users user){
-		LocalDate date = LocalDate.of(2023, 4, 27);
+		// Perform request
+		mvc.perform(
+				MockMvcRequestBuilders.post(BASE_URL + date + "/comments")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(new ObjectMapper().writeValueAsString(testCommentReqDto))
+					.with(csrf())
+			)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.content").value(testCommentResDto.getContent()));
 
-		Diary diary = Diary.builder()
-				.user(user)
-				.date(date)
-				.build();
-
-		return diary;
+		// Verify behavior
+		verify(diaryService).existsByDate(date);
 
 	}
 
 	@Test
 	@TestUsers
-	@DisplayName("댓글 작성")
-	public void testCommentAdd() throws Exception {
+	@DisplayName("댓글_수정_성공")
+	void updateComment() throws Exception {
+		Users testUser = createUsers();
+		Diary diary = createDiary(testUser);
+		String testContent = "test댓글";
+		String updateContent = "수정 후 댓글";
+		boolean isSecret = true;
 
-		Users user = createUsers();
-		Diary diary = createDiary(user);
-		String content = "test content";
-		boolean isSecret = false;
-
-		LocalDate date = LocalDate.of(2023, 4, 27);
-
+		UUID commentId = UUID.randomUUID();
 		Comment comment = Comment.builder()
-				.diary(diary)
-				.users(user)
-				.content(content)
-				.build();
+			.content(testContent)
+			.diary(diary)
+			.commentId(commentId)
+			.isSecret(isSecret)
+			.users(testUser)
+			.build();
+		CommentReqDto testCommentReqDto = CommentReqDto.builder()
+			.commentId(comment.getCommentId())
+			.content(updateContent)
+			.diaryId(diary.getDiaryId())
+			.isSecret(isSecret)
+			.build();
+		comment.update(updateContent);
+		CommentUpdateResDto testCommentUpdateResDto = CommentUpdateResDto.builder()
+			.commentId(comment.getCommentId())
+			.parentId(comment.getParentId())
+			.content(comment.getContent())
+			.isSecret(comment.getIsSecret())
+			.nickname(comment.getUsers().getNickname())
+			.modifiedOn(comment.getModifiedOn())
+			.build();
 
-		CommentReqDto commentReqDto = new CommentReqDto(user.getId(), diary.getId(), content, isSecret, comment.getParentId());
+		given(commentService.update(any(), any(), any())).willReturn(testCommentUpdateResDto);
 
-		CommentResDto commentResDto = CommentResDto.builder()
-				.userId(comment.getUsers().getId())
-				.content(comment.getContent())
-				.createdOn(comment.getCreatedOn())
-				.message(COMMENT_ADD_SUCCESS)
-				.build();
-
-
-		given(commentService.addComment(any(), any(), any())).willReturn(commentResDto);
-
-		mockMvc.perform(
-						MockMvcRequestBuilders.post("/api/v1/diaries/{date}/comments", date)
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(new ObjectMapper().writeValueAsString(commentReqDto))
-								.with(csrf())
-				)
-
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andExpect(jsonPath("$.content").value(commentResDto.getContent()));
+		// Perform request
+		mvc.perform(
+				MockMvcRequestBuilders.put(BASE_URL + date + "/comments")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(new ObjectMapper().writeValueAsString(testCommentReqDto))
+					.with(csrf())
+			)
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.content").value(testCommentUpdateResDto.getContent()));
 
 	}
 
-	/*@Test
-	@DisplayName("댓글 조회")
-	@TestUsers
-	void testGetComment() throws Exception {
+	private Diary createDiary(Users user) {
+		UUID diaryId = UUID.randomUUID();
+		Diary diary = Diary.builder()
+			.user(user)
+			.date(date)
+			.build();
+		diary.setDaryId(diaryId);
 
-		Users user = createUsers();
-		Diary diary = createDiary(user);
-		String content = "test content";
-		boolean isSecret = false;
-		LocalDate date = LocalDate.of(2023, 4, 27);
-		CommentReqDto commentReqDto = new CommentReqDto();
-		Comment comment = Comment.builder()
-				.diary(diary)
-				.users(user)
-				.content(content)
-				.build();
-		CommentResDto commentResDto = new CommentResDto();
-		List<CommentResDto> comments = diaryService.getDiaryComments(diary);
+		return diary;
+	}
 
-		given(diaryService.getDiaryComments(any())).willReturn(Collections.singletonList(commentResDto));
+	private Users createUsers() {
+		final String email = "test@gmail";
+		final String nickname = "테스트계정";
+		final String encodedPassword = "encodedPassoword";
+		final String bio = "안녕";
 
-		mockMvc.perform(
-						MockMvcRequestBuilders.get("/api/v1/diaries/{date}/comments", date)
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(new ObjectMapper().writeValueAsString(commentReqDto))
-								.with(csrf())
-				)
-
-				.andExpect(status().isOk())
-				.andDo(print());
-
-	}*/
-
+		Users user = Users.builder()
+			.email(email)
+			.nickname(nickname)
+			.password(encodedPassword)
+			.build();
+		Profile profile = Profile.builder()
+			.file(null)
+			.bio(bio)
+			.users(user)
+			.build();
+		user.setProfile(profile);
+		return user;
+	}
 
 }

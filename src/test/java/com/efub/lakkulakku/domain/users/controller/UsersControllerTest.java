@@ -88,7 +88,6 @@ public class UsersControllerTest {
 		given(usersService.signup(any(SignupReqDto.class))).willReturn(users);
 
 		//when
-
 		ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/signup")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(new ObjectMapper().writeValueAsString(reqDto)).content(new ObjectMapper().writeValueAsString(reqDto))

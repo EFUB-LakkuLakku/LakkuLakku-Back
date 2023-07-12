@@ -32,7 +32,7 @@ public class Diary extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID diaryId;
 
 	@ManyToOne
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -96,6 +96,7 @@ public class Diary extends BaseTimeEntity {
 		this.likes = likes;
 		this.texts = texts;
 		this.stickers = stickers;
+
 	}
 
 	public void setTemplate(Template template) {
@@ -137,5 +138,8 @@ public class Diary extends BaseTimeEntity {
 
 	public void addViewCount() {
 		this.cntView++;
+	}
+	public void setDaryId(UUID diaryId){
+		this.diaryId = diaryId;
 	}
 }

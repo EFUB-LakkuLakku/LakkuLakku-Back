@@ -21,7 +21,7 @@ public class Template extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID templateId;
 
 	@OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
 	@JoinColumn(name = "diary_id")

@@ -14,7 +14,7 @@ public class DiaryHomeMapper {
 			return null;
 
 		return DiaryHomeResDto.builder()
-				.id(entity.getId())
+				.id(entity.getDiaryId())
 				.title(entity.getTitle())
 				.titleEmoji(entity.getTitleEmoji())
 				.date(entity.getDate())

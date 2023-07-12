@@ -14,7 +14,7 @@ public class NotificationMapper {
 			return null;
 
 		return NotificationResDto.builder()
-				.id(entity.getId())
+				.id(entity.getNotificationId())
 				.message(entity.getMessage())
 				.build();
 	}

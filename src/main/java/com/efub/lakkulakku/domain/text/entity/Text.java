@@ -20,7 +20,7 @@ public class Text extends BaseTimeEntity {
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
 	@Column(length = 16)
-	private UUID id;
+	private UUID textId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "diary_id")

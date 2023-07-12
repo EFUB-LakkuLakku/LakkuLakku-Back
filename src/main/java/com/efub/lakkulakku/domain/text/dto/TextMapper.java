@@ -18,7 +18,7 @@ public class TextMapper {
 			return null;
 
 		return TextResDto.builder()
-				.id(entity.getId())
+				.id(entity.getTextId())
 				.style(entity.getStyle())
 				.weight(entity.getWeight())
 				.size(entity.getSize())

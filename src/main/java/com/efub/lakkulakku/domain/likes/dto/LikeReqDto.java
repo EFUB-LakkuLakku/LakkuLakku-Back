@@ -1,10 +1,10 @@
 package com.efub.lakkulakku.domain.likes.dto;
 
+import java.util.UUID;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
