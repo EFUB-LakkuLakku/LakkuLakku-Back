@@ -1,81 +1,60 @@
-/*package com.efub.lakkulakku.domain.friend.controller;
+package com.efub.lakkulakku.domain.friend.controller;
 
+import com.efub.lakkulakku.domain.comment.controller.CommentController;
+import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
+import com.efub.lakkulakku.domain.comment.service.CommentService;
+import com.efub.lakkulakku.domain.diary.service.DiaryService;
 import com.efub.lakkulakku.domain.friend.dto.FriendReqDto;
+import com.efub.lakkulakku.domain.friend.entity.Friend;
+import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
+import com.efub.lakkulakku.domain.friend.exception.SelfFriendException;
 import com.efub.lakkulakku.domain.friend.service.FriendService;
 import com.efub.lakkulakku.domain.profile.entity.Profile;
-import com.efub.lakkulakku.domain.users.entity.AuthUsers;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.repository.UsersRepository;
+import com.efub.lakkulakku.domain.users.service.AuthUsers;
+import com.efub.lakkulakku.domain.users.service.UsersService;
 import com.efub.lakkulakku.global.config.TestUsers;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.DELETE_FRIEND_SUCCESS;
+import static com.efub.lakkulakku.global.constant.ResponseConstant.FRIEND_SUCCESS;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-
-@WebMvcTest({FriendController.class})
+@WebMvcTest({FriendController.class})//웹 계층 테스트를 위한 어노테이션
 @ExtendWith(MockitoExtension.class)
-@MockBean(JpaMetamodelMappingContext.class)
+@MockBean(JpaMetamodelMappingContext.class) //JPA auditing 기능을 사용하기 때문에 JPA 메타 모델을 처리하기 위해 사용
 class FriendControllerTest {
 	@Autowired
-	private MockMvc mockMvc;
-
-	@InjectMocks
-	FriendController friendController;
-
+	private MockMvc mvc;
 	@MockBean
 	private FriendService friendService;
+	@MockBean
+	private UsersService usersService;
 
 	@MockBean
 	private UsersRepository usersRepository;
 
-
-
-	@Test
-	//@TestUsers
-	@DisplayName("친구추가")
-	void addFriend() throws Exception {
-
-		Users user = createUsers();
-		Users target = createTarget();
-		//FriendReqDto friendReqDto = new FriendReqDto() {};
-		FriendReqDto friendReqDto = FriendReqDto.builder()
-				.uid(target.getUid())
-				.build();
-		doNothing().when(friendService).addFriend(eq(friendReqDto), any(Users.class));
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/friends")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(new ObjectMapper().writeValueAsString(friendReqDto))
-						.with(user(new AuthUsers(user)))
-						.with(csrf()))
-				.andExpect(status().isOk())
-				.andDo(print());
-
-
-	}
+	private static final String BASE_URL = "/api/v1/friends";
 
 
 
@@ -186,5 +165,10 @@ class FriendControllerTest {
 				.build();
 		return user;
 	}
-}
-*/
+
+
+
+	}
+
+
+

@@ -21,6 +21,7 @@ import com.efub.lakkulakku.domain.comment.repository.CommentRepository;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.diary.exception.DiaryNotFoundException;
 import com.efub.lakkulakku.domain.diary.repository.DiaryRepository;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
 import com.efub.lakkulakku.domain.users.entity.Users;
 
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,9 @@ public class CommentService {
 			.isSecret(commentReqDto.isSecret())
 			.build();
 		commentRepository.save(comment);
-		String type = "댓글";
+		NotificationEnum type = NotificationEnum.COMMENT;
 		if (commentReqDto.getParentId() != null) {
-			type = "대댓글";
+			type = NotificationEnum.RECOMMENT;
 		}
 		if (!user.getUserId().equals(diary.getUser().getUserId())) {
 			notifyInfo(comment, type);
@@ -120,7 +121,7 @@ public class CommentService {
 		}
 	}
 
-	private void notifyInfo(Comment comment, String notiType) {
+	private void notifyInfo(Comment comment, NotificationEnum notiType) {
 		comment.publishEvent(eventPublisher, notiType);
 	}
 

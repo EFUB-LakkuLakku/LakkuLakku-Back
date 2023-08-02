@@ -1,21 +1,23 @@
 package com.efub.lakkulakku.domain.notification.service;
 
-import com.efub.lakkulakku.domain.diary.entity.Diary;
-import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
-import com.efub.lakkulakku.domain.notification.entity.Notification;
-import com.efub.lakkulakku.domain.notification.exception.SSEConnectionException;
-import com.efub.lakkulakku.domain.notification.repository.EmitterRepository;
-import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
-import com.efub.lakkulakku.domain.users.entity.Users;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.efub.lakkulakku.domain.notification.dto.NotificationMapper;
+import com.efub.lakkulakku.domain.notification.entity.Notification;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
+import com.efub.lakkulakku.domain.notification.exception.SSEConnectionException;
+import com.efub.lakkulakku.domain.notification.repository.EmitterRepository;
+import com.efub.lakkulakku.domain.notification.repository.NotificationRepository;
+import com.efub.lakkulakku.domain.users.entity.Users;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -48,17 +50,18 @@ public class NotificationService {
 		return emitter;
 	}
 
-	public void send(Users receiver, String notificationType, String message) {
-		Notification notification = notificationRepository.save(createNotification(receiver, notificationType, message));
+	public void send(Users receiver, NotificationEnum notificationType, String message) {
+		Notification notification = notificationRepository.save(
+			createNotification(receiver, notificationType, message));
 
 		String receiverId = String.valueOf(receiver.getUserId());
 		String eventId = receiverId + "_" + System.currentTimeMillis();
 		Map<String, SseEmitter> emitters = emitterRepository.findAllStartWithById(receiverId);
 		emitters.forEach(
-				(key, emitter) -> {
-					emitterRepository.saveEventCache(key, notification);
-					sendNotification(emitter, eventId, key, NotificationMapper.toNotificationResDto(notification));
-				}
+			(key, emitter) -> {
+				emitterRepository.saveEventCache(key, notification);
+				sendNotification(emitter, eventId, key, NotificationMapper.toNotificationResDto(notification));
+			}
 		);
 	}
 
@@ -69,8 +72,8 @@ public class NotificationService {
 	private void sendNotification(SseEmitter emitter, String eventId, String emitterId, Object data) {
 		try {
 			emitter.send(SseEmitter.event()
-					.id(eventId)
-					.data(data));
+				.id(eventId)
+				.data(data));
 		} catch (IOException exception) {
 			emitterRepository.deleteById(emitterId);
 			throw new SSEConnectionException();
@@ -84,21 +87,20 @@ public class NotificationService {
 	private void sendLostData(String lastEventId, UUID memberId, String emitterId, SseEmitter emitter) {
 		Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithId(String.valueOf(memberId));
 		eventCaches.entrySet().stream()
-				.filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-				.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
+			.filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+			.forEach(entry -> sendNotification(emitter, entry.getKey(), emitterId, entry.getValue()));
 	}
 
-	private Notification createNotification(Users receiver, String notiType, String message) {
+	private Notification createNotification(Users receiver, NotificationEnum notiType, String message) {
 		return Notification.builder()
-				.receiver(receiver)
-				.notiType(notiType)
-				.message(message)
-				.build();
+			.receiver(receiver)
+			.notiType(notiType)
+			.message(message)
+			.build();
 	}
 
 	@Transactional
-	public void deleteAllNotification(Users users)
-	{
+	public void deleteAllNotification(Users users) {
 		List<Notification> notificationList = notificationRepository.findByUsersId(users.getUserId());
 		notificationRepository.deleteAll(notificationList);
 	}

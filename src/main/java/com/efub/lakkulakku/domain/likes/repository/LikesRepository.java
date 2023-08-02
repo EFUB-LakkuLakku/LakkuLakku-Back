@@ -20,4 +20,5 @@ public interface LikesRepository extends JpaRepository<Likes, UUID> {
 
 	boolean existsByDiaryAndUsers(Diary diary, Users user);
 
+	int countByDiary(Diary diary);
 }
