@@ -16,6 +16,7 @@ import com.efub.lakkulakku.domain.likes.dto.LikeMapper;
 import com.efub.lakkulakku.domain.likes.dto.LikeReqDto;
 import com.efub.lakkulakku.domain.likes.entity.Likes;
 import com.efub.lakkulakku.domain.likes.repository.LikesRepository;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
 import com.efub.lakkulakku.domain.users.entity.Users;
 
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class LikesService {
 
 		if (message.equals(LIKES_ADD_SUCCESS)) {
 			if (!user.getUserId().equals(diary.getUser().getUserId())) {
-				notifyInfo(likes, "좋아요");
+				notifyInfo(likes, NotificationEnum.LIKES);
 			}
 			diary.setCntLike(diary.getCntLike() + 1);
 			diaryService.save(diary);
@@ -79,7 +80,7 @@ public class LikesService {
 		return likesRepository.existsByDiaryAndUsers(diary, user);
 	}
 
-	private void notifyInfo(Likes likes, String notiType) {
+	private void notifyInfo(Likes likes, NotificationEnum notiType) {
 		likes.publishEvent(eventPublisher, notiType);
 	}
 }

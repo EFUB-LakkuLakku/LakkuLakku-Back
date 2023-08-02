@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import com.efub.lakkulakku.domain.notification.dto.NotificationMessage;
 import com.efub.lakkulakku.domain.notification.dto.NotificationReqDto;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 
@@ -47,7 +48,7 @@ public class Friend extends BaseTimeEntity {
 		this.target = target;
 	}
 
-	public void publishEvent(ApplicationEventPublisher eventPublisher, String notiType) {
+	public void publishEvent(ApplicationEventPublisher eventPublisher, NotificationEnum notiType) {
 		eventPublisher.publishEvent(NotificationReqDto.builder()
 			.receiver(sender)
 			.notiType(notiType)

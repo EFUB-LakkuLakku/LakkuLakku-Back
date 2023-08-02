@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import com.efub.lakkulakku.domain.diary.entity.Diary;
 import com.efub.lakkulakku.domain.notification.dto.NotificationMessage;
 import com.efub.lakkulakku.domain.notification.dto.NotificationReqDto;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.global.entity.BaseTimeEntity;
 
@@ -67,7 +68,7 @@ public class Likes extends BaseTimeEntity {
 		this.isLike = !this.isLike;
 	}
 
-	public void publishEvent(ApplicationEventPublisher eventPublisher, String notiType) {
+	public void publishEvent(ApplicationEventPublisher eventPublisher, NotificationEnum notiType) {
 		eventPublisher.publishEvent(NotificationReqDto.builder()
 			.receiver(diary.getUser())
 			.notiType(notiType)

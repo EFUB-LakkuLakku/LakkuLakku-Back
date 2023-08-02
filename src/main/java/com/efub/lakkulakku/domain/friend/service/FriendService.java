@@ -15,6 +15,7 @@ import com.efub.lakkulakku.domain.friend.entity.Friend;
 import com.efub.lakkulakku.domain.friend.exception.DuplicateFriendException;
 import com.efub.lakkulakku.domain.friend.exception.SelfFriendException;
 import com.efub.lakkulakku.domain.friend.repository.FriendRepository;
+import com.efub.lakkulakku.domain.notification.entity.NotificationEnum;
 import com.efub.lakkulakku.domain.users.entity.Users;
 import com.efub.lakkulakku.domain.users.service.UsersService;
 
@@ -43,7 +44,7 @@ public class FriendService {
 				.sender(user)
 				.target(targetUser)
 				.build();
-			notifyInfo(friend, "FRIEND");
+			notifyInfo(friend, NotificationEnum.FRIEND);
 			return friendRepository.save(friend);
 		}
 	}
@@ -81,7 +82,7 @@ public class FriendService {
 		friendRepository.deleteById(id);
 	}
 
-	private void notifyInfo(Friend friend, String notiType) {
+	private void notifyInfo(Friend friend, NotificationEnum notiType) {
 		friend.publishEvent(eventPublisher, notiType);
 	}
 
